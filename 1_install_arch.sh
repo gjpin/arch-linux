@@ -1,3 +1,5 @@
+#!/bin/bash
+
 encryption_passphrase=""
 root_password=""
 user_password=""
