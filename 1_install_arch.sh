@@ -38,8 +38,8 @@ yes | mkfs.vfat -F 32 /dev/nvme0n1p1
 yes | mkfs.ext2 /dev/nvme0n1p2
 
 echo "Encrypting root partition"
-echo -en $encryption_passphrase\n$encryption_passphrase | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random luksFormat /dev/nvme0n1p3
-echo -en $encryption_passphrase | cryptsetup luksOpen /dev/nvme0n1p3 cryptoVol
+printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random luksFormat /dev/nvme0n1p3
+printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p3 cryptoVol
 
 echo "Setting up LVM"
 pvcreate /dev/mapper/cryptoVol
