@@ -7,13 +7,9 @@ hostname="archVM"
 user_name="testuser"
 continent_country="Europe/Berlin"
 swap_size="1"
-#your_country=""
 
 echo "Updating system clock"
 timedatectl set-ntp true
-
-#echo "Updating Mirrorlist"
-#curl -s "https://www.archlinux.org/mirrorlist/?country=$your_country&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors -n 5 -
 
 ###############################
 # Setup partitions, LVM, encryption
