@@ -1,12 +1,12 @@
 #!/bin/bash
 
-encryption_passphrase=""
-root_password=""
-user_password=""
-hostname=""
-user_name=""
-continent_country=""
-swap_size="8"
+encryption_passphrase="test"
+root_password="test"
+user_password="test"
+hostname="archVM"
+user_name="testuser"
+continent_country="Europe/Berlin"
+swap_size="1"
 #your_country=""
 
 echo "Updating system clock"
@@ -20,26 +20,26 @@ timedatectl set-ntp true
 ###############################
 echo "Partitioning disk"
 echo "Creating EFI partition"
-printf "n\n1\n4096\n+100M\nef00\nw\ny\n" | gdisk /dev/nvme0n1
+printf "n\n1\n4096\n+100M\nef00\nw\ny\n" | gdisk /dev/sda
 
 echo "Creating boot partition"
-printf "n\n2\n\n+512M\n\nw\ny\n" | gdisk /dev/nvme0n1
+printf "n\n2\n\n+512M\n\nw\ny\n" | gdisk /dev/sda
 
 echo "Creating root partition"
-printf "n\n3\n\n\n\nw\ny\n" | gdisk /dev/nvme0n1
+printf "n\n3\n\n\n\nw\ny\n" | gdisk /dev/sda
 
 echo "Zeroing partitions"
-cat /dev/zero > /dev/nvme0n1p1
-cat /dev/zero > /dev/nvme0n1p2
-cat /dev/zero > /dev/nvme0n1p3
+cat /dev/zero > /dev/sda1
+cat /dev/zero > /dev/sda2
+cat /dev/zero > /dev/sda3
 
 echo "Creating EFI filesystem"
-yes | mkfs.vfat -F 32 /dev/nvme0n1p1
-yes | mkfs.ext2 /dev/nvme0n1p2
+yes | mkfs.vfat -F 32 /dev/sda1
+yes | mkfs.ext2 /dev/sda2
 
 echo "Encrypting root partition"
-echo -en $encryption_passphrase\n$encryption_passphrase | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random luksFormat /dev/nvme0n1p3
-echo -en $encryption_passphrase\n$encryption_passphrase | cryptsetup luksOpen /dev/nvme0n1p3 cryptoVol
+echo -en $encryption_passphrase\n$encryption_passphrase | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random luksFormat /dev/sda3
+echo -en $encryption_passphrase\n$encryption_passphrase | cryptsetup luksOpen /dev/sda3 cryptoVol
 
 echo "Setting up LVM"
 pvcreate /dev/mapper/cryptoVol
@@ -55,9 +55,9 @@ echo "Mounting new system"
 mount /dev/mapper/Arch-root /mnt
 swapon /dev/mapper/Arch-swap
 mkdir /mnt/boot
-mount /dev/nvme0n1p2 /mnt/boot
+mount /dev/sda2 /mnt/boot
 mkdir /mnt/boot/efi
-mount /dev/nvme0n1p1 /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
 
 ###############################
 # Install ArchLinux
@@ -102,7 +102,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchL
 
 echo "Configuring Grub"
 sed -i 's/^GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
-sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX="cryptdevice=/dev/nvme0n1p3:cryptoVol resume=/dev/mapper/Arch-swap" /etc/default/grub
+sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX="cryptdevice=/dev/sda3:cryptoVol resume=/dev/mapper/Arch-swap" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF
 
