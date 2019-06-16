@@ -6,6 +6,7 @@ user_password=""
 hostname=""
 user_name=""
 continent_country=""
+swap_size="8"
 
 echo "Updating system clock"
 timedatectl set-ntp true
@@ -39,7 +40,7 @@ printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p3 crypto
 echo "Setting up LVM"
 pvcreate /dev/mapper/cryptoVol
 vgcreate Arch /dev/mapper/cryptoVol
-lvcreate -L +8GB Arch -n swap
+lvcreate -L +"$swap_size"GB Arch -n swap
 lvcreate -l +100%FREE Arch -n root
 
 echo "Creating filesystems on encrypted partition"
