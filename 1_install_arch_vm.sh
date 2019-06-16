@@ -102,7 +102,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArchL
 
 echo "Configuring Grub"
 sed -i 's/^GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
-sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX="cryptdevice=/dev/sda3:cryptoVol resume=/dev/mapper/Arch-swap" /etc/default/grub
+sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX=\"cryptdevice=/dev/sda3:cryptoVol resume=/dev/mapper/Arch-swap\" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF
 
