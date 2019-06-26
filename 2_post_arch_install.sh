@@ -18,15 +18,15 @@ pacman -S xdg-user-dirs
 echo "Installing fonts"
 pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation
 
+echo "Installing common applications"
+pacman -S firefox wget keepassxc git openssh vim
+
 echo "Adding your user to wheel group"
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
 echo "Installing intel microcode"
 pacman -S intel-ucode
 grub-mkconfig -o /boot/grub/grub.cfg
-
-echo "Installing common applications"
-pacman -S firefox wget keepassxc git openssh
 
 echo "Installing yay" 
 wget https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz
