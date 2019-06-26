@@ -19,7 +19,7 @@ echo "Installing fonts"
 pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation
 
 echo "Adding your user to wheel group"
-echo 'foobar ALL=(ALL:ALL) ALL' | EDITOR='tee -a' visudo
+echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
 echo "Installing intel microcode"
 pacman -S intel-ucode
