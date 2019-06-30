@@ -12,14 +12,24 @@ reboot
 echo "Enabling NetworkManager"
 systemctl enable NetworkManager
 
-echo "Installing common directories"
-pacman -S xdg-user-dirs
+echo "Installing common base"
+pacman -S xdg-user-dirs xorg-server-xwayland
 
 echo "Installing fonts"
-pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation
+pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
 pacman -S firefox wget keepassxc git openssh vim
+
+echo "Installing and setting up terminal and zsh"
+pacman -S alacritty zsh zsh-theme-powerlevel9k
+chsh -s /bin/zsh
+tee -a ~/.zshrc << END
+source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
+prompt_context() {}
+END
 
 echo "Adding your user to wheel group"
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
