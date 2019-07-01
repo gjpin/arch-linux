@@ -9,6 +9,9 @@ reboot
 ###############################
 # Run this script as root
 ###############################
+echo "Adding user as a sudoer"
+echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
+
 echo "Enabling NetworkManager"
 systemctl enable NetworkManager
 
@@ -30,9 +33,6 @@ bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 prompt_context() {}
 END
-
-echo "Adding your user to wheel group"
-echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
 echo "Installing intel microcode"
 pacman -S intel-ucode
