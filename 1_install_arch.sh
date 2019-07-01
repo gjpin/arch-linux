@@ -59,7 +59,7 @@ mount /dev/nvme0n1p1 /mnt/boot/efi
 # Install ArchLinux
 ###############################
 echo "Installing Arch"
-yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog wpa_supplicant
+yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog wpa_supplicant networkmanager
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
