@@ -30,7 +30,7 @@ makepkg -si
 cd ..
 
 echo "Installing an setting up theme"
-pacman -S gtk-engine-murrine gtk-engines
+sudo pacman -S gtk-engine-murrine gtk-engines
 yay -S qogir-gtk-theme-git
 
 git clone https://github.com/vinceliuice/Qogir-icon-theme.git
@@ -42,7 +42,8 @@ echo "Installing sway"
 sudo pacman -S sway
 cp /etc/sway/config ~/.config/sway/config
 
-tee -a ~/.zshrc << END
+echo "Setting Gnome theme"
+tee -a ~/.config/sway/config << END
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
     gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
