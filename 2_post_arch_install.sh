@@ -21,12 +21,12 @@ echo "Installing fonts"
 yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
-yes | sudo pacman -S firefox wget keepassxc git openssh vim alacritty
+yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
 
 echo "Installing yay" 
 git clone https://aur.archlinux.org/yay-bin.git
 cd yay-bin
-makepkg -si
+'' '' '' | makepkg -si
 cd ..
 
 echo "Installing an setting up theme"
@@ -39,17 +39,22 @@ sudo mkdir -p "/usr/share/icons"
 sudo ./install.sh -d "/usr/share/icons"
 
 echo "Installing sway"
-sudo pacman -S sway
-cp /etc/sway/config ~/.config/sway/config
+'' | sudo pacman -S sway swaylock swayidle waybar
+mkdir -p ~/.config/sway
+cp /etc/sway/config ~/.config/sway/
 
-echo "Setting Gnome theme"
-tee -a ~/.config/sway/config << END
-set $gnome-schema org.gnome.desktop.interface
-exec_always {
-    gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
-    gsettings set $gnome-schema icon-theme 'Qogir'
-}
-END
+# echo "Setting Gnome theme"
+# tee -a ~/.config/sway/config << END
+# set $gnome-schema org.gnome.desktop.interface
+# exec_always {
+#     gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
+#     gsettings set $gnome-schema icon-theme 'Qogir'
+# }
+# END
+
+echo "Installing stuff to make sway complete"
+sudo pacman -S pulseaudio thunar rofi
+wget 
 
 echo "Installing and setting up terminal and zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k

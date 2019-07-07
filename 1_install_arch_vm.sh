@@ -59,7 +59,7 @@ mount /dev/sda1 /mnt/boot/efi
 # Install ArchLinux
 ###############################
 echo "Installing Arch"
-yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog networkmanager
+yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -101,8 +101,8 @@ sed -i 's/^GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
 sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX=\"cryptdevice=/dev/sda3:cryptoVol\ resume=/dev/mapper/Arch-swap\" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "Installing linux-headers and dkms"
-yes | pacman -S linux-headers dkms
+echo "Installing common base"
+yes | pacman -S linux-headers dkms networkmanager wget
 
 echo "Installing intel microcode"
 yes | pacman -S intel-ucode
