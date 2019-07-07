@@ -29,11 +29,35 @@ cd yay-bin
 makepkg -si
 cd ..
 
+echo "Installing an setting up theme"
+pacman -S gtk-engine-murrine gtk-engines
+yay -S qogir-gtk-theme-git
+
+git clone https://github.com/vinceliuice/Qogir-icon-theme.git
+cd Qogir-icon-theme
+sudo mkdir -p "/usr/share/icons"
+sudo ./install.sh -d "/usr/share/icons"
+
+echo "Installing sway"
+sudo pacman -S sway
+cp /etc/sway/config ~/.config/sway/config
+
+tee -a ~/.zshrc << END
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+    gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
+    gsettings set $gnome-schema icon-theme 'Qogir'
+}
+END
+
 echo "Installing and setting up terminal and zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
 touch ~/.zshrc
 tee -a ~/.zshrc << END
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+  XKB_DEFAULT_LAYOUT=us exec sway
+fi
 source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
 bindkey ";5C" forward-word
 bindkey ";5D" backward-word
@@ -46,19 +70,3 @@ setopt    appendhistory     #Append history to the history file (no overwriting)
 setopt    sharehistory      #Share history across terminals
 setopt incappendhistory #Immediately append to the history file, not just when a term is killed
 END
-
-echo "Installing an setting up theme"
-pacman -S gtk-engine-murrine gtk-engines
-yay -S qogir-gtk-theme-git
-
-git clone https://github.com/vinceliuice/Qogir-icon-theme.git
-cd Qogir-icon-theme
-sudo mkdir -p "/usr/share/icons"
-sudo ./install.sh -d "/usr/share/icons"
-
-# TODO: see https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
-exec_always {
-    gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
-    gsettings set $gnome-schema icon-theme 'Qogir'
-}
-
