@@ -59,7 +59,7 @@ mount /dev/nvme0n1p1 /mnt/boot/efi
 # Install ArchLinux
 ###############################
 echo "Installing Arch"
-yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog wpa_supplicant networkmanager
+yes '' | pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr dialog networkmanager
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -100,6 +100,16 @@ echo "Configuring Grub"
 sed -i 's/^GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
 sed -i /GRUB_CMDLINE_LINUX=/c\GRUB_CMDLINE_LINUX=\"cryptdevice=/dev/nvme0n1p3:cryptoVol\ resume=/dev/mapper/Arch-swap\" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "Installing linux-headers and dkms"
+yes | pacman -S linux-headers dkms
+
+echo "Installing intel microcode"
+yes | pacman -S intel-ucode
+grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "Adding user as a sudoer"
+echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 EOF
 
 echo "ArchLinux is ready. You can reboot now!"

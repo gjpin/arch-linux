@@ -1,36 +1,36 @@
 #!/bin/bash
 ###############################
-# Run this script as root
+# Do NOT run as root
 ###############################
-echo "Installing"
-yes | pacman -S linux-headers dkms
-
-reboot
-
-###############################
-# Run this script as root
-###############################
-echo "Adding user as a sudoer"
-echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
-
 echo "Enabling NetworkManager"
-systemctl enable NetworkManager
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+
+echo "Installing and configuring UFW"
+yes | sudo pacman -S ufw
+sudo systemctl enable ufw
+sudo systemctl start ufw
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
 
 echo "Installing common base"
-yes | pacman -S xdg-user-dirs xorg-server-xwayland
+yes | sudo pacman -S xdg-user-dirs xorg-server-xwayland
 
 echo "Installing fonts"
-yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
-yes | pacman -S firefox wget keepassxc git openssh vim
+yes | sudo pacman -S firefox wget keepassxc git openssh vim alacritty
 
-ZSH CANNOT BE INSTALLED AS ROOT
-ZSH CANNOT BE INSTALLED AS ROOT
-ZSH CANNOT BE INSTALLED AS ROOT
-ZSH CANNOT BE INSTALLED AS ROOT
+echo "Installing yay" 
+git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
+makepkg -si
+cd ..
+
 echo "Installing and setting up terminal and zsh"
-yes | pacman -S alacritty zsh zsh-theme-powerlevel9k
+yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
 touch ~/.zshrc
 tee -a ~/.zshrc << END
@@ -47,14 +47,18 @@ setopt    sharehistory      #Share history across terminals
 setopt incappendhistory #Immediately append to the history file, not just when a term is killed
 END
 
-echo "Installing intel microcode"
-yes | pacman -S intel-ucode
-grub-mkconfig -o /boot/grub/grub.cfg
+echo "Installing an setting up theme"
+pacman -S gtk-engine-murrine gtk-engines
+yay -S qogir-gtk-theme-git
 
-echo "Installing and configuring UFW"
-yes | pacman -S ufw
-systemctl start ufw
-systemctl enable ufw
-ufw enable
-ufw default deny incoming
-ufw default allow outgoing
+git clone https://github.com/vinceliuice/Qogir-icon-theme.git
+cd Qogir-icon-theme
+sudo mkdir -p "/usr/share/icons"
+sudo ./install.sh -d "/usr/share/icons"
+
+# TODO: see https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
+exec_always {
+    gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
+    gsettings set $gnome-schema icon-theme 'Qogir'
+}
+
