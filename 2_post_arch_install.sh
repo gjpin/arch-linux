@@ -44,15 +44,6 @@ wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/.config
 mkdir -p ~/.config/sway
 mv config ~/.config/sway/
 
-# echo "Setting Gnome theme"
-# tee -a ~/.config/sway/config << END
-# set $gnome-schema org.gnome.desktop.interface
-# exec_always {
-#     gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
-#     gsettings set $gnome-schema icon-theme 'Qogir'
-# }
-# END
-
 echo "Installing stuff to make sway complete"
 sudo pacman -S pulseaudio thunar rofi slurp grim swaylock swayidle waybar
 wget https://github.com/exah-io/minimal-arch-linux/raw/master/wallpaper/6303-mauritania.jpg
