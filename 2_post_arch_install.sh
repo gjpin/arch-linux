@@ -39,9 +39,10 @@ sudo mkdir -p "/usr/share/icons"
 sudo ./install.sh -d "/usr/share/icons"
 
 echo "Installing sway"
-'' | sudo pacman -S sway swaylock swayidle waybar
+'' | sudo pacman -S sway
+wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/.config/sway/config
 mkdir -p ~/.config/sway
-cp /etc/sway/config ~/.config/sway/
+mv config ~/.config/sway/
 
 # echo "Setting Gnome theme"
 # tee -a ~/.config/sway/config << END
@@ -53,7 +54,7 @@ cp /etc/sway/config ~/.config/sway/
 # END
 
 echo "Installing stuff to make sway complete"
-sudo pacman -S pulseaudio thunar rofi slurp grim
+sudo pacman -S pulseaudio thunar rofi slurp grim swaylock swayidle waybar
 wget https://github.com/exah-io/minimal-arch-linux/raw/master/wallpaper/6303-mauritania.jpg
 mv 6303-mauritania.jpg ~/Pictures/
 

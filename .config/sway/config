@@ -221,7 +221,7 @@ bar {
 
 set $screenselect env WAYLAND_DISPLAY=wayland-0 slurp
 set $screenshot env WAYLAND_DISPLAY=wayland-0 grim
-set $screenshotout $HOME/screenshots/$(date "+%Y-%m-%d-%H%M%S_shot.png")
+set $screenshotout $HOME/Pictures/screenshots/$(date "+%Y-%m-%d-%H%M%S_shot.png")
 
 bindsym $mod+Shift+p exec $screenshot $screenshotout
 bindsym $mod+Shift+Mod1+p exec $screenshot -g "$($screenselect)" $screenshotout
