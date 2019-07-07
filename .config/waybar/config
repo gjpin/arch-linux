@@ -1,0 +1,118 @@
+{
+    "layer": "top", // Waybar at top layer
+    // "position": "bottom", // Waybar at the bottom of your screen
+    // "height": 30, // Waybar height
+    // "width": 1280, // Waybar width
+    // Choose the order of the modules
+    "modules-left": ["sway/workspaces", "sway/mode", "custom/spotify"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["custom/brightness", "pulseaudio", "network", "cpu", "memory", "battery", "clock", "tray"],
+    // Modules configuration
+    // "sway/workspaces": {
+    //     "disable-scroll": true,
+    //     "all-outputs": true,
+    //     "format": "{name}: {icon}",
+    //     "format-icons": {
+    //         "1": "",
+    //         "2": "",
+    //         "3": "",
+    //         "4": "",
+    //         "5": "",
+    //         "urgent": "",
+    //         "focused": "",
+    //         "default": ""
+    //     }
+    // },
+    "sway/mode": {
+        "format": "{}"
+    },
+    "sway/window": {
+        "max-length": 50
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    "clock": {
+        "interval": 1,
+        "format": "{:%a %b %d %H:%M:%S}"
+    },
+    "cpu": {
+        "format": "{}% "
+    },
+    "memory": {
+        "format": "{}% "
+    },
+    "battery": {
+        "interval": 2,
+        "states": {
+            "100": 100,
+            "90": 90,
+            "80": 80,
+            "70": 70,
+            "60": 60,
+            "50": 50,
+            "40": 40,
+            "30": 30,
+            "20": 20,
+            "10": 10,
+            "critical": 5
+        },
+        "format": "{capacity}% ",
+        "format-full": "{capacity}% ",
+        "format-discharging-100": "{capacity}% ",
+        "format-discharging-90": "{capacity}% ",
+        "format-discharging-80": "{capacity}% ",
+        "format-discharging-70": "{capacity}% ",
+        "format-discharging-60": "{capacity}% ",
+        "format-discharging-50": "{capacity}% ",
+        "format-discharging-40": "{capacity}% ",
+        "format-discharging-30": "{capacity}% ",
+        "format-discharging-20": "{capacity}% ",
+        "format-discharging-10": "{capacity}% ",
+	"format-discharging-critical": "{capacity}% ",
+        "format-charging-100": "{capacity}% ",
+        "format-charging-90": "{capacity}% ",
+        "format-charging-80": "{capacity}% ",
+        "format-charging-70": "{capacity}% ",
+        "format-charging-60": "{capacity}% ",
+        "format-charging-50": "{capacity}% ",
+        "format-charging-40": "{capacity}% ",
+        "format-charging-30": "{capacity}% ",
+        "format-charging-20": "{capacity}% ",
+        "format-charging-10": "{capacity}% ",
+        "format-charging-critical": "{capacity}% ", 
+        "format-icons": ["", "", "", "", ""]
+    },
+    "network": {
+        // "interface": "wlp2s0", // (Optional) To force the use of this interface
+        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-disconnected": "Disconnected "
+    },
+    "pulseaudio": {
+        //"scroll-step": 1,
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphones": "",
+            "handsfree": "陋",
+            "headset": "",
+            "phone": "陋",
+            "portable": "陋",
+            "car": "",
+            "speaker": "",
+            "default": [""]
+        },
+        "on-click": "pavucontrol"
+    },
+    "custom/brightness": {
+        "format": "{} ",
+        //"interval": 1,
+        "exec": "fish $HOME/.config/waybar/brightness.fish",
+        "on-scroll-up": "light -A 2",
+        "on-scroll-down": "light -U 2"
+    }
+}
+

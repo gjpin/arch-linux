@@ -1,0 +1,49 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+window {
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+#workspaces button {
+    padding: 5px 10px;
+    background: transparent;
+    color: white;
+    border-bottom: 3px solid transparent;
+}
+
+#workspaces button.icon label {
+    font-size: 10px;
+}
+
+#workspaces button.focused {
+    background: rgba(200, 200, 200, 0.1);
+    border-bottom: 3px solid white;
+}
+
+#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-brightness, #custom-spotify {
+    padding: 0 6px;
+    margin: 0 2px;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: black;
+    }
+}
+
+#battery.warning {
+    background: #f53c3c;
+    color: white;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}

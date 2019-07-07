@@ -53,8 +53,9 @@ cp /etc/sway/config ~/.config/sway/
 # END
 
 echo "Installing stuff to make sway complete"
-sudo pacman -S pulseaudio thunar rofi
-wget 
+sudo pacman -S pulseaudio thunar rofi slurp grim
+wget https://github.com/exah-io/minimal-arch-linux/raw/master/wallpaper/6303-mauritania.jpg
+mv 6303-mauritania.jpg ~/Pictures/
 
 echo "Installing and setting up terminal and zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
