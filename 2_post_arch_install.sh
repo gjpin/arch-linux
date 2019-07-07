@@ -26,8 +26,9 @@ yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
 echo "Installing yay" 
 git clone https://aur.archlinux.org/yay-bin.git
 cd yay-bin
-'' '' '' | makepkg -si
+makepkg -si
 cd ..
+rm -rf yay-bin
 
 echo "Installing an setting up theme"
 sudo pacman -S gtk-engine-murrine gtk-engines
@@ -37,16 +38,18 @@ git clone https://github.com/vinceliuice/Qogir-icon-theme.git
 cd Qogir-icon-theme
 sudo mkdir -p "/usr/share/icons"
 sudo ./install.sh -d "/usr/share/icons"
+cd ..
+rm -rf Qogir-icon-theme
 
 echo "Installing sway"
-'' | sudo pacman -S sway
+sudo pacman -S sway
 wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/.config/sway/config
 mkdir -p ~/.config/sway
 mv config ~/.config/sway/
 
 echo "Installing stuff to make sway complete"
-sudo pacman -S pulseaudio thunar rofi slurp grim swaylock swayidle waybar
-wget https://github.com/exah-io/minimal-arch-linux/raw/master/wallpaper/6303-mauritania.jpg
+sudo pacman -S pulseaudio pavucontrol thunar rofi slurp grim swaylock swayidle waybar
+wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/wallpaper/6303-mauritania.jpg
 mv 6303-mauritania.jpg ~/Pictures/
 
 echo "Installing and setting up terminal and zsh"
