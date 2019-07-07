@@ -55,13 +55,22 @@ yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
 touch ~/.zshrc
 tee -a ~/.zshrc << END
+# Load swam on tty1
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
   XKB_DEFAULT_LAYOUT=us exec sway
 fi
+
+# Load theme
 source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
+
+# Bind keys for navigation
 bindkey ";5C" forward-word
 bindkey ";5D" backward-word
+
+# Customize prompt
 prompt_context() {}
+
+# History support
 HISTSIZE=5000               #How many lines of history to keep in memory
 HISTFILE=~/.zsh_history     #Where to save history to disk
 SAVEHIST=5000               #Number of history entries to save to disk
