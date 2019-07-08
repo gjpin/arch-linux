@@ -41,6 +41,9 @@ sudo ./install.sh -d "/usr/share/icons"
 cd ..
 rm -rf Qogir-icon-theme
 
+echo "Installing Material Design icons"
+yay -S ttf-material-design-icons-git
+
 echo "Installing sway"
 sudo pacman -S sway
 wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/.config/sway/config
@@ -52,16 +55,20 @@ sudo pacman -S pulseaudio pavucontrol thunar rofi slurp grim swaylock swayidle w
 wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/wallpaper/6303-mauritania.jpg
 mv 6303-mauritania.jpg ~/Pictures/
 
+echo "Installing office stuff"
+sudo pacman -S ristretto gimp inkscape thunderbird
+
+echo "Installing dev stuff"
+sudo pacman -S code
+yay -S nvm
+source /usr/share/nvm/init-nvm.sh
+nvm install --lts=dubnium
+
 echo "Installing and setting up terminal and zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
 touch ~/.zshrc
 tee -a ~/.zshrc << END
-# Load swam on tty1
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-  XKB_DEFAULT_LAYOUT=us exec sway
-fi
-
 # Load theme
 source /usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme
 
