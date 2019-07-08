@@ -2,26 +2,6 @@
 ###############################
 # Do NOT run as root
 ###############################
-echo "Enabling NetworkManager"
-sudo systemctl enable NetworkManager
-sudo systemctl start NetworkManager
-
-echo "Installing and configuring UFW"
-yes | sudo pacman -S ufw
-sudo systemctl enable ufw
-sudo systemctl start ufw
-sudo ufw enable
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-echo "Installing common base"
-yes | sudo pacman -S xdg-user-dirs xorg-server-xwayland
-
-echo "Installing fonts"
-yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
-
-echo "Installing common applications"
-yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
 
 echo "Installing yay" 
 git clone https://aur.archlinux.org/yay-bin.git
