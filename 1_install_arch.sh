@@ -24,7 +24,7 @@ cat /dev/zero > /dev/nvme0n1p1
 cat /dev/zero > /dev/nvme0n1p2
 
 echo "Creating EFI filesystem"
-yes | mkfs.ext4 /dev/nvme0n1p1
+yes | mkfs.fat -F32 /dev/nvme0n1p1
 
 echo "Encrypting / partition"
 printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/nvme0n1p2
@@ -120,6 +120,19 @@ sudo systemctl start ufw
 sudo ufw enable
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
+
+echo "Enabling NetworkManager"
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+
+echo "Installing common base"
+yes | sudo pacman -S xdg-user-dirs xorg-server-xwayland
+
+echo "Installing fonts"
+yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+
+echo "Installing common applications"
+yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
 EOF
 
 umount -R /mnt
