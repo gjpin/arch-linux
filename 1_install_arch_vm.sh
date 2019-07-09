@@ -104,6 +104,19 @@ tee -a /boot/loader/entries/arch.conf << END
     options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
+mkdir -p "/etc/pacman.d/hooks/"
+tee -a /mnt/etc/pacman.d/hooks/systemd-boot.hook << END
+    [Trigger]
+    Type = Package
+    Operation = Upgrade
+    Target = systemd
+
+    [Action]
+    Description = Updating systemd-boot
+    When = PostTransaction
+    Exec = /usr/bin/bootctl update
+END
+
 echo "Enabling periodic TRIM"
 systemctl enable fstrim.timer
 
