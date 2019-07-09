@@ -153,7 +153,7 @@ echo "Installing common applications"
 yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
 EOF
 
-umount -R /mnt
-swapoff -a
+#umount -R /mnt
+#swapoff -a
 
 echo "ArchLinux is ready. You can reboot now!"
