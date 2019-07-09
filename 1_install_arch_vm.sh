@@ -90,12 +90,16 @@ yes | pacman -S intel-ucode
 echo "Setting up systemd-boot"
 bootctl –path=/boot install
 
+mkdir -p "/boot/loader/"
+touch /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
     default arch
     timeout 0
     editor 0
 END
 
+mkdir -p "/boot/loader/entries/"
+touch /boot/loader/entries/arch.conf
 tee -a /boot/loader/entries/arch.conf << END
     title ArchLinux
     linux /vmlinuz-linux
@@ -105,7 +109,8 @@ tee -a /boot/loader/entries/arch.conf << END
 END
 
 mkdir -p "/etc/pacman.d/hooks/"
-tee -a /mnt/etc/pacman.d/hooks/systemd-boot.hook << END
+touch /etc/pacman.d/hooks/systemd-boot.hook
+tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
     [Trigger]
     Type = Package
     Operation = Upgrade
