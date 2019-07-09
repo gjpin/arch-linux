@@ -20,7 +20,7 @@ printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
 printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/sda
 
 echo "Zeroing partitions"
-cat /dev/zero > /dev/sda1P
+cat /dev/zero > /dev/sda1
 cat /dev/zero > /dev/sda2
 
 echo "Creating EFI filesystem"
