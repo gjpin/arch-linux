@@ -6,6 +6,7 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 * UEFI mode
 * NVMe SSD
 * TRIM compatible SSD
+* Intel CPU
 
 ## **Quickstart**
 1. Connect to the internet. If using wifi, you can use wifi-menu
@@ -35,6 +36,7 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 * LVM on LUKS
 * SSD Periodic TRIM
 * UFW (deny incoming, allow outgoing)
+* Applications: firefox, keepassxc, git, openssh, vim, alacritty
 
 
 **TODO**

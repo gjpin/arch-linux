@@ -20,7 +20,7 @@ printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/nvme0n1
 printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/nvme0n1
 
 echo "Zeroing partitions"
-cat /dev/zero > /dev/nvme0n1p1
+cat /dev/zero > /dev/nvme0n1p1P
 cat /dev/zero > /dev/nvme0n1p2
 
 echo "Creating EFI filesystem"
@@ -99,8 +99,8 @@ END
 tee -a /boot/loader/entries/arch.conf << END
     title ArchLinux
     linux /vmlinuz-linux
-    initrd /intel-ucode.img
     initrd /initramfs-linux.img
+    initrd /intel-ucode.img
     options cryptdevice=/dev/nvme0n1p2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
