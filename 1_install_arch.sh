@@ -93,33 +93,33 @@ bootctl –path=/boot install
 mkdir -p "/boot/loader/"
 touch /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
-    default arch
-    timeout 0
-    editor 0
+default arch
+timeout 0
+editor 0
 END
 
 mkdir -p "/boot/loader/entries/"
 touch /boot/loader/entries/arch.conf
 tee -a /boot/loader/entries/arch.conf << END
-    title ArchLinux
-    linux /vmlinuz-linux
-    initrd /initramfs-linux.img
-    initrd /intel-ucode.img
-    options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
+title ArchLinux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+initrd /intel-ucode.img
+options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
 mkdir -p "/etc/pacman.d/hooks/"
 touch /etc/pacman.d/hooks/systemd-boot.hook
 tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
-    [Trigger]
-    Type = Package
-    Operation = Upgrade
-    Target = systemd
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
 
-    [Action]
-    Description = Updating systemd-boot
-    When = PostTransaction
-    Exec = /usr/bin/bootctl update
+[Action]
+Description = Updating systemd-boot
+When = PostTransaction
+Exec = /usr/bin/bootctl update
 END
 
 echo "Enabling periodic TRIM"
