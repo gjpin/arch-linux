@@ -34,7 +34,7 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 | nvme0n1 | disk | |
 | ├─nvme0n1p1 | part | /boot |
 | ├─nvme0n1p2 | part |  |
-| &nbsp;&nbsp;&nbsp;└─cryptoVol | crypt | |
+| &nbsp;&nbsp;&nbsp;└─cryptoVols | crypt | |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─Arch-swap | lvm | [SWAP] |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─Arch-root | lvm | / |
 

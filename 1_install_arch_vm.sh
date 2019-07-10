@@ -27,7 +27,7 @@ echo "Creating EFI filesystem"
 yes | mkfs.fat -F32 /dev/sda1
 
 echo "Encrypting / partition"
-printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/sda2
+printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 --label CRYPTO luksFormat /dev/sda2
 printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/sda2 cryptoVols
 
 echo "Setting up LVM"
@@ -105,7 +105,7 @@ title ArchLinux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
 initrd /intel-ucode.img
-options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
+options cryptdevice=LABEL=CRYPTO:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
 mkdir -p /etc/pacman.d/hooks/
