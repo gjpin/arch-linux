@@ -94,7 +94,7 @@ mkdir -p /boot/loader/
 touch /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
 default arch
-timeout 0
+timeout 3
 editor 0
 END
 
