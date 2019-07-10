@@ -85,7 +85,7 @@ sed -i 's/^MODULES.*/MODULES=(ext4 intel_agp i915)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 echo "Setting up systemd-boot"
-bootctl –path=/boot install
+bootctl -path=/boot install
 
 mkdir -p /boot/loader/
 touch /boot/loader/loader.conf
