@@ -8,6 +8,12 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 * TRIM compatible SSD
 * Intel CPU
 
+## Features
+* LVM on LUKS
+* SSD Periodic TRIM
+* UFW (deny incoming, allow outgoing)
+* Applications: firefox, keepassxc, git, openssh, vim, alacritty
+
 ## **Quickstart**
 1. Connect to the internet. If using wifi, you can use wifi-menu
 2. Download 1_install_arch.sh
@@ -32,11 +38,12 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─Arch-swap | lvm | [SWAP] |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─Arch-root | lvm | / |
 
-## Features
-* LVM on LUKS
-* SSD Periodic TRIM
-* UFW (deny incoming, allow outgoing)
-* Applications: firefox, keepassxc, git, openssh, vim, alacritty
+## How to chroot
+mkdir -p /mnt/boot
+mount /dev/nvme0n1p1 /mnt/boot
+cryptsetup luksOpen /dev/nvme0n1p2 cryptoVols
+mount /dev/mapper/Arch-root /mnt
+arch-chroot /mnt
 
 
 **TODO**

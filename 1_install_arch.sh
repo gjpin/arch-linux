@@ -90,7 +90,7 @@ yes | pacman -S intel-ucode
 echo "Setting up systemd-boot"
 bootctl –path=/boot install
 
-mkdir -p "/boot/loader/"
+mkdir -p /boot/loader/
 touch /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
 default arch
@@ -98,7 +98,7 @@ timeout 0
 editor 0
 END
 
-mkdir -p "/boot/loader/entries/"
+mkdir -p /boot/loader/entries/
 touch /boot/loader/entries/arch.conf
 tee -a /boot/loader/entries/arch.conf << END
 title ArchLinux
@@ -108,7 +108,7 @@ initrd /intel-ucode.img
 options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
-mkdir -p "/etc/pacman.d/hooks/"
+mkdir -p /etc/pacman.d/hooks/
 touch /etc/pacman.d/hooks/systemd-boot.hook
 tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
 [Trigger]
