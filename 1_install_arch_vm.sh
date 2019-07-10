@@ -50,7 +50,7 @@ swapon /dev/mapper/Arch-swap
 # Install ArchLinux
 ###############################
 echo "Installing Arch"
-yes '' | pacstrap /mnt base base-devel intel-ucode
+yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -85,7 +85,7 @@ sed -i 's/^MODULES.*/MODULES=(ext4 intel_agp i915)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
 echo "Setting up systemd-boot"
-bootctl -path=/boot install
+bootctl --path=/boot install
 
 mkdir -p /boot/loader/
 touch /boot/loader/loader.conf
@@ -122,8 +122,8 @@ END
 echo "Enabling periodic TRIM"
 systemctl enable fstrim.timer
 
-echo "Installing common packages"
-yes | pacman -S linux-headers dkms networkmanager wget
+echo "Enabling NetworkManager"
+systemctl enable NetworkManager
 
 echo "Adding user as a sudoer"
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
@@ -135,28 +135,19 @@ tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin testuser --noclear %I $TERM
-END
 
-echo "Installing and configuring UFW"
-yes | sudo pacman -S ufw
-sudo systemctl enable ufw
-sudo systemctl start ufw
-sudo ufw enable
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-echo "Enabling NetworkManager"
-sudo systemctl enable NetworkManager
-sudo systemctl start NetworkManager
+echo "Installing common packages"
+yes | pacman -S linux-headers dkms wget
 
 echo "Installing common base"
-yes | sudo pacman -S xdg-user-dirs xorg-server-xwayland
+yes | pacman -S xdg-user-dirs xorg-server-xwayland
 
 echo "Installing fonts"
-yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
-yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
+yes | pacman -S firefox keepassxc git openssh vim alacritty
+END
 EOF
 
 #umount -R /mnt

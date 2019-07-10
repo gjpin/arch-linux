@@ -3,6 +3,14 @@
 # Do NOT run as root
 ###############################
 
+echo "Installing and configuring UFW"
+yes | sudo pacman -S ufw
+sudo systemctl enable ufw
+sudo systemctl start ufw
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
 echo "Installing yay" 
 git clone https://aur.archlinux.org/yay-bin.git
 cd yay-bin
