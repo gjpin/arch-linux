@@ -135,6 +135,7 @@ tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin testuser --noclear %I $TERM
+END
 
 echo "Installing common packages"
 yes | pacman -S linux-headers dkms wget
@@ -147,10 +148,9 @@ yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
 yes | pacman -S firefox keepassxc git openssh vim alacritty
-END
 EOF
 
-#umount -R /mnt
-#swapoff -a
+umount -R /mnt
+swapoff -a
 
 echo "ArchLinux is ready. You can reboot now!"

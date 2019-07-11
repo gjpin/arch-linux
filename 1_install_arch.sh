@@ -27,7 +27,7 @@ echo "Creating EFI filesystem"
 yes | mkfs.fat -F32 /dev/nvme0n1p1
 
 echo "Encrypting / partition"
-printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/nvme0n1p2
+printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 --label LVMPART luksFormat /dev/nvme0n1p2
 printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p2 cryptoVols
 
 echo "Setting up LVM"
@@ -50,7 +50,7 @@ swapon /dev/mapper/Arch-swap
 # Install ArchLinux
 ###############################
 echo "Installing Arch"
-yes '' | pacstrap /mnt base base-devel
+yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -80,15 +80,12 @@ useradd -m -G wheel -s /bin/bash $user_name
 echo -en "$user_password\n$user_password" | passwd $user_name
 
 echo "Generating initramfs"
-sed -i 's/^HOOKS.*/HOOKS=(base udev autodetect modconf block keymap encrypt lvm2 resume filesystems keyboard fsck)/' /etc/mkinitcpio.conf
-sed -i 's/^MODULES.*/MODULES=(intel_agp i915)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS.*/HOOKS=(base udev keyboard autodetect modconf block keymap encrypt lvm2 resume filesystems fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^MODULES.*/MODULES=(ext4 intel_agp i915)/' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 
-echo "Installing intel microcode"
-yes | pacman -S intel-ucode
-
 echo "Setting up systemd-boot"
-bootctl –path=/boot install
+bootctl --path=/boot install
 
 mkdir -p /boot/loader/
 touch /boot/loader/loader.conf
@@ -103,14 +100,14 @@ touch /boot/loader/entries/arch.conf
 tee -a /boot/loader/entries/arch.conf << END
 title ArchLinux
 linux /vmlinuz-linux
-initrd /initramfs-linux.img
 initrd /intel-ucode.img
-options cryptdevice=/dev/sda2:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
+initrd /initramfs-linux.img
+options cryptdevice=LABEL=LVMPART:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
 mkdir -p /etc/pacman.d/hooks/
-touch /etc/pacman.d/hooks/systemd-boot.hook
-tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
+touch /etc/pacman.d/hooks/100-systemd-boot.hook
+tee -a /etc/pacman.d/hooks/100-systemd-boot.hook << END
 [Trigger]
 Type = Package
 Operation = Upgrade
@@ -125,32 +122,32 @@ END
 echo "Enabling periodic TRIM"
 systemctl enable fstrim.timer
 
-echo "Installing common packages"
-yes | pacman -S linux-headers dkms networkmanager wget
+echo "Enabling NetworkManager"
+systemctl enable NetworkManager
 
 echo "Adding user as a sudoer"
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
-echo "Installing and configuring UFW"
-yes | sudo pacman -S ufw
-sudo systemctl enable ufw
-sudo systemctl start ufw
-sudo ufw enable
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
+echo "Enabling autologin"
+mkdir -p  /etc/systemd/system/getty@tty1.service.d/
+touch /etc/systemd/system/getty@tty1.service.d/override.conf
+tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin testuser --noclear %I $TERM
+END
 
-echo "Enabling NetworkManager"
-sudo systemctl enable NetworkManager
-sudo systemctl start NetworkManager
+echo "Installing common packages"
+yes | pacman -S linux-headers dkms wget
 
 echo "Installing common base"
-yes | sudo pacman -S xdg-user-dirs xorg-server-xwayland
+yes | pacman -S xdg-user-dirs xorg-server-xwayland
 
 echo "Installing fonts"
-yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
 
 echo "Installing common applications"
-yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
+yes | pacman -S firefox keepassxc git openssh vim alacritty
 EOF
 
 umount -R /mnt
