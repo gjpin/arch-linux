@@ -134,7 +134,7 @@ touch /etc/systemd/system/getty@tty1.service.d/override.conf
 tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
 [Service]
 ExecStart=
-ExecStart=-/usr/bin/agetty --autologin testuser --noclear %I $TERM
+ExecStart=-/usr/bin/agetty --autologin $user_name --noclear %I $TERM
 END
 
 echo "Installing common packages"
