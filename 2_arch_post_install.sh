@@ -3,6 +3,18 @@
 # Do NOT run as root
 ###############################
 
+echo "Installing common packages"
+yes | pacman -S linux-headers dkms wget
+
+echo "Installing common base"
+yes | pacman -S xdg-user-dirs xorg-server-xwayland
+
+echo "Installing fonts"
+yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+
+echo "Installing common applications"
+yes | pacman -S firefox keepassxc git openssh vim alacritty
+
 echo "Installing and configuring UFW"
 yes | sudo pacman -S ufw
 sudo systemctl enable ufw

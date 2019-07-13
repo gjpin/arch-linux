@@ -1,34 +1,30 @@
 #!/bin/bash
 
-encryption_passphrase=""
-root_password=""
-user_password=""
-hostname=""
-user_name=""
-continent_country=""
-swap_size="8"
+encryption_passphrase="test"
+root_password="test"
+user_password="test"
+hostname="archVM"
+user_name="testuser"
+continent_country="Europe/Berlin"
+swap_size="1"
 
 echo "Updating system clock"
 timedatectl set-ntp true
 
-###############################
-# Setup partitions, LVM, encryption
-###############################
-echo "Partitioning disk"
-echo "Creating partitions"
-printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/nvme0n1
-printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/nvme0n1
+echo "Creating partition tables"
+printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
+printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/sda
 
 echo "Zeroing partitions"
-cat /dev/zero > /dev/nvme0n1p1P
-cat /dev/zero > /dev/nvme0n1p2
+cat /dev/zero > /dev/sda1
+cat /dev/zero > /dev/sda2
 
-echo "Creating EFI filesystem"
-yes | mkfs.fat -F32 /dev/nvme0n1p1
+echo "Building EFI filesystem"
+yes | mkfs.fat -F32 /dev/sda1
 
-echo "Encrypting / partition"
-printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 --label LVMPART luksFormat /dev/nvme0n1p2
-printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p2 cryptoVols
+echo "Setting up cryptographic volume"
+printf "%s" "$encryption_passphrase" | cryptsetup -c aes-xts-plain64 -h sha512 -s 512 --use-random --type luks2 --label LVMPART luksFormat /dev/sda2
+printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/sda2 cryptoVols
 
 echo "Setting up LVM"
 pvcreate /dev/mapper/cryptoVols
@@ -36,20 +32,20 @@ vgcreate Arch /dev/mapper/cryptoVols
 lvcreate -L +"$swap_size"GB Arch -n swap
 lvcreate -l +100%FREE Arch -n root
 
-echo "Creating filesystems on encrypted partition"
+echo "Building filesystems for root and swap"
 yes | mkswap /dev/mapper/Arch-swap
 yes | mkfs.ext4 /dev/mapper/Arch-root
 
-echo "Mounting new system"
+echo "Mounting root/boot and enabling swap"
 mount /dev/mapper/Arch-root /mnt
 mkdir /mnt/boot
-mount /dev/nvme0n1p1 /mnt/boot
+mount /dev/sda1 /mnt/boot
 swapon /dev/mapper/Arch-swap
 
 ###############################
 # Install ArchLinux
 ###############################
-echo "Installing Arch"
+echo "Installing Arch Linux"
 yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager
 
 echo "Generating fstab"
@@ -105,6 +101,7 @@ initrd /initramfs-linux.img
 options cryptdevice=LABEL=LVMPART:cryptoVols root=/dev/mapper/Arch-root resume=/dev/mapper/Arch-swap quiet rw
 END
 
+echo "Setting up Pacman hook for automatic systemd-boot updates"
 mkdir -p /etc/pacman.d/hooks/
 touch /etc/pacman.d/hooks/100-systemd-boot.hook
 tee -a /etc/pacman.d/hooks/100-systemd-boot.hook << END
@@ -119,15 +116,6 @@ When = PostTransaction
 Exec = /usr/bin/bootctl update
 END
 
-echo "Enabling periodic TRIM"
-systemctl enable fstrim.timer
-
-echo "Enabling NetworkManager"
-systemctl enable NetworkManager
-
-echo "Adding user as a sudoer"
-echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
-
 echo "Enabling autologin"
 mkdir -p  /etc/systemd/system/getty@tty1.service.d/
 touch /etc/systemd/system/getty@tty1.service.d/override.conf
@@ -137,17 +125,14 @@ ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $user_name --noclear %I $TERM
 END
 
-echo "Installing common packages"
-yes | pacman -S linux-headers dkms wget
+echo "Enabling periodic TRIM"
+systemctl enable fstrim.timer
 
-echo "Installing common base"
-yes | pacman -S xdg-user-dirs xorg-server-xwayland
+echo "Enabling NetworkManager"
+systemctl enable NetworkManager
 
-echo "Installing fonts"
-yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
-
-echo "Installing common applications"
-yes | pacman -S firefox keepassxc git openssh vim alacritty
+echo "Adding user as a sudoer"
+echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 EOF
 
 umount -R /mnt
