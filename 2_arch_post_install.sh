@@ -1,19 +1,7 @@
 #!/bin/bash
-###############################
-# Do NOT run as root
-###############################
 
 echo "Installing common packages"
-yes | pacman -S linux-headers dkms wget
-
-echo "Installing common base"
-yes | pacman -S xdg-user-dirs xorg-server-xwayland
-
-echo "Installing fonts"
-yes | pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
-
-echo "Installing common applications"
-yes | pacman -S firefox keepassxc git openssh vim alacritty
+yes | sudo pacman -S linux-headers dkms wget xdg-user-dirs xorg-server-xwayland
 
 echo "Installing and configuring UFW"
 yes | sudo pacman -S ufw
@@ -23,6 +11,12 @@ sudo ufw enable
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
+echo "Installing fonts"
+yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack
+
+echo "Installing common applications"
+yes | sudo pacman -S firefox keepassxc git openssh vim alacritty
+
 echo "Installing yay" 
 git clone https://aur.archlinux.org/yay-bin.git
 cd yay-bin
@@ -30,14 +24,14 @@ makepkg -si
 cd ..
 rm -rf yay-bin
 
-echo "Installing an setting up theme"
+echo "Installing and setting up GTK and icon themes"
 sudo pacman -S gtk-engine-murrine gtk-engines
 yay -S qogir-gtk-theme-git
 
 git clone https://github.com/vinceliuice/Qogir-icon-theme.git
 cd Qogir-icon-theme
-sudo mkdir -p "/usr/share/icons"
-sudo ./install.sh -d "/usr/share/icons"
+mkdir -p "/usr/share/icons"
+./install.sh -d "/usr/share/icons"
 cd ..
 rm -rf Qogir-icon-theme
 
@@ -51,7 +45,7 @@ mkdir -p ~/.config/sway
 mv config ~/.config/sway/
 
 echo "Installing stuff to make sway complete"
-sudo pacman -S pulseaudio pavucontrol thunar rofi slurp grim swaylock swayidle waybar
+sudo pacman -S pulseaudio pavucontrol fish network-manager-applet thunar rofi slurp grim swaylock swayidle waybar
 wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/wallpaper/6303-mauritania.jpg
 mv 6303-mauritania.jpg ~/Pictures/
 

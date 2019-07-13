@@ -42,18 +42,12 @@ mkdir /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 swapon /dev/mapper/Arch-swap
 
-###############################
-# Install ArchLinux
-###############################
 echo "Installing Arch Linux"
 yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
 
-###############################
-# Configure base system
-###############################
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash <<EOF
 echo "Setting system clock"

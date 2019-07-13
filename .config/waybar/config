@@ -59,7 +59,7 @@
             "critical": 5
         },
         "format": "{capacity}% ",
-        "format-full": "{capacity}% ",
+        "format-full": "{capacity}% ",
         "format-discharging-100": "{capacity}% ",
         "format-discharging-90": "{capacity}% ",
         "format-discharging-80": "{capacity}% ",
@@ -88,7 +88,8 @@
         // "interface": "wlp2s0", // (Optional) To force the use of this interface
         "format-wifi": "{essid} ({signalStrength}%) ",
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        "format-disconnected": "Disconnected "
+        "format-disconnected": "Disconnected ",
+        "on-click": "nm-applet --no-agent"
     },
     "pulseaudio": {
         //"scroll-step": 1,
@@ -97,11 +98,7 @@
         "format-muted": "",
         "format-icons": {
             "headphones": "",
-            "handsfree": "陋",
             "headset": "",
-            "phone": "陋",
-            "portable": "陋",
-            "car": "",
             "speaker": "",
             "default": [""]
         },

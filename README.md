@@ -1,8 +1,7 @@
-# **Modern Arch Linux - Opinionated install and post-install bash scripts**
-*Note: this is a collection of VERY SIMPLE Arch Linux install scripts.
-It's custom made for my machine and needs. If there's any interest, I'm willing to refactor and make it more generic.*
+# Modern Arch Linux setup
+*Note: this is a collection of SIMPLE Arch Linux (post-)install scripts, custom made for my machine.*
 
-## Features
+## Features and setup
 ### Install script
 * LVM on LUKS
 * LUKS2
@@ -15,13 +14,6 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 * UFW (deny incoming, allow outgoing)
 * Applications: firefox, keepassxc, git, openssh, vim, alacritty
 
-## **Requirements**
-* UEFI mode
-* NVMe SSD
-* TRIM compatible SSD
-* Intel CPU
-
-## Setup
 ### Partitions
 | Name | Type | Mountpoint |
 | - | :-: | :-: |
@@ -32,7 +24,13 @@ It's custom made for my machine and needs. If there's any interest, I'm willing 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─Arch-swap | lvm | [SWAP] |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─Arch-root | lvm | / |
 
-## **Quickstart**
+## Requirements
+* UEFI mode
+* NVMe SSD
+* TRIM compatible SSD
+* Intel CPU
+
+## Quickstart
 1. Download and boot into the latest [Arch Linux iso](https://www.archlinux.org/download/)
 2. Connect to the internet. If using wifi, you can use wifi-menu
 3. wget [1_arch_install.sh](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/1_arch_install.sh)
