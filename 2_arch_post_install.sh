@@ -29,6 +29,7 @@ cd ..
 rm -rf nvm
 source /usr/share/nvm/init-nvm.sh
 nvm install --lts=dubnium
+git clone git@github.com:mafredri/zsh-async.git ~/.zsh-async
 
 echo "Installing and setting zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
