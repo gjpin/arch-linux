@@ -12,7 +12,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term env WAYLAND_DISPLAY=termite
+set $term env WAYLAND_DISPLAY=alacritty
 # Your preferred application launcher
 set $menu rofi -show run
 
@@ -22,10 +22,10 @@ set $menu rofi -show run
 
 output * bg ~/Pictures/6303-mauritania.jpg fill
 
-default_border pixel 5
+default_border pixel 3
 #smart_gaps on
-gaps inner 5
-gaps outer 5
+gaps inner 3
+gaps outer 3
 hide_edge_borders smart
 
 bindsym XF86MonBrightnessUp exec light -A 5

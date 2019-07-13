@@ -12,17 +12,21 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing common applications"
-yes | sudo pacman -S firefox keepassxc git openssh vim links alacritty termite
+yes | sudo pacman -S firefox keepassxc git openssh vim links alacritty
 
 echo "Installing office applications"
-yes | sudo pacman -S ristretto gimp inkscape thunderbird
+echo -en "1\nyes" | sudo pacman -S ristretto gimp inkscape thunderbird
 
 echo "Installing fonts"
 yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack ttf-fira-code
 
 echo "Installing VS Code, NVM and Node.js LTS"
 yes | sudo pacman -S code
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+git clone https://aur.archlinux.org/nvm.git
+cd nvm
+yes | makepkg -si
+cd ..
+rm -rf nvm
 source /usr/share/nvm/init-nvm.sh
 nvm install --lts=dubnium
 
@@ -73,3 +77,5 @@ wget -P ~/.config/waybar https://raw.githubusercontent.com/exah-io/minimal-arch-
 echo "Ricing Alacritty"
 mkdir -p ~/.config/alacritty
 wget -P ~/.config/alacritty https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/alacritty/alacritty.yml
+
+echo "Your setup is ready. You can reboot now!"
