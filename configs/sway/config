@@ -24,8 +24,8 @@ output * bg ~/Pictures/6303-mauritania.jpg fill
 
 default_border pixel 5
 #smart_gaps on
-gaps inner 20
-gaps outer 20
+gaps inner 5
+gaps outer 5
 hide_edge_borders smart
 
 bindsym XF86MonBrightnessUp exec light -A 5
