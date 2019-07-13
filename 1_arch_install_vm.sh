@@ -43,7 +43,7 @@ mount /dev/sda1 /mnt/boot
 swapon /dev/mapper/Arch-swap
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager termite
+yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager wget
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab

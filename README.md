@@ -54,6 +54,15 @@ mount /dev/mapper/Arch-root /mnt
 arch-chroot /mnt
 ```
 
+### How to install yay
+```
+git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
+yes | makepkg -si
+cd ..
+rm -rf yay-bin
+```
+
 ### TODO
 * Make post-install scripts idempotent
 * Hotkey to automatically switch GTK+VSCode themes (dark x light)
