@@ -12,7 +12,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing common applications"
-"1" yes | sudo pacman -S firefox keepassxc git openssh vim links alacritty
+echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty
 
 echo "Installing office applications"
 yes | sudo pacman -S ristretto gimp inkscape thunderbird
