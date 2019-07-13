@@ -12,7 +12,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing common applications"
-yes | sudo pacman -S firefox keepassxc git openssh vim alacritty termite links
+yes | sudo pacman -S firefox keepassxc git openssh vim links alacritty termite
 
 echo "Installing office stuff"
 yes | sudo pacman -S ristretto gimp inkscape thunderbird
@@ -29,7 +29,11 @@ nvm install --lts=dubnium
 echo "Installing and setting zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
-wget -P ~/ 
+wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/zsh/.zshrc
+wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/zsh/.zprofile
+mkdir -p ~/.zshrc.d
+wget -P ~/.zshrc.d https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/zsh/.zshrc.d/environ.zsh
+wget -P ~/.zshrc.d https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/zsh/.zshrc.d/wayland.zsh
 
 echo "Setting up GTK theme and installing dependencies"
 yes | sudo pacman -S gtk-engine-murrine gtk-engines
