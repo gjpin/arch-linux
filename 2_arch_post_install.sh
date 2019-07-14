@@ -29,7 +29,8 @@ cd ..
 rm -rf nvm
 source /usr/share/nvm/init-nvm.sh
 nvm install --lts=dubnium
-git clone git@github.com:mafredri/zsh-async.git ~/.zsh-async
+mkdir -p ~/.zsh-async
+wget -P ~/.zsh-async https://raw.githubusercontent.com/mafredri/zsh-async/master/async.zsh
 
 echo "Installing and setting zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
@@ -62,7 +63,7 @@ sudo mkdir -p /usr/share/fonts/TTF/
 sudo wget -P /usr/share/fonts/TTF/ https://raw.githubusercontent.com/Templarian/MaterialDesign-Webfont/master/fonts/materialdesignicons-webfont.ttf
 
 echo "Installing sway and additional packages"
-yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol fish network-manager-applet thunar rofi slurp grim
+yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim fish thunar mousepad
 mkdir -p ~/.config/sway
 wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/sway/config
 
