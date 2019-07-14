@@ -1,5 +1,5 @@
 # GTK3
-export GDK_BACKEND=wayland
+# export GDK_BACKEND=wayland
 
 # Qt5
 export QT_QPA_PLATFORM=wayland-egl
