@@ -1,5 +1,3 @@
-# Default config for sway
-#
 # Read `man 5 sway` for a complete reference.
 
 ### Variables
@@ -12,7 +10,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term env WAYLAND_DISPLAY=alacritty
+set $term alacritty
 # Your preferred application launcher
 set $menu rofi -show run
 
@@ -35,6 +33,26 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
+### Idle configuration
+#
+# Example configuration:
+#
+exec swayidle -w \
+         timeout 300 'swaylock -f -c 000000' \
+         timeout 305 'swaymsg "output * dpms off"' \
+              resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+# Lock screen
+bindsym $mod+L exec swayidle -w \
+         'swaylock -f -c 000000' \
+         timeout 5 'swaymsg "output * dpms off"' \
+              resume 'swaymsg "output * dpms on"' \
+
 #
 # Example configuration:
 #
@@ -56,13 +74,19 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
-input "1452:588:bcm5974" {
-    tap enabled
-    drag enabled
-    natural_scroll enabled
-    accel_profile adaptive
-    pointer_accel -0.1
-}
+input 1739:30383:DELL07E6:00_06CB:76AF_Touchpad {
+	natural_scroll enabled
+	tap enabled
+	#Clickfinger works even if this is enabled
+	click_method button_areas
+	#click_method clickfinger
+	accel_profile adaptive
+	dwt enabled
+	#dwt disabled
+    #drag enabled
+	drag_lock enabled
+}	
+
 
 ### Key bindings
 #
@@ -87,8 +111,8 @@ input "1452:588:bcm5974" {
     # reload the configuration file
     bindsym $mod+Shift+c reload
 
-    # exit sway (logs you out of your wayland session)
-    bindsym $mod+Shift+e exit
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
 #
 # Moving around:
 #
@@ -185,54 +209,47 @@ mode "resize" {
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 10 px or 10 ppt
-    bindsym $down resize grow height 10 px or 10 ppt
-    bindsym $up resize shrink height 10 px or 10 ppt
-    bindsym $right resize grow width 10 px or 10 ppt
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
 
-    # ditto, with arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
 
-    # return to default mode
+    # Return to default mode
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
 
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-#bar {
-#    position top
-#    colors {
-#        statusline #ffffff
-#        background #323232
-#        inactive_workspace #32323200 #32323200 #5c5c5c
-#    }
-#}
+# Load waybar
+# ----------------------------------------------------------------------------
 
 bar {
     swaybar_command waybar
 }
 
-set $screenselect env WAYLAND_DISPLAY=wayland-0 slurp
-set $screenshot env WAYLAND_DISPLAY=wayland-0 grim
+# Take screenshots
+# ----------------------------------------------------------------------------
+
+set $screenselect slurp
+set $screenshot grim
 set $screenshotout $HOME/Pictures/screenshots/$(date "+%Y-%m-%d-%H%M%S_shot.png")
 
-bindsym $mod+Shift+p exec $screenshot $screenshotout
-bindsym $mod+Shift+Mod1+p exec $screenshot -g "$($screenselect)" $screenshotout
+bindsym Print exec $screenshot $screenshotout
+bindsym $mod+Print exec $screenshot -g "$($screenselect)" $screenshotout
 
-# Load gnome theme
+# Set gnome theme and icons
+# ----------------------------------------------------------------------------
+
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
     gsettings set $gnome-schema gtk-theme 'Qogir-win-light'
     gsettings set $gnome-schema icon-theme 'Qogir'
 }
-
-exec $term
 
 include /etc/sway/config.d/*

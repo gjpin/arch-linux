@@ -15,7 +15,7 @@ echo "Installing common applications"
 echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty
 
 echo "Installing office applications"
-yes | sudo pacman -S ristretto gimp inkscape thunderbird
+yes | sudo pacman -S eog tumbler evince gimp inkscape thunderbird
 
 echo "Installing fonts"
 yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack ttf-fira-code
@@ -66,6 +66,7 @@ echo "Installing sway and additional packages"
 yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim fish thunar mousepad
 mkdir -p ~/.config/sway
 wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/sway/config
+mkdir -p ~/Pictures/screenshots
 
 echo "Setting wallpaper"
 wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/wallpaper/6303-mauritania.jpg
