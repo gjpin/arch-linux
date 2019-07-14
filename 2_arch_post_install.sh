@@ -12,7 +12,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing common applications"
-echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty
+echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty upower htop
 
 echo "Installing office applications"
 yes | sudo pacman -S eog tumbler evince gimp inkscape thunderbird
@@ -63,10 +63,13 @@ sudo mkdir -p /usr/share/fonts/TTF/
 sudo wget -P /usr/share/fonts/TTF/ https://raw.githubusercontent.com/Templarian/MaterialDesign-Webfont/master/fonts/materialdesignicons-webfont.ttf
 
 echo "Installing sway and additional packages"
-yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim fish thunar mousepad
+yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim thunar mousepad
 mkdir -p ~/.config/sway
 wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/sway/config
 mkdir -p ~/Pictures/screenshots
+
+echo "Enabling auto-mount for thunar"
+yes | sudo pacman -S gvfs thunar-volman
 
 echo "Setting wallpaper"
 wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/wallpaper/6303-mauritania.jpg

@@ -107,7 +107,6 @@
     "custom/brightness": {
         "format": "{} ",
         //"interval": 1,
-        "exec": "fish $HOME/.config/waybar/brightness.fish",
         "on-scroll-up": "light -A 2",
         "on-scroll-down": "light -U 2"
     }
