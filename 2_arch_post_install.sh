@@ -76,7 +76,6 @@ wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux
 
 echo "Ricing waybar"
 mkdir -p ~/.config/waybar
-wget -P ~/.config/waybar https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/waybar/brightness.fish
 wget -P ~/.config/waybar https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/waybar/config
 wget -P ~/.config/waybar https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/waybar/style.css
 
