@@ -12,7 +12,20 @@
 
 ### Post install script
 * UFW (deny incoming, allow outgoing)
-* Applications: firefox, keepassxc, git, openssh, vim, alacritty
+* swaywm:
+   * Alacritty terminal
+   * autostart on tty1
+   * waybar: onclick pavucontrol (volume control) and nmtui (ncli network manager)
+   * swayidle and swaylock: automatic sleep and lock
+   * rofi
+   * slurp and grim for screenshots
+   * GTK theme and icons: Qogir
+* zsh:
+   * powerlevel9k theme
+   * History
+   * async NVM
+   * Force wayland for QT applications
+* Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop
 
 ### Partitions
 | Name | Type | Mountpoint |
