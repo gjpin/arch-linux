@@ -1,5 +1,5 @@
 # Modern Arch Linux setup
-*Note: this is a collection of SIMPLE Arch Linux (post-)install scripts, custom made for my machine.*
+*Note: this is a collection of SIMPLE and OPINIONATED Arch Linux (post-)install scripts.*
 
 ## Features and setup
 ### Install script
@@ -10,22 +10,22 @@
 * SSD Periodic TRIM
 * Intel microcode
 
-### Post install script
+### Post install script*
 * UFW (deny incoming, allow outgoing)
 * swaywm:
-   * Alacritty terminal
    * autostart on tty1
    * waybar: onclick pavucontrol (volume control) and nmtui (ncli network manager)
    * swayidle and swaylock: automatic sleep and lock
-   * rofi
+   * Alacritty terminal
+   * rofi as application launcher
    * slurp and grim for screenshots
-   * GTK theme and icons: Qogir
 * zsh:
    * powerlevel9k theme
    * History
-   * async NVM
+   * async NVM load
    * Force wayland for QT applications
-   * --Force wayland for GTK applications-- on hold due to electron apps (code oss)
+   * ~~Force wayland for GTK applications~~ commented due to electron apps incompatibility (code oss)
+* GTK theme and icons: Qogir
 * Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss
 
 ### Partitions
