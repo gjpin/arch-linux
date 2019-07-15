@@ -25,7 +25,8 @@
    * History
    * async NVM
    * Force wayland for QT applications
-* Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop
+   * --Force wayland for GTK applications-- on hold due to electron apps (code oss)
+* Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss
 
 ### Partitions
 | Name | Type | Mountpoint |
