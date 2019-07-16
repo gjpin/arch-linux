@@ -120,7 +120,7 @@ ExecStart=-/usr/bin/agetty --autologin $user_name --noclear %I $TERM
 END
 
 echo "Updating mirrors list"
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
 reflector --latest 200 --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 touch /etc/pacman.d/hooks/mirrors-update.hook
