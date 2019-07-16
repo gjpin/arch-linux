@@ -5,7 +5,7 @@ root_password=""
 user_password=""
 hostname=""
 user_name=""
-continent_country=""
+continent_city=""
 swap_size="8"
 
 echo "Updating system clock"
@@ -43,7 +43,7 @@ mount /dev/nvme0n1p1 /mnt/boot
 swapon /dev/mapper/Arch-swap
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager wget
+yes '' | pacstrap /mnt base base-devel intel-ucode networkmanager wget reflector
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -51,7 +51,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash <<EOF
 echo "Setting system clock"
-ln -fs /usr/share/zoneinfo/$continent_country /etc/localtime
+ln -fs /usr/share/zoneinfo/$continent_city /etc/localtime
 hwclock --systohc --localtime
 
 echo "Setting locales"
@@ -97,8 +97,8 @@ END
 
 echo "Setting up Pacman hook for automatic systemd-boot updates"
 mkdir -p /etc/pacman.d/hooks/
-touch /etc/pacman.d/hooks/100-systemd-boot.hook
-tee -a /etc/pacman.d/hooks/100-systemd-boot.hook << END
+touch /etc/pacman.d/hooks/systemd-boot.hook
+tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
 [Trigger]
 Type = Package
 Operation = Upgrade
@@ -117,6 +117,24 @@ tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
 [Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty --autologin $user_name --noclear %I $TERM
+END
+
+echo "Updating mirrors list"
+mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
+reflector --latest 200 --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
+touch /etc/pacman.d/hooks/mirrors-update.hook
+tee -a /etc/pacman.d/hooks/mirrors-update.hook << END
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = pacman-mirrorlist
+
+[Action]
+Description = Updating pacman-mirrorlist with reflector and removing pacnew...
+When = PostTransaction
+Depends = reflector
+Exec = /bin/sh -c "reflector --latest 200 --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew"
 END
 
 echo "Enabling periodic TRIM"

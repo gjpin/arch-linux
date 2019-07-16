@@ -1,5 +1,5 @@
-# Modern Arch Linux setup
-*Note: this is a collection of SIMPLE and OPINIONATED Arch Linux (post-)install scripts.*
+# Modern Arch Linux install scripts
+SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 
 ## Features and setup
 ### Install script
@@ -9,8 +9,9 @@
 * Automatic login (with systemd)
 * SSD Periodic TRIM
 * Intel microcode
+* Automatic sort of mirrors list by speed, synced within the last 12 hours and filtered by HTTPS protocol (Reflector with Pacman hook)
 
-### Post install script*
+### Post install script
 * UFW (deny incoming, allow outgoing)
 * swaywm:
    * autostart on tty1
@@ -24,7 +25,7 @@
    * History
    * async NVM load
    * Force wayland for QT applications
-   * ~~Force wayland for GTK applications~~ commented due to electron apps incompatibility (code oss)
+   * ~~Force wayland for GTK applications~~ disabled due to electron apps incompatibility (code oss)
 * GTK theme and icons: Qogir
 * Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss
 
