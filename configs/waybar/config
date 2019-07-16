@@ -6,7 +6,7 @@
     // Choose the order of the modules
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["sway/window"],
-    "modules-right": ["custom/brightness", "pulseaudio", "network", "cpu", "memory", "battery", "clock", "tray"],
+    "modules-right": ["backlight", "pulseaudio", "network", "cpu", "memory", "battery", "clock", "tray"],
     // Modules configuration
     // "sway/workspaces": {
     //     "disable-scroll": true,
@@ -104,11 +104,10 @@
         },
         "on-click": "pavucontrol"
     },
-    "custom/brightness": {
-        "format": "{} ",
-        //"interval": 1,
-        "on-scroll-up": "light -A 2",
-        "on-scroll-down": "light -U 2"
-    }
+   "backlight": {
+        "format": "{percent}% ",
+        "on-scroll-down": "light -A 1",
+        "on-scroll-up": "light -U 1"
+}
 }
 
