@@ -15,7 +15,7 @@ echo "Installing common applications"
 echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty upower htop
 
 echo "Installing office applications"
-yes | sudo pacman -S eog tumbler evince gimp inkscape thunderbird
+yes | sudo pacman -S tumbler evince gimp inkscape thunderbird
 
 echo "Installing fonts"
 yes | sudo pacman -S ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack ttf-fira-code
