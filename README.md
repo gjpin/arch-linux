@@ -27,7 +27,7 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
    * Force wayland for QT applications
    * ~~Force wayland for GTK applications~~ disabled due to electron apps incompatibility (code oss)
 * GTK theme and icons: Qogir
-* Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss
+* Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), eog, tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss, nnn
 
 ### Partitions
 | Name | Type | Mountpoint |
