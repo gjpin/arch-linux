@@ -8,6 +8,9 @@ bindkey ";5D" backward-word
 # Customize prompt
 prompt_context() {}
 
+# Disable right prompt (due to Alacritty redrawing issues)
+POWERLEVEL9K_DISABLE_RPROMPT=true
+
 # History support
 HISTSIZE=5000               #How many lines of history to keep in memory
 HISTFILE=~/.zsh_history     #Where to save history to disk

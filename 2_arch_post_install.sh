@@ -32,6 +32,10 @@ nvm install --lts=dubnium
 mkdir -p ~/.zsh-async
 wget -P ~/.zsh-async https://raw.githubusercontent.com/mafredri/zsh-async/master/async.zsh
 
+echo "Installing VS Code theme and icons"
+code --install-extension jolaleye.horizon-theme-vscode
+code --install-extension vscode-icons-team.vscode-icons
+
 echo "Installing and setting zsh"
 yes | sudo pacman -S zsh zsh-theme-powerlevel9k
 chsh -s /bin/zsh
@@ -63,7 +67,7 @@ sudo mkdir -p /usr/share/fonts/TTF/
 sudo wget -P /usr/share/fonts/TTF/ https://raw.githubusercontent.com/Templarian/MaterialDesign-Webfont/master/fonts/materialdesignicons-webfont.ttf
 
 echo "Installing sway and additional packages"
-yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim thunar mousepad nnn
+yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim thunar mousepad nnn light
 mkdir -p ~/.config/sway
 wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/sway/config
 mkdir -p ~/Pictures/screenshots
