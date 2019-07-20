@@ -131,7 +131,7 @@ Type = Package
 Target = pacman-mirrorlist
 
 [Action]
-Description = Updating pacman-mirrorlist with reflector and removing pacnew...
+Description = Updating pacman-mirrorlist with reflector
 When = PostTransaction
 Depends = reflector
 Exec = /bin/sh -c "reflector --latest 200 --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist"

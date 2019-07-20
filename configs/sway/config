@@ -38,10 +38,10 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
+         timeout 300 'swaylock -f -c 000000 -i ~/Pictures/6303-mauritania.jpg' \
          timeout 305 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000'
+         before-sleep 'swaylock -f -c 000000 -i ~/Pictures/6303-mauritania.jpg'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 305 seconds, and turn your screens back on when
