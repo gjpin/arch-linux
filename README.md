@@ -62,16 +62,26 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 10. Run the script: ./2_arch_post_install.sh
 
 ## MISC
-### Disable VS Code online services
-* Search for @tag:usesOnlineServices in VSCode settings
+### How to disable VS Code online services
+* Search for @tag:usesOnlineServices in VSCode settings and disable online services
 
-### Enable Audio codec power management
+### How to setup Github with SSH Key
+```
+git config --global user.email "github external email"
+git config --global user.name "username"
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+copy SSH key and add to Github (eg. mousepad ~/.ssh/id_rsa.pub and copy content)
+```
+
+### How to enable Audio codec power management
 ```
 sudo powertop
 Tunables -> Enable Audio codec power management
 ```
 
-### Clear all partitions
+### How to clear all partitions
 ```
 gdisk /dev/nvme0n1
 x
