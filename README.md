@@ -1,6 +1,8 @@
 # Modern Arch Linux install scripts
 SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 
+![screenshot](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/screenshot.png)
+
 ## Features and setup
 ### Install script
 * LVM on LUKS
