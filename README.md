@@ -60,6 +60,15 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 10. Run the script: ./2_arch_post_install.sh
 
 ## MISC
+### Clear all partitions
+```
+gdisk /dev/nvme0n1
+x
+z
+w
+```
+
+
 ### How to chroot
 ```
 mkdir -p /mnt/boot
