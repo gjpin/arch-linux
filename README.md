@@ -62,6 +62,9 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 10. Run the script: ./2_arch_post_install.sh
 
 ## MISC
+### Disable VS Code online services
+* Search for @tag:usesOnlineServices in VSCode settings
+
 ### Clear all partitions
 ```
 gdisk /dev/nvme0n1
@@ -69,7 +72,6 @@ x
 z
 w
 ```
-
 
 ### How to chroot
 ```
