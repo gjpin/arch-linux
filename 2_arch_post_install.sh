@@ -12,7 +12,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing common applications"
-echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty upower htop
+echo -en "1\nyes" | sudo pacman -S firefox keepassxc git openssh vim links alacritty upower htop powertop
 
 echo "Installing office applications"
 yes | sudo pacman -S tumbler evince gimp inkscape thunderbird
@@ -86,5 +86,8 @@ wget -P ~/.config/waybar https://raw.githubusercontent.com/exah-io/minimal-arch-
 echo "Ricing Alacritty"
 mkdir -p ~/.config/alacritty
 wget -P ~/.config/alacritty https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/alacritty/alacritty.yml
+
+echo "Disabling bluetooth"
+sudo rfkill block bluetooth
 
 echo "Your setup is ready. You can reboot now!"

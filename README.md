@@ -65,6 +65,12 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 ### Disable VS Code online services
 * Search for @tag:usesOnlineServices in VSCode settings
 
+### Enable Audio codec power management
+```
+sudo powertop
+Tunables -> Enable Audio codec power management
+```
+
 ### Clear all partitions
 ```
 gdisk /dev/nvme0n1
@@ -90,10 +96,6 @@ yes | makepkg -si
 cd ..
 rm -rf yay-bin
 ```
-
-### TODO
-* Make post-install scripts idempotent
-* Hotkey to automatically switch GTK+VSCode themes (dark x light)
 
 ### References
 * Ricing: [First rice on my super old MacBook Air!](https://www.reddit.com/r/unixporn/comments/9y9w0r/sway_first_rice_on_my_super_old_macbook_air/) on Reddit
