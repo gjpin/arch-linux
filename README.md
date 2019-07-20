@@ -75,12 +75,6 @@ ssh-add ~/.ssh/id_rsa
 copy SSH key and add to Github (eg. mousepad ~/.ssh/id_rsa.pub and copy content)
 ```
 
-### How to enable Audio codec power management
-```
-sudo powertop
-Tunables -> Enable Audio codec power management
-```
-
 ### How to clear all partitions
 ```
 gdisk /dev/nvme0n1
