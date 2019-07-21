@@ -87,8 +87,13 @@ echo "Ricing Alacritty"
 mkdir -p ~/.config/alacritty
 wget -P ~/.config/alacritty https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/alacritty/alacritty.yml
 
-echo "Disabling bluetooth"
-sudo rfkill block bluetooth
+echo "Blacklisting bluetooth"
+sudo touch /etc/modprobe.d/nobt.conf
+sudo tee /etc/modprobe.d/nobt.conf << END
+blacklist btusb
+blacklist bluetooth
+END
+sudo mkinitcpio -p linux
 
 echo "Increasing the amount of inotify watchers"
 echo fs.inotify.max_user_watches=524288 | sudo tee /etc/sysctl.d/40-max-user-watches.conf && sudo sysctl --system
