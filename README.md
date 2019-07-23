@@ -15,6 +15,7 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 
 ### Post install script
 * UFW (deny incoming, allow outgoing)
+* TLP
 * swaywm:
    * autostart on tty1
    * waybar: onclick pavucontrol (volume control) and nmtui (ncli network manager)
