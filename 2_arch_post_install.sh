@@ -77,7 +77,7 @@ sudo mkdir -p /usr/share/fonts/TTF/
 sudo wget -P /usr/share/fonts/TTF/ https://raw.githubusercontent.com/Templarian/MaterialDesign-Webfont/master/fonts/materialdesignicons-webfont.ttf
 
 echo "Installing sway and additional packages"
-yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim thunar mousepad nnn light feh
+yes | sudo pacman -S sway swaylock swayidle waybar pulseaudio pavucontrol rofi slurp grim thunar mousepad nnn light feh qalculate-gtk
 mkdir -p ~/.config/sway
 wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/configs/sway/config
 mkdir -p ~/Pictures/screenshots
