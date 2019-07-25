@@ -51,18 +51,27 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 ## Quickstart
 1. Download and boot into the latest [Arch Linux iso](https://www.archlinux.org/download/)
 2. Connect to the internet. If using wifi, you can use wifi-menu
-3. wget [1_arch_install.sh](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/1_arch_install.sh)
-4. Change the variables at the top of the file
+3. Clear all existing partitions (see MISC section below)
+4. wget [1_arch_install.sh](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/1_arch_install.sh)
+5. Change the variables at the top of the file
    * continent_country must have the following format: Continent/City . e.g. Europe/Berlin
-5. Enable the closest mirror to you on /etc/pacman.d/mirrorlist (move it to the top)
-6. Make the script executable: chmod +x 1_arch_install.sh
-7. Run the script: ./1_arch_install.sh
-8. Reboot
-9. wget [2_arch_post_install.sh](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/2_arch_post_install.sh)
-9. Make the script executable: chmod +x 2_arch_post_install.sh
-10. Run the script: ./2_arch_post_install.sh
+6. Enable the closest mirror to you on /etc/pacman.d/mirrorlist (move it to the top)
+7. Make the script executable: chmod +x 1_arch_install.sh
+8. Run the script: ./1_arch_install.sh
+9. Reboot
+10. wget [2_arch_post_install.sh](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/2_arch_post_install.sh)
+11. Make the script executable: chmod +x 2_arch_post_install.sh
+12. Run the script: ./2_arch_post_install.sh
 
 ## MISC
+### How to clear all partitions
+```
+gdisk /dev/nvme0n1
+x
+z
+w
+```
+
 ### How to disable VS Code online services
 * Search for @tag:usesOnlineServices in VSCode settings and disable online services
 
@@ -74,14 +83,6 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 copy SSH key and add to Github (eg. mousepad ~/.ssh/id_rsa.pub and copy content)
-```
-
-### How to clear all partitions
-```
-gdisk /dev/nvme0n1
-x
-z
-w
 ```
 
 ### How to chroot
