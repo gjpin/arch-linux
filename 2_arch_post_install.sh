@@ -39,8 +39,6 @@ cd ..
 rm -rf nvm
 source /usr/share/nvm/init-nvm.sh
 nvm install --lts=dubnium
-mkdir -p ~/.zsh-async
-wget -P ~/.zsh-async https://raw.githubusercontent.com/mafredri/zsh-async/master/async.zsh
 
 echo "Installing VS Code theme and icons"
 code --install-extension jolaleye.horizon-theme-vscode

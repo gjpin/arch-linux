@@ -15,7 +15,7 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 
 ### Post install script
 * UFW (deny incoming, allow outgoing)
-* TLP
+* TLP (default settings)
 * swaywm:
    * autostart on tty1
    * waybar: onclick pavucontrol (volume control) and nmtui (ncli network manager)
@@ -26,8 +26,8 @@ SIMPLE and *heavily* OPINIONATED Arch Linux (post-)install scripts
 * zsh:
    * powerlevel9k theme
    * History
-   * async NVM load
-   * Force wayland for QT applications
+   * Load NVM on first invocation
+   * ~~Force wayland for QT applications~~ disabled due to incompatibility with keepassxc
    * ~~Force wayland for GTK applications~~ disabled due to electron apps incompatibility (code oss)
 * GTK theme and icons: Qogir
 * Other applications: firefox, keepassxc, git, openssh, vim, alacritty, thunar (with USB automonting), NVM (with node.js LTS), tumbler, evince, gimp, inkscape, thunderbird, upower, htop, code oss, nnn
