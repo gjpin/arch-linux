@@ -1,6 +1,12 @@
 # Modern Arch Linux install scripts
 ![screenshot](https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/screenshot.png)
 
+## Installation
+* Increase cowspace partition so that git can be downloaded without before chroot: `mount -o remount,size=2G /run/archiso/cowspace`
+* Install git: `pacman -Sy git`
+* Clone repository: `git clone https://github.com/exah-io/minimal-arch-linux.git`
+* Run install script: `bash minimal-arch-linux/1_arch_install.sh`
+
 ## Features and setup
 ### Install script
 * LVM on LUKS
