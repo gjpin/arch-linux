@@ -88,7 +88,7 @@ git config --global user.name "Github username"
 ssh-keygen -t rsa -b 4096 -C "Github email"
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
-copy SSH key and add to Github (eg. nvim ~/.ssh/id_rsa.pub and copy content into github.com)
+copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
 ```
 
 ### How to chroot
