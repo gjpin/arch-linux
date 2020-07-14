@@ -18,7 +18,7 @@
 - UEFI mode
 - NVMe SSD
 - TRIM compatible SSD
-- Intel CPU (recommended: Skylake or newer due to fastboot)
+- Intel CPU (Skylake or newer)
 
 ### Partitions
 
