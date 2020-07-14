@@ -120,6 +120,12 @@ sudo tee -a /etc/sysctl.d/dirty.conf << EOF
 vm.dirty_writeback_centisecs = 1500
 EOF
 
+echo "Improving Java applications font rendering"
+sudo tee -a /etc/environment << EOF
+_JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
+JAVA_FONTS=/usr/share/fonts/TTF
+EOF
+
 echo "Enabling bluetooh"
 sudo systemctl start bluetooth
 sudo systemctl enable bluetooth
