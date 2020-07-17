@@ -64,7 +64,7 @@ echo "Creating user's folders"
 sudo pacman -S --noconfirm xdg-user-dirs
 
 echo "Installing fonts"
-sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome noto-fonts-emoji
+sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome noto-fonts-emoji ttf-hanazono
 
 echo "Downloading wallpapers and Arch Linux icon"
 mkdir -p ~/Pictures/wallpapers
