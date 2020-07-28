@@ -78,7 +78,7 @@ tee -a ~/.bashrc << EOF
 export PS1="\w \\$  "
 PROMPT_COMMAND='PROMPT_COMMAND='\''PS1="\n\w \\$  "'\'
 
-alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update"
+alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 EOF
 
 echo "Installing yay"
