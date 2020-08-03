@@ -53,6 +53,7 @@ EOF
 
 echo "Installing chromium with GPU acceleration"
 sudo pacman -S --noconfirm chromium
+mkdir -p ~/.config/
 touch ~/.config/chromium-flags.conf
 tee -a ~/.config/chromium-flags.conf << EOF
 --ignore-gpu-blacklist
