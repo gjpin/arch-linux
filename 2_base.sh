@@ -128,8 +128,8 @@ JAVA_FONTS=/usr/share/fonts/TTF
 EOF
 
 echo "Enabling bluetooh"
-sudo systemctl start bluetooth
-sudo systemctl enable bluetooth
+sudo systemctl start bluetooth.service
+sudo systemctl enable bluetooth.service
 
 echo "Disabling root (still allows sudo)"
 passwd --lock root
