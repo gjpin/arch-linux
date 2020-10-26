@@ -85,16 +85,22 @@ y
 y
 ```
 
-### How to setup Github with SSH Key
-
-```
-git config --global user.email "Github external email"
-git config --global user.name "Github username"
-ssh-keygen -t rsa -b 4096 -C "Github email"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
-copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
-```
+### How to enable secure boot
+1. Download [sbctl-git](https://aur.archlinux.org/packages/sbctl-git/)
+2. Confirm secure boot is disabled and delete existing keys in the bios (should automatically go into setup mode)
+3. Confirm status (setup mode): `sudo sbctl status`
+4. Create new keys: `sudo sbctl create-keys`
+5. Enroll new keys: `sudo sbctl enroll-keys`
+6. Confirm status (setup mode should now be disabled): `sudo sbctl status`
+7. Confirm what needs to be signed: `sbctl verify`
+8. Sign with new keys:
+  - `sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI`
+  - `sudo sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi`
+  - `sudo sbctl sign -s /boot/vmlinuz-linux`
+  - `sudo sbctl sign -s /boot/vmlinuz-linux-lts`
+  - `sudo sbctl sign -s /usr/lib/fwupd/efi/fwupdx64.efi -o /usr/lib/fwupd/efi/fwupdx64.efi.signed`
+9. Reboot and enable secure boot in the bios
+10. Confirm status (secure boot enabled): `sudo sbctl status`
 
 ### How to chroot
 
@@ -104,4 +110,15 @@ mount /dev/nvme0n1p1 /mnt/boot
 cryptsetup luksOpen /dev/nvme0n1p2 cryptlvm
 mount /dev/vg0/root /mnt
 arch-chroot /mnt
+```
+
+### How to setup Github with SSH Key
+
+```
+git config --global user.email "Github external email"
+git config --global user.name "Github username"
+ssh-keygen -t rsa -b 4096 -C "Github email"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
 ```
