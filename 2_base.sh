@@ -153,6 +153,14 @@ sudo systemctl enable bluetooth.service
 echo "Disabling root (still allows sudo)"
 passwd --lock root
 
+echo "Adding NTFS support"
+sudo pacman -S --noconfirm ntfs-3g
+
+# echo "Install syncthing with autostart on boot"
+# sudo pacman -S --noconfirm syncthing
+# sudo systemctl enable syncthing@USERNAME-CHANGE-ME.service
+# sudo systemctl start syncthing@USERNAME-CHANGE-ME.service
+
 # echo "Installing Node.js LTS"
 # sudo pacman -S --noconfirm nodejs-lts-erbium
 
