@@ -20,6 +20,9 @@
 - TRIM compatible SSD
 - CPU: Intel (Skylake or newer) / AMD
 - GPU: AMDGPU - only if CPU vendor is AMD (for now base script checks for CPU vendor. If it's AMD, then it'll also install required drivers for AMD GPU)
+- Tested under:
+  - Dell XPS 7390
+  - Custom desktop build (AMD CPU and GPU) 
 
 ### Partitions
 
