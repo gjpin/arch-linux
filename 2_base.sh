@@ -160,6 +160,7 @@ sudo pacman -S --noconfirm ntfs-3g
 # sudo pacman -S --noconfirm syncthing
 # sudo systemctl enable syncthing@USERNAME-CHANGE-ME.service
 # sudo systemctl start syncthing@USERNAME-CHANGE-ME.service
+# sudo ufw allow syncthing
 
 # echo "Installing Node.js LTS"
 # sudo pacman -S --noconfirm nodejs-lts-erbium
