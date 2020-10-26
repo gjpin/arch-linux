@@ -7,7 +7,7 @@
 - systemd-boot (with Pacman hook for automatic updates)
 - systemd init hooks (instead of busybox)
 - SSD Periodic TRIM
-- Intel microcode
+- Intel/AMD microcode
 - Standard Kernel + LTS kernel as fallback
 - Hibernate support
 - Kernel: LZ4 compression
@@ -18,8 +18,8 @@
 - UEFI mode
 - NVMe SSD
 - TRIM compatible SSD
-- CPU: CPU (Skylake or newer) / AMD
-- GPU: AMDGPU (only if CPU vendor is AMD)
+- CPU: Intel (Skylake or newer) / AMD
+- GPU: AMDGPU - only if CPU vendor is AMD (for now base script checks for CPU vendor. If it's AMD, then it'll also install required drivers for AMD GPU)
 
 ### Partitions
 
@@ -33,7 +33,7 @@
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─vg0-root |  lvm  |     /      |
 
 ## Post install script
-- Gnome / KDE / Sway (separate scripts)
+- KDE / Gnome / Sway (separate scripts)
 - UFW (deny incoming, allow outgoing)
 - Automatic login
 - Fonts
