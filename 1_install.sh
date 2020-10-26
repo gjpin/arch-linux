@@ -50,7 +50,7 @@ yes | mkswap /dev/vg0/swap
 swapon /dev/vg0/swap
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware lvm2 device-mapper e2fsprogs intel-ucode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak
+yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-hardened linux-hardened-headers linux-firmware lvm2 device-mapper e2fsprogs intel-ucode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -86,6 +86,7 @@ sed -i 's/^MODULES.*/MODULES=(ext4 intel_agp i915)/' /etc/mkinitcpio.conf
 sed -i 's/#COMPRESSION="lz4"/COMPRESSION="lz4"/g' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
+mkinitcpio -p linux-hardened
 
 echo "Setting up systemd-boot"
 bootctl --path=/boot install
@@ -108,12 +109,21 @@ initrd /initramfs-linux.img
 options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard i915.fastboot=1 i915.enable_fbc=1 i915.enable_guc=2 nmi_watchdog=0 quiet rw
 END
 
-touch /boot/loader/entries/archlts.conf
-tee -a /boot/loader/entries/archlts.conf << END
+touch /boot/loader/entries/arch-lts.conf
+tee -a /boot/loader/entries/arch-lts.conf << END
 title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts.img
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard i915.fastboot=1 i915.enable_fbc=1 i915.enable_guc=2 nmi_watchdog=0 quiet rw
+END
+
+touch /boot/loader/entries/arch-hardened.conf
+tee -a /boot/loader/entries/arch-hardened.conf << END
+title Arch Linux Hardened
+linux /vmlinuz-linux-hardened
+initrd /intel-ucode.img
+initrd /initramfs-linux-hardened.img
 options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard i915.fastboot=1 i915.enable_fbc=1 i915.enable_guc=2 nmi_watchdog=0 quiet rw
 END
 
