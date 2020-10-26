@@ -66,7 +66,7 @@ yes | mkswap /dev/vg0/swap
 swapon /dev/vg0/swap
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware lvm2 device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak
+yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware lvm2 device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
