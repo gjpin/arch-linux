@@ -18,7 +18,8 @@
 - UEFI mode
 - NVMe SSD
 - TRIM compatible SSD
-- Intel CPU (Skylake or newer)
+- CPU: CPU (Skylake or newer) / AMD
+- GPU: AMDGPU (only if CPU vendor is AMD)
 
 ### Partitions
 
@@ -41,7 +42,7 @@
 - yay (AUR helper)
 - Plymouth
 - Flatpak support (Firefox installed as Flatpak)
-- Lutris with Wine support (commented)
+- Lutris with Wine support
 - Sway only:
    - Base16 theme: alacritty, rofi, vim
    - Flatpak: automatic updates via systemd timer

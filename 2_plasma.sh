@@ -31,7 +31,10 @@ echo "Disabling baloo (file indexer)"
 balooctl suspend
 balooctl disable
 
-# echo "Installing KDE Connect and opening required firewall ports"
+echo "Improving KDE/GTK integration"
+sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-kde breeze-gtk kde-gtk-config
+
+echo "Installing KDE Connect and opening required firewall ports"
 sudo pacman -S --noconfirm kdeconnect sshfs
 sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto tcp
 sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto udp

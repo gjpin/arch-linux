@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Intall different packages according to GPU vendor (Intel, AMDGPU) 
+cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
+gpu_drivers=""
+libva_driver=""
+if [[ $cpu_vendor =~ "AuthenticAMD" ]]
+then
+ gpu_drivers="xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
+ libva_driver="LIBVA_DRIVER_NAME=radeonsi"
+elif [[ $cpu_vendor =~ "GenuineIntel" ]]
+then
+ gpu_drivers="vulkan-intel lib32-vulkan-intel intel-media-driver"
+ libva_driver="LIBVA_DRIVER_NAME=iHD"
+fi
+
 echo "Adding multilib support"
 sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
@@ -14,15 +28,15 @@ sudo ufw enable
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
-echo "Installing additional Intel drivers"
-sudo pacman -S --noconfirm mesa lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
+echo "Installing GPU drivers"
+sudo pacman -S --noconfirm mesa lib32-mesa $gpu_drivers
 
 echo "Improving hardware video accelaration"
-sudo pacman -S --noconfirm intel-media-driver ffmpeg libva-utils
+sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver 
 
 # Reference: https://github.com/lutris/docs/blob/master/WineDependencies.md
-# echo "Installing Lutris (with Wine support)
-# sudo pacman -S --noconfirm lutris wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs
+echo "Installing Lutris (with Wine support)"
+sudo pacman -S --noconfirm lutris wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader
 
 echo "Installing common applications"
 sudo pacman -S --noconfirm vim keepassxc git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
@@ -76,6 +90,8 @@ wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal
 echo "Ricing bash"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
+$libva_driver
+
 export PS1="\w \\$  "
 PROMPT_COMMAND='PROMPT_COMMAND='\''PS1="\n\w \\$  "'\'
 
@@ -127,7 +143,7 @@ _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 JAVA_FONTS=/usr/share/fonts/TTF
 EOF
 
-echo "Enabling bluetooh"
+echo "Enabling bluetooth"
 sudo systemctl start bluetooth.service
 sudo systemctl enable bluetooth.service
 
