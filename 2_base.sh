@@ -3,15 +3,17 @@
 # Intall different packages according to GPU vendor (Intel, AMDGPU) 
 cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
 gpu_drivers=""
-libva_driver=""
+libva_environment_variable=""
+vdpau_environment_variable=""
 if [[ $cpu_vendor =~ "AuthenticAMD" ]]
 then
  gpu_drivers="xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
- libva_driver="LIBVA_DRIVER_NAME=radeonsi"
+ libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
- gpu_drivers="vulkan-intel lib32-vulkan-intel intel-media-driver"
- libva_driver="LIBVA_DRIVER_NAME=iHD"
+ gpu_drivers="vulkan-intel lib32-vulkan-intel intel-media-driver libvdpau-va-gl"
+ libva_environment_variable="export LIBVA_DRIVER_NAME=iHD"
+ vdpau_environment_variable="export VDPAU_DRIVER=va_gl"
 fi
 
 echo "Adding multilib support"
@@ -32,7 +34,7 @@ echo "Installing GPU drivers"
 sudo pacman -S --noconfirm mesa lib32-mesa $gpu_drivers
 
 echo "Improving hardware video accelaration"
-sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver 
+sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
 
 # Reference: https://github.com/lutris/docs/blob/master/WineDependencies.md
 echo "Installing Lutris (with Wine support)"
@@ -90,7 +92,8 @@ wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal
 echo "Ricing bash"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
-$libva_driver
+$libva_environment_variable
+$vdpau_environment_variable
 
 export PS1="\w \\$  "
 PROMPT_COMMAND='PROMPT_COMMAND='\''PS1="\n\w \\$  "'\'
@@ -109,7 +112,7 @@ echo "Installing and configuring Plymouth"
 yay -S --noconfirm plymouth-git
 sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
-sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/archlts.conf
+sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
 sudo mkinitcpio -p linux
 sudo mkinitcpio -p linux-lts
 sudo plymouth-set-default-theme -R bgrt
