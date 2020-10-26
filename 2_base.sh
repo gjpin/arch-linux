@@ -147,8 +147,8 @@ JAVA_FONTS=/usr/share/fonts/TTF
 EOF
 
 echo "Enabling bluetooth"
-sudo systemctl start bluetooth.service
 sudo systemctl enable bluetooth.service
+sudo systemctl start bluetooth.service
 
 echo "Disabling root (still allows sudo)"
 passwd --lock root
