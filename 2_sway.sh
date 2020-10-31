@@ -130,3 +130,7 @@ EOF
 
 systemctl --user enable flatpak-update.timer
 systemctl --user start flatpak-update.timer
+
+echo "Installing pango library"
+sudo pacman -S --noconfirm pango
+sudo fc-cache
