@@ -1,7 +1,6 @@
 ### VARIABLES
 # Font
-set $font Fira Code Regular 10
-
+set $font pango:Source Code Pro 11
 # Background image
 set $background tony-liao-8RQi94ZHovg-unsplash.jpg
 
