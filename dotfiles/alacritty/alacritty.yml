@@ -41,7 +41,7 @@ font:
 draw_bold_text_with_bright_colors: true
 
 schemes:
-  one_light: &light
+  one_light: &one_light
     primary:
       background: '0xfafafa'
       foreground: '0x383a42'
@@ -78,7 +78,7 @@ schemes:
       - { index: 20, color: '0x696c77' }
       - { index: 21, color: '0x202227' }
 
-  one_dark: &dark
+  one_dark: &one_dark
     primary:
       background: '0x282c34'
       foreground: '0xabb2bf'
@@ -115,6 +115,60 @@ schemes:
       - { index: 20, color: '0x565c64' }
       - { index: 21, color: '0xb6bdca' }
 
-colors: *light
+  gruvbox_dark: &gruvbox_dark
+    primary:
+      # hard contrast: background = '#1d2021'
+      background: '#282828'
+      # soft contrast: background = '#32302f'
+      foreground: '#ebdbb2'
+
+    normal:
+      black:   '#282828'
+      red:     '#cc241d'
+      green:   '#98971a'
+      yellow:  '#d79921'
+      blue:    '#458588'
+      magenta: '#b16286'
+      cyan:    '#689d6a'
+      white:   '#a89984'
+
+    bright:
+      black:   '#928374'
+      red:     '#fb4934'
+      green:   '#b8bb26'
+      yellow:  '#fabd2f'
+      blue:    '#83a598'
+      magenta: '#d3869b'
+      cyan:    '#8ec07c'
+      white:   '#ebdbb2'
+      
+  gruvbox_light: &gruvbox_light
+    primary:
+      # hard contrast: background = '#f9f5d7'
+      background: '#fbf1c7'
+      # soft contrast: background = '#f2e5bc'
+      foreground: '#3c3836'
+
+    normal:
+      black:   '#fbf1c7'
+      red:     '#cc241d'
+      green:   '#98971a'
+      yellow:  '#d79921'
+      blue:    '#458588'
+      magenta: '#b16286'
+      cyan:    '#689d6a'
+      white:   '#7c6f64'
+
+    bright:
+      black:   '#928374'
+      red:     '#9d0006'
+      green:   '#79740e'
+      yellow:  '#b57614'
+      blue:    '#076678'
+      magenta: '#8f3f71'
+      cyan:    '#427b58'
+      white:   '#3c3836'
+
+colors: *one_dark
 
 background_opacity: 0.97
