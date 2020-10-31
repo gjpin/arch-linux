@@ -1,11 +1,12 @@
 ### VARIABLES
-# Font
-set $font pango:Source Code Pro 11
 # Background image
 set $background tony-liao-8RQi94ZHovg-unsplash.jpg
 
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
+
+# Font
+font pango:SourceCodePro Medium 11
 
 # Home row direction keys, like vim
 set $left h
@@ -19,9 +20,6 @@ set $menu rofi -show drun
 
 # Background
 output * bg ~/Pictures/wallpapers/$background fill
-
-# Font
-font pango:$font
 
 # Gaps
 default_border pixel 1
