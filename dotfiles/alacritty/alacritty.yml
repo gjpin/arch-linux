@@ -17,16 +17,8 @@ scrolling:
 
 font:
   normal:
-    family: Fira Code
-
-  bold:
-    family: Fira Code
-
-  italic:
-    family: Fira Code
-
-  bold_italic:
-    family: Fira Code
+    family: Source Code Pro
+    style: Medium
 
   size: 11.0
 
