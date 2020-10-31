@@ -1,6 +1,6 @@
 configuration {
  modi: "window,drun,ssh,combi";
  theme: "base16-one-light";
- font: "Fira Code 11";
+ font: "Source Code Pro 11";
  combi-modi: "window,drun,ssh";
  }
