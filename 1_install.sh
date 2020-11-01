@@ -4,7 +4,7 @@ encryption_passphrase=""
 root_password=""
 user_password=""
 hostname=""
-user_name=""
+username=""
 continent_city=""
 swap_size="16"
 
@@ -92,9 +92,9 @@ echo "Setting root password"
 echo -en "$root_password\n$root_password" | passwd
 
 echo "Creating new user"
-useradd -m -G wheel -s /bin/bash $user_name
-usermod -a -G video $user_name
-echo -en "$user_password\n$user_password" | passwd $user_name
+useradd -m -G wheel -s /bin/bash $username
+usermod -a -G video $username
+echo -en "$user_password\n$user_password" | passwd $username
 
 echo "Generating initramfs"
 sed -i 's/^HOOKS.*/HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block sd-encrypt sd-lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
