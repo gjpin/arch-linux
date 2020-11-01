@@ -19,6 +19,7 @@ wget -P ~/.config/waybar/ https://raw.githubusercontent.com/exah-io/minimal-arch
 
 echo "Ricing rofi"
 mkdir -p ~/.config/rofi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/config.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/base16-one-light.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/base16-onedark.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
