@@ -20,7 +20,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - NVMe SSD
 - TRIM compatible SSD
 - CPU: Intel (Skylake or newer) / AMD
-- GPU: Intel / AMDGPU - only if CPU vendor is AMD (this combination is hard-coded. For now, base script checks for CPU vendor and if it's AMD, then it'll also install required drivers for AMD GPU)
+- GPU: AMDGPU - only if CPU vendor is AMD (this combination is hard-coded. For now, base script checks for CPU vendor and if it's AMD, then it'll also install required drivers for AMD GPU)
 
 ### Partitions
 
