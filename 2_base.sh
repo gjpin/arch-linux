@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Intall different packages according to GPU vendor (Intel, AMDGPU) 
+# Detect username
+username=$(whoami)
+
+# Install different packages according to GPU vendor (Intel, AMDGPU) 
 cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
 gpu_drivers=""
 libva_environment_variable=""
@@ -157,10 +160,10 @@ echo "Adding NTFS support"
 sudo pacman -S --noconfirm ntfs-3g
 
 # echo "Install syncthing with autostart on boot"
-# sudo pacman -S --noconfirm syncthing
-# sudo systemctl enable syncthing@USERNAME-CHANGE-ME.service
-# sudo systemctl start syncthing@USERNAME-CHANGE-ME.service
-# sudo ufw allow syncthing
+sudo pacman -S --noconfirm syncthing
+sudo systemctl enable syncthing@$username.service
+sudo systemctl start syncthing@$username.service
+sudo ufw allow syncthing
 
 # echo "Installing Node.js LTS"
 # sudo pacman -S --noconfirm nodejs-lts-erbium
