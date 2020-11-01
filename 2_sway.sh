@@ -21,6 +21,13 @@ echo "Ricing rofi"
 mkdir -p ~/.config/rofi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/base16-one-light.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/base16-onedark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-dark-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-dark-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-dark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-light-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-light-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/gruvbox-light.rasi
 
 echo "Enabling sway autostart"
 touch ~/.bash_profile
@@ -37,6 +44,7 @@ wget -P ~/.vim https://raw.githubusercontent.com/exah-io/minimal-arch-linux/mast
 mkdir -p ~/.vim/colors
 wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/vim/base16-one-light.vim
 wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/vim/base16-onedark.vim
+wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/vim/gruvbox.vim
 
 echo "Installing and ricing Alacritty terminal"
 sudo pacman -S --noconfirm alacritty
