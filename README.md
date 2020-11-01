@@ -54,7 +54,7 @@
 ## Installation guide
 
 1. Download and boot into the latest [Arch Linux iso](https://www.archlinux.org/download/)
-2. Connect to the internet. If using wifi, you can use `wictl` to connect to a network:
+2. Connect to the internet. If using wifi, you can use `iwctl` to connect to a network:
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
