@@ -58,7 +58,7 @@
 3. Clear all existing partitions (see below: MISC - How to clear all partitions)
 4. Give highest priority to the closest mirror to you on /etc/pacman.d/mirrorlist by moving it to the top
 5. Sync repos: `pacman -Sy` and install wget `pacman -S wget`
-6. `wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/1_install.sh`
+6. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/1_install.sh`
 7. Change the variables at the top of the file (lines 3 through 9)
    - continent_country must have the following format: Zone/SubZone . e.g. Europe/Berlin
    - run `timedatectl list-timezones` to see full list of zones and subzones
@@ -66,7 +66,7 @@
 9. Run the script: `./1_install.sh`
 10. Reboot into Arch Linux
 11. Connect to wifi with `nmtui`
-12. `wget https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
+12. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
 13. Make the script executable: `chmod +x 2_gnome.sh` or `chmod +x 2_plasma.sh` or `chmod +x 2_sway.sh`
 14. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
 
