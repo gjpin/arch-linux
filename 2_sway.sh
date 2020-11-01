@@ -6,7 +6,7 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Installing sway and additional packages"
-sudo pacman -S --noconfirm sway swaylock swayidle waybar rofi light pulseaudio pavucontrol slurp grim ristretto
+sudo pacman -S --noconfirm sway swaylock swayidle waybar rofi light pulseaudio pavucontrol slurp grim ristretto mousepad
 
 echo "Ricing sway"
 mkdir -p ~/.config/sway
