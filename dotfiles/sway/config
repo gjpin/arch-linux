@@ -62,8 +62,7 @@ input 1739:30383:CUST0001:00_06CB:76AF_Touchpad {
 	click_method button_areas
 	#click_method clickfinger
 	accel_profile adaptive
-	dwt enabled
-	#dwt disabled
+	dwt disabled
     #drag enabled
 	drag_lock enabled
 }	
