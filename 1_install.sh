@@ -110,7 +110,7 @@ mkdir -p /boot/loader/
 echo ' ' > /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
 default arch.conf
-timeout 0
+timeout 2
 editor 0
 END
 
