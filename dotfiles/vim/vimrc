@@ -1,4 +1,5 @@
 set nocompatible
+set termguicolors
 
 " set colorscheme
 colorscheme base16-one-light
