@@ -73,7 +73,7 @@ tar -xzf ~/.icons/kali-icons.tar.gz -C ~/.icons
 rm -f ~/.icons/kali-icons.tar.gz
 
 echo "Setting GTK theme, font and icons"
-FONT="Source Code Pro 10"
+FONT="Cantarell Regular 10"
 GTK_THEME="Kali-Light"
 GTK_ICON_THEME="Flat-Remix-Blue-Dark"
 GTK_SCHEMA="org.gnome.desktop.interface"
