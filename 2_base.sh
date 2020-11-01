@@ -91,6 +91,7 @@ mkdir -p ~/Pictures/wallpapers
 wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/arch.png
 wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/tony-liao-8RQi94ZHovg-unsplash.jpg
 wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/dan-aragon-n20DUSVsUk8-unsplash.jpg
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/robinwall02-notext.png
 
 echo "Ricing bash"
 touch ~/.bashrc
