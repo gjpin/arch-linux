@@ -43,7 +43,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - yay (AUR helper)
 - Plymouth
 - Flatpak support (Firefox installed as Flatpak)
-- Lutris with Wine support
+- Lutris with Wine support (commented)
 - Syncthing
 
 ## Installation guide
@@ -116,4 +116,16 @@ ssh-keygen -t rsa -b 4096 -C "Github email"
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
+```
+
+### How to install Lutris and Steam (Flatpak)
+
+```
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+flatpak update --appstream
+
+flatpak install flathub-beta net.lutris.Lutris//beta
+flatpak install flathub org.gnome.Platform.Compat.i386
+flatpak install flathub com.valvesoftware.Steam
 ```
