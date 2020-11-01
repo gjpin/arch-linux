@@ -130,3 +130,6 @@ EOF
 
 systemctl --user enable flatpak-update.timer
 systemctl --user start flatpak-update.timer
+
+echo "Installing wdisplays"
+yay -S --noconfirm wdisplays-git
