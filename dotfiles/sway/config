@@ -1,6 +1,6 @@
 ### VARIABLES
 # Background image
-set $background tony-liao-8RQi94ZHovg-unsplash.jpg
+set $background robinwall02-notext.png
 
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
