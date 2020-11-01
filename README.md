@@ -1,4 +1,5 @@
 # Arch Linux install scripts
+Note: These scripts are not meant to be another full fledged Arch installer. They are made to fit my devices: Dell XPS 7390 and custom desktop build (Ryzen 3700X and RX 5700XT).
 
 ## Install script
 
@@ -20,9 +21,6 @@
 - TRIM compatible SSD
 - CPU: Intel (Skylake or newer) / AMD
 - GPU: AMDGPU - only if CPU vendor is AMD (for now base script checks for CPU vendor. If it's AMD, then it'll also install required drivers for AMD GPU)
-- Tested under:
-  - Dell XPS 7390
-  - Custom desktop build (Ryzen 3700X and RX 5700XT) 
 
 ### Partitions
 
