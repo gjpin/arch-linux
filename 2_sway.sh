@@ -6,7 +6,7 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Installing sway and additional packages"
-sudo pacman -S --noconfirm sway swaylock swayidle waybar rofi light pulseaudio pavucontrol slurp grim ristretto mousepad
+sudo pacman -S --noconfirm sway swaylock swayidle waybar rofi light pulseaudio pavucontrol slurp grim ristretto tumbler mousepad
 
 echo "Ricing sway"
 mkdir -p ~/.config/sway
@@ -142,3 +142,9 @@ flatpak override --user --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.Thunderbird
 
 echo "Installing wdisplays"
 yay -S --noconfirm wdisplays-git
+
+echo "Setting some default applications"
+xdg-mime default ristretto.desktop image/jpeg
+xdg-mime default ristretto.desktop image/jpg
+xdg-mime default ristretto.desktop image/png
+xdg-settings set default-web-browser firefox.desktop
