@@ -47,9 +47,6 @@
 - Flatpak support (Firefox installed as Flatpak)
 - Lutris with Wine support
 - Syncthing
-- Sway only:
-   - Base16 theme: alacritty, rofi, vim
-   - Flatpak: automatic updates via systemd timer
 
 ## Installation guide
 
