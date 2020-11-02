@@ -148,3 +148,6 @@ xdg-mime default ristretto.desktop image/jpeg
 xdg-mime default ristretto.desktop image/jpg
 xdg-mime default ristretto.desktop image/png
 xdg-settings set default-web-browser firefox.desktop
+
+echo "Creating screenshots folder"
+mkdir -p ~/Pictures/screenshots
