@@ -148,7 +148,3 @@ xdg-mime default ristretto.desktop image/jpeg
 xdg-mime default ristretto.desktop image/jpg
 xdg-mime default ristretto.desktop image/png
 xdg-settings set default-web-browser firefox.desktop
-
-echo "Configuring Firefox Flatpak to run under wayland and other optimizations"
-sudo pacman -S --noconfirm gnome-settings-daemon
-sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
