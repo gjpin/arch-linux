@@ -166,11 +166,14 @@ passwd --lock root
 echo "Adding NTFS support"
 sudo pacman -S --noconfirm ntfs-3g
 
-# echo "Install syncthing with autostart on boot"
+echo "Install syncthing with autostart on boot"
 sudo pacman -S --noconfirm syncthing
 sudo systemctl enable syncthing@$username.service
 sudo systemctl start syncthing@$username.service
 sudo ufw allow syncthing
+
+echo "Installing pipewire"
+sudo pacman -S --noconfirm pipewire libpipewire02
 
 # echo "Installing Node.js LTS"
 # sudo pacman -S --noconfirm nodejs-lts-erbium
