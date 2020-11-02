@@ -87,7 +87,7 @@ y
 4. Create new keys: `sudo sbctl create-keys`
 5. Enroll new keys: `sudo sbctl enroll-keys`
 6. Confirm status (setup mode should now be disabled): `sudo sbctl status`
-7. Confirm what needs to be signed: `sbctl verify`
+7. Confirm what needs to be signed: `sudo sbctl verify`
 8. Sign with new keys:
   - `sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI`
   - `sudo sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi`
