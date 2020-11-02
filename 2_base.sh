@@ -56,7 +56,8 @@ flatpak --assumeyes install org.gtk.Gtk3theme.Breeze-Dark
 echo "Installing Firefox Flatpak"
 flatpak --assumeyes install flathub org.mozilla.firefox
 
-echo "Improving font rendering issues with Firefox Flatpak"	
+echo "Improving font rendering issues with Firefox Flatpak"
+sudo pacman -S --noconfirm gnome-settings-daemon
 mkdir -p ~/.var/app/org.mozilla.firefox/config/fontconfig	
 touch ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf	
 tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF	
@@ -71,7 +72,6 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
 EOF
 
 echo "Configuring Firefox Flatpak to run under wayland and other optimizations"
-sudo pacman -S --noconfirm gnome-settings-daemon
 sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
 echo "Installing chromium with GPU acceleration"
