@@ -82,6 +82,7 @@ tee -a ~/.config/chromium-flags.conf << EOF
 --ignore-gpu-blacklist
 --enable-gpu-rasterization
 --enable-zero-copy
+--enable-accelerated-video-decode
 EOF
 
 echo "Creating user's folders"
