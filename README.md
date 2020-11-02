@@ -84,7 +84,7 @@ y
 ```
 
 ### Firefox required configs for VA-API support
-At about:config set gfx.webrender.enabled and widget.wayland-dmabuf-vaapi.enabled to true and restart browser
+At about:config set ```gfx.webrender.enabled``` and ```widget.wayland-dmabuf-vaapi.enabled``` to true and restart browser
 
 ### How to enable secure boot
 1. Download [sbctl-git](https://aur.archlinux.org/packages/sbctl-git/)
