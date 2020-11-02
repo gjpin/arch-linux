@@ -9,7 +9,7 @@ echo "Installing Xorg"
 sudo pacman -S --noconfirm xorg
 
 echo "Installing Plasma and common applications"
-sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kaccounts-integration kaccounts-providers kate kgpg kmail konsole kwalletmanager okular spectacle plasma-browser-integration kcalc filelight partitionmanager
+sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kaccounts-integration kaccounts-providers kate kgpg kmail konsole kwalletmanager okular spectacle plasma-browser-integration kcalc filelight partitionmanager gst-libav gst-plugins-good
 
 echo "Adding Thunderbolt frontend"
 sudo pacman -S --noconfirm plasma-thunderbolt
@@ -33,6 +33,7 @@ balooctl disable
 
 echo "Improving KDE/GTK integration"
 sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-kde breeze-gtk kde-gtk-config
+sudo flatpak override --socket=wayland --env="MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox
 
 echo "Installing KDE Connect and opening required firewall ports"
 sudo pacman -S --noconfirm kdeconnect sshfs
