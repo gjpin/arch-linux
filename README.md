@@ -84,7 +84,9 @@ y
 ```
 
 ### Firefox required configs for VA-API support
-At about:config set ```gfx.webrender.enabled``` and ```widget.wayland-dmabuf-vaapi.enabled``` to true and restart browser
+- At about:config set ```gfx.webrender.enabled``` and ```widget.wayland-dmabuf-vaapi.enabled``` to true and restart browser
+  - Read original blog post [here](https://mastransky.wordpress.com/2020/06/03/firefox-on-fedora-finally-gets-va-api-on-wayland/)
+  - Note: base script already sets the required environment variables. Only changing these 2 configs suffices
 
 ### How to enable secure boot
 1. Download [sbctl-git](https://aur.archlinux.org/packages/sbctl-git/)
