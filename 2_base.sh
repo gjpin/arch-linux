@@ -72,7 +72,7 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
 EOF
 
 echo "Configuring Firefox Flatpak to run under wayland and other optimizations"
-sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
+sudo flatpak override --socket=wayland --env="MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox
 
 echo "Installing chromium with GPU acceleration"
 sudo pacman -S --noconfirm chromium
