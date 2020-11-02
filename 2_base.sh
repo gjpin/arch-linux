@@ -83,6 +83,7 @@ tee -a ~/.config/chromium-flags.conf << EOF
 --enable-gpu-rasterization
 --enable-zero-copy
 --enable-accelerated-video-decode
+--use-vulkan
 EOF
 
 echo "Creating user's folders"
