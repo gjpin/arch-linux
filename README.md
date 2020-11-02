@@ -137,7 +137,7 @@ flatpak install flathub-beta net.lutris.Lutris//beta
 flatpak install flathub org.gnome.Platform.Compat.i386
 flatpak install flathub com.valvesoftware.Steam
 
-# Allow Steam link through the Firewall
+# Allow Steam Link through the Firewall
 sudo ufw allow from 192.168.1.0/24 to any port 27036:27037 proto tcp
 sudo ufw allow from 192.168.1.0/24 to any port 27031:27036 proto udp
 ```
