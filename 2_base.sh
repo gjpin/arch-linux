@@ -105,9 +105,6 @@ tee -a ~/.bashrc << EOF
 $libva_environment_variable
 $vdpau_environment_variable
 
-export PS1="\w \\$  "
-PROMPT_COMMAND='PROMPT_COMMAND='\''PS1="\n\w \\$  "'\'
-
 alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 EOF
 
