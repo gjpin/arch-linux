@@ -99,7 +99,7 @@ wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal
 wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/dan-aragon-n20DUSVsUk8-unsplash.jpg
 wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/robinwall02-notext.png
 
-echo "Ricing bash"
+echo "Set environment variables and alias"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
 $libva_environment_variable
