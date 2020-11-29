@@ -48,6 +48,7 @@ sudo pacman -S --noconfirm vim keepassxc git openssh links upower htop powertop 
 
 echo "Adding Flathub repository (Flatpak)"
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak update --appstream
 
 echo "Installing Flatpak GTK breeze themes"
 flatpak --assumeyes install org.gtk.Gtk3theme.Breeze
@@ -70,9 +71,6 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
     </pattern></rejectfont></selectfont>	
 </fontconfig>	
 EOF
-
-echo "Configuring Firefox Flatpak to run under wayland and other optimizations"
-sudo flatpak override --socket=wayland --env="MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox
 
 echo "Installing chromium with GPU acceleration"
 sudo pacman -S --noconfirm chromium
@@ -102,9 +100,6 @@ wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal
 echo "Set environment variables and alias"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
-$libva_environment_variable
-$vdpau_environment_variable
-
 alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 EOF
 
@@ -147,8 +142,10 @@ sudo tee -a /etc/sysctl.d/dirty.conf << EOF
 vm.dirty_writeback_centisecs = 1500
 EOF
 
-echo "Improving Java applications font rendering"
+echo "Setting environment variables (and improve Java applications font rendering)"
 sudo tee -a /etc/environment << EOF
+$libva_environment_variable
+$vdpau_environment_variable
 _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 JAVA_FONTS=/usr/share/fonts/TTF
 EOF
