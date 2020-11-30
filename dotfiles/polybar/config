@@ -14,11 +14,14 @@ foreground = B3B1AD
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 modules-left = i3
 modules-center =
-modules-right = temperature sep memory sep cpu sep pulseaudio sep xbacklight sep wired-network sep wireless-network sep date
+modules-right = memory sep cpu sep pulseaudio sep xbacklight sep wired-network sep wireless-network sep date
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; i3 MODULE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/i3]
+type = internal/i3
+
 strip-wsnumbers = true
 enable-click = true
 enable-scroll = true
@@ -54,7 +57,7 @@ interface = eth0
 interval = 1.0
 
 format-connected = <label-connected> 
-label-connected = local_ip
+label-connected = %local_ip%
 
 format-disconnected = <label-disconnected>
 label-disconnected = No connection
@@ -116,7 +119,7 @@ use-ui-max = true
 interval = 5
 
 format-volume = <label-volume>
-label-volume = Vol %percentage%
+label-volume = Vol %percentage%%
 
 click-right = pavucontrol &
 
