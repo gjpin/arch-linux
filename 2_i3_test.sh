@@ -6,7 +6,7 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Installing i3, dependencies and additional packages"
-sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock arandr pavucontrol gedit gnome-calculator #picom
+sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock arandr pavucontrol brightnessctl #picom
 
 echo "Installing picom-git"
 yay -S --noconfirm picom-git
@@ -71,7 +71,7 @@ mkdir -p ~/.config/alacritty/
 wget -P ~/.config/alacritty/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/alacritty/alacritty.yml
 
 echo "Installing Gnome apps (file manager, pdf viewer, image viewer)"
-sudo pacman -S --noconfirm nautilus filemanager-actions file-roller evince eog
+sudo pacman -S --noconfirm nautilus filemanager-actions file-roller evince eog gedit gnome-calculator
 
 echo "Changing GTK and icons themes"
 sudo pacman -S --noconfirm lxappearance
@@ -239,6 +239,19 @@ sudo tee -a /etc/fonts/local.conf << EOF
 
 </fontconfig>
 EOF
+
+echo "Improving touchpad configuration"
+echo "Confirm device ID "
+sudo mkdir -p /etc/X11/xorg.conf.d/
+sudo touch /etc/X11/xorg.conf.d/30-touchpad.conf
+/etc/X11/xorg.conf.d/30-touchpad.conf << END
+Section "InputClass"
+    Identifier "CUST0001:00 06CB:76B1 Touchpad"
+    Driver "libinput"
+    Option "NaturalScrolling" "true"
+    Option "Tapping" "on"
+EndSection
+END
 
 echo "Adding Firefox theme"
 git clone https://github.com/vinceliuice/Orchis-theme.git
