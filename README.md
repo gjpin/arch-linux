@@ -130,13 +130,35 @@ copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into 
 ### How to install Lutris and Steam (Flatpak)
 
 ```
+# Sources:
+# https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/wikis/Mesa-git
+# https://github.com/GloriousEggroll/proton-ge-custom#flatpak
+# https://github.com/flathub/net.lutris.Lutris
+
+# Add Flatpak repos
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update --appstream
 
+# Install mesa-git
+flatpak install flathub-beta org.freedesktop.Platform.GL.mesa-git//20.08 org.freedesktop.Platform.GL32.mesa-git//20.08
+
+# Install Lutris
 flatpak install flathub-beta net.lutris.Lutris//beta
 flatpak install flathub org.gnome.Platform.Compat.i386
+
+# Install Steam
 flatpak install flathub com.valvesoftware.Steam
+
+# Make Steam use mesa-git
+sudo sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," /var/lib/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
+
+# Download latest release from GloriousEggroll/proton-ge-custom and move it to Steam Flatpak
+curl -Ls https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep -wo "https.*tar.gz" | wget -qi -
+mkdir -p ~/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/
+tar -xzf Proton-* -C ~/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/
+
+# To enable proton ge: https://github.com/GloriousEggroll/proton-ge-custom#enabling
 
 # Allow Steam Link through the Firewall
 sudo ufw allow from 192.168.1.0/24 to any port 27036:27037 proto tcp

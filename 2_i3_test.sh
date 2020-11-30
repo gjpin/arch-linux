@@ -87,9 +87,6 @@ wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/exah-io/arch-linux/
 mkdir -p ~/.icons/default/
 wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/index.theme
 
-# TODO: set firefox orchis theme
-# flatpak location: ~/.var/app/org.mozilla.firefox/.mozilla/firefox/XXXXX-release
-
 echo "Setting some default applications"
 xdg-mime default eog.desktop image/jpeg
 xdg-mime default eog.desktop image/jpg
@@ -99,3 +96,9 @@ xdg-mime default nautilus.desktop inode/directory
 
 echo "Creating screenshots folder"
 mkdir -p ~/Pictures/screenshots
+
+echo "Adding Firefox theme"
+git clone git@github.com:vinceliuice/Orchis-theme.git
+mv ~/Orchis-theme/src/firefox/chrome ~/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
+rm -rf ~/Orchis-theme
+echo "You still need to set toolkit.legacyUserProfileCustomizations.stylesheets to true"
