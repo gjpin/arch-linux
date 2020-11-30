@@ -145,7 +145,7 @@ flatpak install --user --assumeyes flathub-beta org.freedesktop.Platform.GL.mesa
 
 # Install Lutris
 flatpak install --user --assumeyes flathub-beta net.lutris.Lutris//beta
-flatpak install --user --assumeyes flathub org.gnome.Platform.Compat.i386
+flatpak install --user --assumeyes flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
 
 # Install Steam
 flatpak install --user --assumeyes flathub com.valvesoftware.Steam
