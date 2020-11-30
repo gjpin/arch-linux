@@ -92,8 +92,8 @@ sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf
 
 echo "Downloading wallpapers and Arch Linux icon"
 mkdir -p ~/Pictures/wallpapers
-wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/arch.png
-wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/images/wallpapers/2k.jpg
+wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/arch.png
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.jpg
 
 echo "Set environment variables and alias"
 touch ~/.bashrc
@@ -179,5 +179,5 @@ sudo pacman -S --noconfirm pipewire libpipewire02
 
 # echo "Installing powerlevel10k theme"
 # git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-# wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/zsh/.p10k.zsh
-# wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/zsh/.zshrc
+# wget -P ~/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/zsh/.p10k.zsh
+# wget -P ~/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/zsh/.zshrc
