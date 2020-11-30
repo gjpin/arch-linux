@@ -36,12 +36,27 @@ wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-l
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/ayu-mirage.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/ayu-light-blue.rasi
 
-echo "Enabling i3 autostart"
+echo "Enabling X server autostart"
 sudo tee -a /etc/profile << EOF
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
  exec startx
 fi
 EOF
+
+echo "Configuring xinit"
+wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/.xinitrc
+
+echo "Enabling autologin"
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
+sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
+sudo tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --skip-login --nonewline --noissue --autologin $USER --noclear %I $TERM
+END
+
+echo "Removing last login message"
+touch ~/.hushlogin
 
 echo "Installing and ricing Alacritty terminal"
 sudo pacman -S --noconfirm alacritty
@@ -72,25 +87,8 @@ wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/exah-io/minimal-arc
 mkdir -p ~/.icons/default/
 wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/index.theme
 
-echo "Configuring xinit"
-wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/.xinitrc
-
-
 # TODO: set firefox orchis theme
 # flatpak location: ~/.var/app/org.mozilla.firefox/.mozilla/firefox/XXXXX-release
-
-
-echo "Enabling autologin"
-sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
-sudo touch /etc/systemd/system/getty@tty1.service.d/override.conf
-sudo tee -a /etc/systemd/system/getty@tty1.service.d/override.conf << END
-[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --skip-login --nonewline --noissue --autologin $USER --noclear %I $TERM
-END
-
-echo "Removing last login message"
-touch ~/.hushlogin
 
 echo "Setting some default applications"
 xdg-mime default eog.desktop image/jpeg
