@@ -6,7 +6,7 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Installing i3, dependencies and additional packages"
-sudo pacman -S --noconfirm xorg i3-gaps i3lock xorg-xbacklight feh maim picom rofi pulseaudio network-manager-applet xss-lock
+sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim picom rofi pulseaudio network-manager-applet xss-lock
 
 echo "Configuring i3"
 mkdir -p ~/.config/i3/
@@ -33,12 +33,12 @@ wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-l
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/ayu-mirage.rasi
 wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/rofi/ayu-light-blue.rasi
 
-# echo "Enabling i3 autostart"
-# sudo tee -a /etc/profile << EOF
-# if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-#   exec startx /usr/bin/i3
-# fi
-# EOF
+echo "Enabling i3 autostart"
+sudo tee -a /etc/profile << EOF
+if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+ exec startx /usr/bin/i3
+fi
+EOF
 
 echo "Installing and ricing Alacritty terminal"
 sudo pacman -S --noconfirm alacritty
