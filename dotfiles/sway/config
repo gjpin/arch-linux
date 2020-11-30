@@ -1,6 +1,6 @@
 ### VARIABLES
 # Background image
-set $background robinwall02-notext.png
+set $background 2k.jpg
 
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4

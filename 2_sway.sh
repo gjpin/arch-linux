@@ -58,29 +58,26 @@ sudo pacman -S --noconfirm thunar gvfs thunar-volman thunar-archive-plugin ark f
 echo "Installing PDF viewer"
 sudo pacman -S --noconfirm xreader
 
-echo "Downloading themes (Kali Linux theme without the dragon)"
-# Kali themes source: https://gitlab.com/kalilinux/packages/kali-themes/-/tree/kali/master/share/themes
+echo "Changing GTK and icons themes"
+sudo pacman -S --noconfirm lxappearance
+
 mkdir -p ~/.themes
-wget -P ~/.themes https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/themes-icons/kali-themes.tar.gz
-tar -xzf ~/.themes/kali-themes.tar.gz -C ~/.themes
-rm -f ~/.themes/kali-themes.tar.gz
+wget -P ~/.themes https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/themes-icons/Orchis-light.tar.xz
+tar -xzf ~/.themes/Orchis-light.tar.xz -C ~/.themes
+rm -f ~/.themes/Orchis-light.tar.xz
 
-echo "Downloading icon themes (Kali Linux icons)"
-# Kali themes source: https://gitlab.com/kalilinux/packages/kali-themes/-/tree/kali/master/share/icons
-mkdir -p ~/.icons
-wget -P ~/.icons https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/themes-icons/kali-icons.tar.gz
-tar -xzf ~/.icons/kali-icons.tar.gz -C ~/.icons
-rm -f ~/.icons/kali-icons.tar.gz
+mkdir -p ~/.local/share/icons/
+wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/themes-icons/01-Tela.tar.xz
+tar -xzf ~/.themes/01-Tela.tar.xz -C ~/.local/share/icons/
+rm -f ~/.local/share/icons/01-Tela.tar.xz
 
-echo "Setting GTK theme, font and icons"
-FONT="Cantarell Regular 10"
-GTK_THEME="Kali-Light"
-GTK_ICON_THEME="Flat-Remix-Blue-Dark"
-GTK_SCHEMA="org.gnome.desktop.interface"
-gsettings set $GTK_SCHEMA gtk-theme "$GTK_THEME"
-gsettings set $GTK_SCHEMA icon-theme "$GTK_ICON_THEME"
-gsettings set $GTK_SCHEMA font-name "$FONT"
-gsettings set $GTK_SCHEMA document-font-name "$FONT"
+wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/.gtkrc-2.0
+
+mkdir -p ~/.config/gtk-3.0/
+wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/gtk-3.0/settings.ini
+
+mkdir -p ~/.icons/default/
+wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/index.theme
 
 echo "Enabling suspend and hibernate hotkeys"
 sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=hibernate/g' /etc/systemd/logind.conf

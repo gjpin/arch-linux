@@ -1,6 +1,6 @@
 configuration {
  modi: "window,drun,ssh,combi";
- theme: "base16-one-light";
- font: "Source Code Pro 11";
+ theme: "ayu-light-blue";
+ font: "Roboto Regular 10";
  combi-modi: "window,drun,ssh";
  }

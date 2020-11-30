@@ -1,0 +1,52 @@
+/**
+ * Ayu theme ported for rofi
+ */
+
+* {
+  accentcolor: #ff9940;
+  backgroundcolor: #fafafaf3;
+  separatorcolor: transparent;
+  foregroundcolor: #6c7680;
+  selectioncolor: #333333;
+  
+  background-color: transparent;
+  text-color: @foregroundcolor;
+}
+
+#window {
+  font: "Roboto Regular 10";
+  location: 0;
+  background-color: @backgroundcolor;
+  border-color: @accentcolor;
+  border: 1;
+  border-radius: 0;
+  padding: 16 14;
+  width: 640;
+}
+
+#element {
+  spacing: 2;
+  padding: 8;
+}
+
+#element.selected.normal {
+  text-color: @selectioncolor;
+}
+
+#element.selected.active {
+  text-color: @selectioncolor;
+}
+
+#inputbar {
+  border: none;
+  children: [prompt, entry];
+}
+
+#prompt {
+  color: @accentcolor;
+  padding: 2 8 8;
+}
+
+#entry {
+  padding: 2 8 8;
+}
