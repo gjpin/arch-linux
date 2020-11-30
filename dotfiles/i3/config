@@ -12,7 +12,7 @@ for_window [class="^.*"] border pixel 0
 for_window [title="^.*"] border pixel 0
 
 # Set gaps
-gaps inner 16
+gaps inner 8
 gaps outer 0
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
