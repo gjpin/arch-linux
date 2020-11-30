@@ -63,12 +63,12 @@ sudo pacman -S --noconfirm lxappearance
 
 mkdir -p ~/.themes
 wget -P ~/.themes https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/themes-icons/Orchis-light.tar.xz
-tar -xzf ~/.themes/Orchis-light.tar.xz -C ~/.themes
+tar -xf ~/.themes/Orchis-light.tar.xz -C ~/.themes
 rm -f ~/.themes/Orchis-light.tar.xz
 
 mkdir -p ~/.local/share/icons/
 wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/themes-icons/01-Tela.tar.xz
-tar -xzf ~/.themes/01-Tela.tar.xz -C ~/.local/share/icons/
+tar -xf ~/.themes/01-Tela.tar.xz -C ~/.local/share/icons/
 rm -f ~/.local/share/icons/01-Tela.tar.xz
 
 wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/.gtkrc-2.0

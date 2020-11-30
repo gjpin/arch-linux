@@ -6,7 +6,10 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Installing i3, dependencies and additional packages"
-sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim picom rofi pulseaudio network-manager-applet xss-lock
+sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock #picom
+
+echo "Installing picom-git"
+yay -S --noconfirm picom-git
 
 echo "Configuring i3"
 mkdir -p ~/.config/i3/
@@ -36,7 +39,7 @@ wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/minimal-arch-l
 echo "Enabling i3 autostart"
 sudo tee -a /etc/profile << EOF
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
- exec startx /usr/bin/i3
+ exec startx
 fi
 EOF
 
@@ -53,12 +56,12 @@ sudo pacman -S --noconfirm lxappearance
 
 mkdir -p ~/.themes
 wget -P ~/.themes https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/themes-icons/Orchis-light.tar.xz
-tar -xzf ~/.themes/Orchis-light.tar.xz -C ~/.themes
+tar -xf ~/.themes/Orchis-light.tar.xz -C ~/.themes
 rm -f ~/.themes/Orchis-light.tar.xz
 
 mkdir -p ~/.local/share/icons/
 wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/themes-icons/01-Tela.tar.xz
-tar -xzf ~/.local/share/icons/01-Tela.tar.xz -C ~/.local/share/icons/
+tar -xf ~/.local/share/icons/01-Tela.tar.xz -C ~/.local/share/icons/
 rm -f ~/.local/share/icons/01-Tela.tar.xz
 
 wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/.gtkrc-2.0
