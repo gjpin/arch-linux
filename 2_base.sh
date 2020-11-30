@@ -47,7 +47,7 @@ echo "Installing common applications"
 sudo pacman -S --noconfirm vim keepassxc git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
 
 echo "Adding Flathub repository (Flatpak)"
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak update --appstream
 
 echo "Installing Flatpak GTK breeze themes"

@@ -24,7 +24,7 @@ wget -P ~/.config/picom/ https://raw.githubusercontent.com/exah-io/arch-linux/ma
 
 echo "Configuring polybar"
 mkdir -p ~/.config/polybar/
-wget -P ~/.config/polybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/polybar/conf
+wget -P ~/.config/polybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/polybar/config
 
 echo "Ricing rofi"
 mkdir -p ~/.config/rofi
@@ -241,7 +241,7 @@ sudo tee -a /etc/fonts/local.conf << EOF
 EOF
 
 echo "Adding Firefox theme"
-git clone git@github.com:vinceliuice/Orchis-theme.git
+git clone https://github.com/vinceliuice/Orchis-theme.git
 mv ~/Orchis-theme/src/firefox/chrome ~/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
 rm -rf ~/Orchis-theme
 echo "You still need to set toolkit.legacyUserProfileCustomizations.stylesheets to true"
