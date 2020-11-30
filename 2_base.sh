@@ -51,11 +51,11 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak update --appstream
 
 echo "Installing Flatpak GTK breeze themes"
-flatpak --assumeyes install org.gtk.Gtk3theme.Breeze
-flatpak --assumeyes install org.gtk.Gtk3theme.Breeze-Dark
+flatpak install --user --assumeyes org.gtk.Gtk3theme.Breeze
+flatpak install --user --assumeyes org.gtk.Gtk3theme.Breeze-Dark
 
 echo "Installing Firefox Flatpak"
-flatpak --assumeyes install flathub org.mozilla.firefox
+flatpak install --user --assumeyes flathub org.mozilla.firefox
 
 echo "Improving font rendering issues with Firefox Flatpak"
 sudo pacman -S --noconfirm gnome-settings-daemon

@@ -136,19 +136,19 @@ copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into 
 # https://github.com/flathub/net.lutris.Lutris
 
 # Add Flatpak repos
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update --appstream
 
 # Install mesa-git
-flatpak install flathub-beta org.freedesktop.Platform.GL.mesa-git//20.08 org.freedesktop.Platform.GL32.mesa-git//20.08
+flatpak install --user flathub-beta org.freedesktop.Platform.GL.mesa-git//20.08 org.freedesktop.Platform.GL32.mesa-git//20.08
 
 # Install Lutris
-flatpak install flathub-beta net.lutris.Lutris//beta
-flatpak install flathub org.gnome.Platform.Compat.i386
+flatpak install --user flathub-beta net.lutris.Lutris//beta
+flatpak install --user flathub org.gnome.Platform.Compat.i386
 
 # Install Steam
-flatpak install flathub com.valvesoftware.Steam
+flatpak install --user flathub com.valvesoftware.Steam
 
 # Make Steam use mesa-git
 sudo sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," /var/lib/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
