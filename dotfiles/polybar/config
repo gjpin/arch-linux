@@ -1,20 +1,69 @@
 [bar/mybar]
-monitor-strict = false
-override-redirect = false
+override-redirect = true
 bottom = true
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; COLOURS
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+fixed-center = true
+
+; Dimension defined as pixel value (e.g. 35) or percentage (e.g. 50%),
+; the percentage can optionally be extended with a pixel offset like so:
+; 50%:-10, this will result in a width or height of 50% minus 10 pixels
+width = 93.25%
+height = 37
+
+; Offset defined as pixel value (e.g. 35) or percentage (e.g. 50%)
+; the percentage can optionally be extended with a pixel offset like so:
+; 50%:-10, this will result in an offset in the x or y direction 
+; of 50% minus 10 pixels
+offset-x = 3.4%
+offset-y = 12
+
 background = #0A0E14
-foreground = B3B1AD
+foreground = #eeeeee
+
+radius = 0
+
+line-size = 0
+line-color = #f00
+
+padding-right = 4
+
+module-margin = 1
+
+font-0 = Roboto:bold:size=10;1.5
+font-1 = FontAwesome5Free:style=Solid:size=10;2
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; MODULES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 modules-left = i3
 modules-center =
-modules-right = memory sep cpu sep pulseaudio sep xbacklight sep wired-network sep wireless-network sep date
+modules-right = memory sep cpu sep date
+separator =
+
+spacing = 0
+
+dim-value = 1.0
+
+wm-name = i3
+
+tray-detached = false
+
+tray-maxsize = 16
+
+tray-background = #0e151d
+
+tray-offset-x = 0
+tray-offset-y = 0
+
+tray-padding =
+
+tray-scale = 1.0
+
+dpi-x = 96
+dpi-y = 96
+
+enable-ipc = false
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; i3 MODULE
@@ -22,10 +71,22 @@ modules-right = memory sep cpu sep pulseaudio sep xbacklight sep wired-network s
 [module/i3]
 type = internal/i3
 
+pin-workspaces = true
+
 strip-wsnumbers = true
+
+index-sort = true
+
 enable-click = true
-enable-scroll = true
-wrapping-scroll = true
+
+enable-scroll = false
+
+wrapping-scroll = false
+
+reverse-scroll = false
+
+fuzzy-match = false
+
 label-unfocused = %index%
 label-unfocused-padding = 2
 label-unfocused-foreground = #eeeeee
@@ -41,26 +102,17 @@ label-focused-padding = 2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/date]
 type = internal/date
+
+; Seconds to sleep between updates
 interval = 1.0
+
 date = %d-%m-%Y%
+
 time = %H:%M
 
-format = <label>
 label = %date% %time% 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; WIRED NETWORK MODULES
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-[module/wired-network]
-type = internal/network
-interface = eth0
-interval = 1.0
-
-format-connected = <label-connected> 
-label-connected = %local_ip%
-
-format-disconnected = <label-disconnected>
-label-disconnected = No connection
+label-font = 0
+label-foreground = #eeeeee
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; WIRELESS NETWORK MODULES
@@ -68,23 +120,22 @@ label-disconnected = No connection
 [module/wireless-network]
 type = internal/network
 interface = wlan0
-interval = 1.0
 
-format-connected = <label-connected>
-label-connected = %signal% %essid%
+label-connected = %essid%
+format-connected = <ramp-signal>
+label-connected-foreground = #63be8b
 
 format-disconnected = <label-disconnected>
-label-disconnected = No connection
+label-disconnected = Not connected
+label-disconnected-foreground = #BF616A
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; MEMORY MODULE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-[module/memory]
-type = internal/memory
-interval = 1.0
-
-format = <label>
-label = ram: %percentage_used%
+ramp-signal-foreground = #63be8b
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-5 = 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CPU MODULE
@@ -93,42 +144,33 @@ label = ram: %percentage_used%
 type = internal/cpu
 interval = 1.0
 
+label =  %percentage%%
+
+label-foreground = #4a7fa9
+label-padding-right = 1
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; MEMORY MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/memory]
+type = internal/memory
+
+; Seconds to sleep between updates
+; Default: 1
+interval = 0.5
 format = <label>
-label = cpu: %percentage%%
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; XBACKLIGHT MODULE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-[module/backlight]
-type = internal/xbacklight
+label =  %gb_used%
 
-format = <label>
-label = Bright %percentage%%
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; PULSEAUDIO MODULE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-[module/pulseaudio]
-type = internal/pulseaudio
-
-; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
-; If not, uses default sink
-sink = alsa_output.pci-0000_12_00.3.analog-stereo
-
-use-ui-max = true
-interval = 5
-
-format-volume = <label-volume>
-label-volume = Vol %percentage%%
-
-click-right = pavucontrol &
+label-foreground = #888ba5
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TEMPERATURE MODULE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [module/temperature]
 type = internal/temperature
-interval = 1.0
+
+interval = 1
 
 ; Thermal zone to use
 ; To list all the zone types, run 
@@ -143,12 +185,14 @@ thermal-zone = 0
 ; Default reverts to thermal zone setting
 hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input
 
-format = <label>
-label = Temp %temperature-c%
+warn-temperature = 70
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; SEPARATORS MODULE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format = <label>
+
+label =  %temperature-c%
+
+label-foreground = #c3433b
+
 [module/decor-glyph]
 type = custom/text
 content-foreground = #233446
@@ -157,3 +201,19 @@ margin = 0
 [module/sep]
 inherit = module/decor-glyph
 content = "/"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; FILLER BAR
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[bar/spacefiller]
+height = 50
+bottom = true
+background = #00000000
+
+modules-left = 
+modules-center = filler
+modules-right = 
+
+[module/filler]
+type = custom/text
+content = Filler
