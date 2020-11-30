@@ -1,0 +1,156 @@
+[bar/mybar]
+monitor-strict = false
+override-redirect = false
+bottom = true
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; COLOURS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+background = #0A0E14
+foreground = B3B1AD
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; MODULES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+modules-left = i3
+modules-center =
+modules-right = temperature sep memory sep cpu sep pulseaudio sep xbacklight sep wired-network sep wireless-network sep date
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; i3 MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+strip-wsnumbers = true
+enable-click = true
+enable-scroll = true
+wrapping-scroll = true
+label-unfocused = %index%
+label-unfocused-padding = 2
+label-unfocused-foreground = #eeeeee
+
+label-focused = %index%
+label-focused-foreground = #eeeeee
+label-focused-background = #233446
+label-focused-underline = #fba922
+label-focused-padding = 2
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; DATE MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/date]
+type = internal/date
+interval = 1.0
+date = %d-%m-%Y%
+time = %H:%M
+
+format = <label>
+label = %date% %time% 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; WIRED NETWORK MODULES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/wired-network]
+type = internal/network
+interface = eth0
+interval = 1.0
+
+format-connected = <label-connected> 
+label-connected = local_ip
+
+format-disconnected = <label-disconnected>
+label-disconnected = No connection
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; WIRELESS NETWORK MODULES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/wireless-network]
+type = internal/network
+interface = wlan0
+interval = 1.0
+
+format-connected = <label-connected>
+label-connected = %signal% %essid%
+
+format-disconnected = <label-disconnected>
+label-disconnected = No connection
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; MEMORY MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/memory]
+type = internal/memory
+interval = 1.0
+
+format = <label>
+label = ram: %percentage_used%
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; CPU MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/cpu]
+type = internal/cpu
+interval = 1.0
+
+format = <label>
+label = cpu: %percentage%%
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; XBACKLIGHT MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/backlight]
+type = internal/xbacklight
+
+format = <label>
+label = Bright %percentage%%
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; PULSEAUDIO MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/pulseaudio]
+type = internal/pulseaudio
+
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; If not, uses default sink
+sink = alsa_output.pci-0000_12_00.3.analog-stereo
+
+use-ui-max = true
+interval = 5
+
+format-volume = <label-volume>
+label-volume = Vol %percentage%
+
+click-right = pavucontrol &
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; TEMPERATURE MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/temperature]
+type = internal/temperature
+interval = 1.0
+
+; Thermal zone to use
+; To list all the zone types, run 
+; $ for i in /sys/class/thermal/thermal_zone*; do echo "$i: $(<$i/type)"; done
+; Default: 0
+thermal-zone = 0
+
+; Full path of temperature sysfs path
+; Use `sensors` to find preferred temperature source, then run
+; $ for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done
+; to find path to desired file
+; Default reverts to thermal zone setting
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input
+
+format = <label>
+label = Temp %temperature-c%
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; SEPARATORS MODULE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[module/decor-glyph]
+type = custom/text
+content-foreground = #233446
+margin = 0
+
+[module/sep]
+inherit = module/decor-glyph
+content = "/"

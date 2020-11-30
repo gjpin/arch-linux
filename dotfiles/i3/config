@@ -188,3 +188,6 @@ bindsym $mod+Shift+s exec maim -s $screenshots_folder/$(date +%s).png
 
 # start picom
 exec_always --no-startup-id picom &
+
+# start polybar
+exec_always --no-startup-id polybar mybar &

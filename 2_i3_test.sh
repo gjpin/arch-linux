@@ -11,6 +11,9 @@ sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh ma
 echo "Installing picom-git"
 yay -S --noconfirm picom-git
 
+echo "Installing polybar"
+yay -S --noconfirm polybar
+
 echo "Configuring i3"
 mkdir -p ~/.config/i3/
 wget -P ~/.config/i3/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/i3/config
@@ -18,6 +21,10 @@ wget -P ~/.config/i3/ https://raw.githubusercontent.com/exah-io/arch-linux/maste
 echo "Configuring picom"
 mkdir -p ~/.config/picom
 wget -P ~/.config/picom/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/picom/picom.conf
+
+echo "Configuring polybar"
+mkdir -p ~/.config/polybar/
+wget -P ~/.config/polybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/polybar/conf
 
 echo "Ricing rofi"
 mkdir -p ~/.config/rofi
