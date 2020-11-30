@@ -70,7 +70,7 @@ mkdir -p ~/.icons/default/
 wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/gtk/index.theme
 
 echo "Configuring xinit"
-wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/.xinitrc
+wget -P ~/ https://raw.githubusercontent.com/exah-io/minimal-arch-linux/master/dotfiles/.xinitrc
 
 
 # TODO: set firefox orchis theme
