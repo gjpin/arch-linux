@@ -11,9 +11,16 @@ set $mod Mod4
 for_window [class="^.*"] border pixel 0
 for_window [title="^.*"] border pixel 0
 
+# Force floating windows
+for_window [class="KeePassXC" instance="keepassxc"] floating enable
+for_window [class="Pavucontrol" instance="pavucontrol"] floating enable
+
 # Set gaps
 gaps inner 8
 gaps outer 0
+
+# Set lock screen
+bindsym $mod+n exec i3lock -i ~/Pictures/wallpapers/2k.png
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
@@ -185,7 +192,7 @@ bindsym $mod+r mode "resize"
 bindsym $mod+e exec $filemanager
 
 # set wallpaper
-exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/2k.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/2k.png
 
 # screenshots shortcut
 bindsym $mod+Shift+s exec maim -s $screenshots_folder/$(date +%s).png
@@ -194,4 +201,5 @@ bindsym $mod+Shift+s exec maim -s $screenshots_folder/$(date +%s).png
 exec_always --no-startup-id picom &
 
 # start polybar
+exec_always --no-startup-id polybar spacefiller &
 exec_always --no-startup-id polybar mybar &

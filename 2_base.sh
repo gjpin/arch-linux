@@ -93,7 +93,7 @@ sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf
 echo "Downloading wallpapers and Arch Linux icon"
 mkdir -p ~/Pictures/wallpapers
 wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/arch.png
-wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.jpg
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.png
 
 echo "Set environment variables and alias"
 touch ~/.bashrc
