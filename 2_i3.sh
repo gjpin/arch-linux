@@ -254,7 +254,9 @@ EndSection
 END
 
 echo "Adding Firefox theme"
-git clone https://github.com/vinceliuice/Orchis-theme.git
-mv ~/Orchis-theme/src/firefox/chrome ~/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
-rm -rf ~/Orchis-theme
+git clone https://github.com/muckSponge/MaterialFox.git
+mv ~/MaterialFox/chrome ~/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
+rm -rf ~/MaterialFox
 echo "You still need to set toolkit.legacyUserProfileCustomizations.stylesheets to true"
+echo "You still need to set svg.context-properties.content.enabled to true"
+echo "You still need to install this theme: https://addons.mozilla.org/en-US/firefox/addon/materialfox-light/"
