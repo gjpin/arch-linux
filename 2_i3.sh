@@ -253,6 +253,20 @@ Section "InputClass"
 EndSection
 END
 
+if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
+then
+echo "Enabling suspend and hibernate hotkeys"
+sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=hibernate/g' /etc/systemd/logind.conf
+sudo sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=suspend/g' /etc/systemd/logind.conf
+
+echo "Blacklisting bluetooth modules"
+sudo touch /etc/modprobe.d/nobt.conf
+sudo tee -a /etc/modprobe.d/nobt.conf << END
+blacklist btusb
+blacklist bluetooth
+END
+fi
+
 echo "Adding Firefox theme"
 git clone https://github.com/muckSponge/MaterialFox.git
 mv ~/MaterialFox/chrome ~/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
