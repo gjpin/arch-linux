@@ -117,6 +117,9 @@ sudo mkinitcpio -p linux
 sudo mkinitcpio -p linux-lts
 sudo plymouth-set-default-theme -R bgrt
 
+echo "Improving laptop battery"
+if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
+then
 echo "Installing and starting thermald"
 sudo pacman -S --noconfirm thermald
 sudo systemctl start thermald.service
@@ -139,6 +142,7 @@ sudo touch /etc/sysctl.d/dirty.conf
 sudo tee -a /etc/sysctl.d/dirty.conf << EOF
 vm.dirty_writeback_centisecs = 1500
 EOF
+fi
 
 echo "Setting environment variables (and improve Java applications font rendering)"
 sudo tee -a /etc/environment << EOF
