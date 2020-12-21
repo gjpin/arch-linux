@@ -9,7 +9,7 @@ echo "Installing Xorg"
 sudo pacman -S --noconfirm xorg
 
 echo "Installing Plasma and common applications"
-sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kaccounts-integration kaccounts-providers kate kgpg kmail konsole kwalletmanager okular spectacle plasma-browser-integration kcalc filelight partitionmanager gst-libav gst-plugins-good
+sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kaccounts-integration kaccounts-providers kate kgpg kmail konsole kwalletmanager okular spectacle kscreen plasma-browser-integration kcalc filelight partitionmanager
 
 echo "Adding Thunderbolt frontend"
 sudo pacman -S --noconfirm plasma-thunderbolt
@@ -21,11 +21,14 @@ echo "Adding GTK application appearance settings support"
 sudo pacman -S --noconfirm kde-gtk-config
 
 echo "Installing Plasma wayland session"
-sudo pacman -S --noconfirm plasma-wayland-session
+sudo pacman -S --noconfirm plasma-wayland-session plasma-wayland-protocols
 
 echo "Installing SDDM and SDDM-KCM"
 sudo pacman -S --noconfirm sddm sddm-kcm
 sudo systemctl enable sddm
+
+echo "Improving multimedia support"
+sudo pacman -S --noconfirm phonon-qt5-vlc
 
 echo "Disabling baloo (file indexer)"
 balooctl suspend
