@@ -1,7 +1,4 @@
 # Arch Linux install scripts
-
-![screenshot](https://raw.githubusercontent.com/exah-io/arch-linux/master/1606836035.png)
-
 Note: These scripts are not meant to be another full-fledged Arch installer. They are made to fit my devices: Dell XPS 7390 and custom desktop build (Ryzen 3700X and RX 5700XT). In any case, as long as you don't use a Nvidia GPU, they should work fine.
 
 ## Install script
