@@ -155,7 +155,7 @@ flatpak install --user --assumeyes com.valvesoftware.Steam.CompatibilityTool.Pro
 flatpak override --user --filesystem=/mnt/Data/Games com.valvesoftware.Steam
 
 # Make Steam use mesa-git
-sudo sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," /var/lib/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
+sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," ~/.local/share/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
 
 # Download latest release from GloriousEggroll/proton-ge-custom and move it to Steam Flatpak
 curl -Ls https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep -wo "https.*tar.gz" | wget -qi -
