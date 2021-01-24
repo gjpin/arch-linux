@@ -161,8 +161,8 @@ echo "Setting environment variables (and improve Java applications font renderin
 sudo tee -a /etc/environment << EOF
 $libva_environment_variable
 $vdpau_environment_variable
-_JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
-JAVA_FONTS=/usr/share/fonts/TTF
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
+export JAVA_FONTS=/usr/share/fonts/TTF
 EOF
 
 echo "Enabling bluetooth"
