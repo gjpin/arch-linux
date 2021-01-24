@@ -127,6 +127,15 @@ ssh-add ~/.ssh/id_rsa
 copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
 ```
 
+### How to install Firefox Gnome theme
+```
+echo "Installing Firefox Flatpak Gnome theme"
+git clone https://github.com/rafaelmardojai/firefox-gnome-theme/ && cd firefox-gnome-theme
+./scripts/install.sh -f ~/.var/app/org.mozilla.firefox/.mozilla/firefox
+rm -rf ~/firefox-gnome-theme
+```
+
+
 ### How to install Lutris and Steam (Flatpak)
 
 ```
