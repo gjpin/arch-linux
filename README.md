@@ -84,8 +84,8 @@ y
 ```
 
 ### Firefox required configs for VA-API support
-- Run ```flatpak --user override --socket=wayland --env="MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox```
-- At about:config set ```gfx.webrender.enabled``` and ```widget.wayland-dmabuf-vaapi.enabled``` to true and restart browser
+- Run ```flatpak --user override --socket=wayland --env="MOZ_WEBRENDER=1 MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox```
+- At about:config set ```gfx.webrender.enabled```, ```media.ffmpeg.vaapi.enabled``` ```widget.wayland-dmabuf-vaapi.enabled``` to true and ```media.ffvpx.enabled``` to false and then restart browser
   - Read original blog post [here](https://mastransky.wordpress.com/2020/06/03/firefox-on-fedora-finally-gets-va-api-on-wayland/)
   - Note: base script already sets the required environment variables. Only changing these 2 configs suffices
 
