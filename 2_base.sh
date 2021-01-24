@@ -47,8 +47,9 @@ sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
 echo "Installing common applications"
 sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
 
-echo "Adding Flathub repository (Flatpak)"
+echo "Adding Flathub repositories (Flatpak)"
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update --appstream
 
 echo "Installing Flatpak GTK breeze themes"
@@ -74,7 +75,6 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
 EOF
 
 echo "Installing Chrome Flatpak with GPU acceleration"
-flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak install --user --assumeyes flathub-beta com.google.Chrome
 mkdir -p ~/.var/app/com.google.Chrome/config
 touch ~/.var/app/com.google.Chrome/config/chrome-flags.conf
