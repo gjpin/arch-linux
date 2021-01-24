@@ -152,7 +152,7 @@ flatpak install --user --assumeyes flathub com.valvesoftware.Steam
 flatpak install --user --assumeyes com.valvesoftware.Steam.CompatibilityTool.Proton
 
 # Give Steam Flatpak access to external drive
-flatpak override --user --filesystem=/media/datadrive/Games com.valvesoftware.Steam
+flatpak override --user --filesystem=/mnt/Data/Games com.valvesoftware.Steam
 
 # Make Steam use mesa-git
 sudo sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," /var/lib/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
