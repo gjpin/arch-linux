@@ -72,11 +72,23 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
 </fontconfig>	
 EOF
 
-echo "Installing chromium with GPU acceleration"
-sudo pacman -S --noconfirm chromium
-mkdir -p ~/.config/
-touch ~/.config/chromium-flags.conf
-tee -a ~/.config/chromium-flags.conf << EOF
+echo "Installing Chrome Flatpak with GPU acceleration"
+flatpak install --user --assumeyes flathub-beta com.google.Chrome
+mkdir -p ~/.var/app/com.google.Chrome/config
+touch ~/.var/app/com.google.Chrome/config/chrome-flags.conf
+tee -a ~/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
+--ignore-gpu-blacklist
+--enable-gpu-rasterization
+--enable-zero-copy
+--enable-accelerated-video-decode
+--use-vulkan
+EOF
+
+echo "Installing Chromium Flatpak with GPU acceleration"
+flatpak install --user --assumeyes flathub org.chromium.Chromium
+mkdir -p ~/.var/app/org.chromium.Chromium/config
+touch ~/.var/app/org.chromium.Chromium/config/chromium-flags.conf
+tee -a ~/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --ignore-gpu-blacklist
 --enable-gpu-rasterization
 --enable-zero-copy
