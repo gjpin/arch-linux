@@ -40,11 +40,6 @@ echo "Improving Plymouth support"
 sudo systemctl disable gdm.service
 sudo systemctl enable gdm-plymouth.service
 
-echo "Installing Firefox Flatpak Gnome theme"
-git clone https://github.com/rafaelmardojai/firefox-gnome-theme/ && cd firefox-gnome-theme
-./scripts/install.sh -f ~/.var/app/org.mozilla.firefox/.mozilla/firefox
-rm -rf ~/firefox-gnome-theme
-
 # echo "Enabling Arch repositories in Gnome Software"
 # sudo pacman -S --noconfirm gnome-software-packagekit-plugin
 
