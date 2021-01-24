@@ -74,6 +74,7 @@ tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF
 EOF
 
 echo "Installing Chrome Flatpak with GPU acceleration"
+flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak install --user --assumeyes flathub-beta com.google.Chrome
 mkdir -p ~/.var/app/com.google.Chrome/config
 touch ~/.var/app/com.google.Chrome/config/chrome-flags.conf
