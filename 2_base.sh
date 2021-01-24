@@ -12,6 +12,7 @@ if [[ $cpu_vendor =~ "AuthenticAMD" ]]
 then
  gpu_drivers="xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
  libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
+ vdpau_environment_variable="export VDPAU_DRIVER=radeonsi"
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
  gpu_drivers="vulkan-intel lib32-vulkan-intel intel-media-driver libvdpau-va-gl"
