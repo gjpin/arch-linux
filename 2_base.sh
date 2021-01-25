@@ -132,14 +132,17 @@ sudo mkinitcpio -p linux
 sudo mkinitcpio -p linux-lts
 sudo plymouth-set-default-theme -R bgrt
 
-echo "Improving laptop battery"
-if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
+if [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
 echo "Installing and starting thermald"
 sudo pacman -S --noconfirm thermald
 sudo systemctl start thermald.service
 sudo systemctl enable thermald.service
+fi
 
+if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
+then
+echo "Improving laptop battery"
 echo "Enabling audio power saving features"
 sudo touch /etc/modprobe.d/audio_powersave.conf
 sudo tee -a /etc/modprobe.d/audio_powersave.conf << EOF
