@@ -114,6 +114,7 @@ echo "Set environment variables and alias"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
 alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
+export TERM=xterm
 EOF
 
 echo "Installing yay"
