@@ -42,6 +42,9 @@ echo "Improving Plymouth support"
 sudo systemctl disable gdm.service
 sudo systemctl enable gdm-plymouth.service
 
+echo "Improving media compatibility"
+sudo pacman -S --noconfirm gst-libav
+
 # echo "Enabling Arch repositories in Gnome Software"
 # sudo pacman -S --noconfirm gnome-software-packagekit-plugin
 
