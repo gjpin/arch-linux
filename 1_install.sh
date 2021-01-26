@@ -6,7 +6,7 @@ user_password=""
 hostname=""
 username=""
 continent_city=""
-swap_size="16"
+swap_size="16" # same as ram if using hibernation, otherwise minimum of 8
 
 # Set different microcode, kernel params and initramfs modules according to CPU vendor
 cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
