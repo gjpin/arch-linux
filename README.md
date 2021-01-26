@@ -105,17 +105,6 @@ mount /dev/vg0/root /mnt
 arch-chroot /mnt
 ```
 
-### How to setup Github with SSH Key
-
-```
-git config --global user.email "Github external email"
-git config --global user.name "Github username"
-ssh-keygen -t rsa -b 4096 -C "Github email"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
-copy SSH key and add to Github (eg. vim ~/.ssh/id_rsa.pub and copy content into github.com)
-```
-
 ### How to install Firefox Gnome theme
 ```
 echo "Installing Firefox Flatpak Gnome theme"
@@ -123,7 +112,6 @@ git clone https://github.com/rafaelmardojai/firefox-gnome-theme/ && cd firefox-g
 ./scripts/install.sh -f ~/.var/app/org.mozilla.firefox/.mozilla/firefox
 rm -rf ~/firefox-gnome-theme
 ```
-
 
 ### How to install Lutris and Steam (Flatpak)
 
