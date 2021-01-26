@@ -28,6 +28,7 @@ echo "Setting font sizes"
 gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Cantarell Bold 10'
 gsettings set org.gnome.desktop.interface font-name 'Cantarell 10'
 gsettings set org.gnome.desktop.interface document-font-name 'Cantarell 10'
+gsettings set org.gnome.desktop.interface monospace-font-name "Cascadia Mono Regular 11"
 
 echo "Setting custom shortcuts"
 gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
@@ -35,6 +36,7 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'gnome-terminal'
 gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Gnome Terminal'
 gsettings set org.gnome.desktop.wm.keybindings close ['<Shift><Super>q']
+gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip ['<Shift><Super>s']
 
 echo "Improving Plymouth support"
 sudo systemctl disable gdm.service
