@@ -56,32 +56,21 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-3. Clear all existing partitions (see below: MISC - How to clear all partitions)
-4. Give highest priority to the closest mirror to you on /etc/pacman.d/mirrorlist by moving it to the top
-5. Sync repos: `pacman -Sy` and install wget `pacman -S wget`
-6. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/1_install.sh`
-7. Change the variables at the top of the file (lines 3 through 9)
+3. Give highest priority to the closest mirror to you on /etc/pacman.d/mirrorlist by moving it to the top
+4. Sync repos: `pacman -Sy` and install wget `pacman -S wget`
+5. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/1_install.sh`
+6. Change the variables at the top of the file (lines 3 through 9)
    - continent_country must have the following format: Zone/SubZone . e.g. Europe/Berlin
    - run `timedatectl list-timezones` to see full list of zones and subzones
-8. Make the script executable: `chmod +x 1_install.sh`
-9. Run the script: `./1_install.sh`
-10. Reboot into Arch Linux
-11. Connect to wifi with `nmtui`
-12. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
-13. Make the script executable: `chmod +x 2_gnome.sh` or `chmod +x 2_plasma.sh` or `chmod +x 2_sway.sh`
-14. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
+7. Make the script executable: `chmod +x 1_install.sh`
+8. Run the script: `./1_install.sh`
+9. Reboot into Arch Linux
+10. Connect to wifi with `nmtui`
+11. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
+12. Make the script executable: `chmod +x 2_gnome.sh` or `chmod +x 2_plasma.sh` or `chmod +x 2_sway.sh`
+13. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
 
 ## Misc guides
-
-### How to clear all partitions
-
-```
-gdisk /dev/nvme0n1
-x
-z
-y
-y
-```
 
 ### Firefox required configs for VA-API support
 - Run ```flatpak --user override --socket=wayland --env="MOZ_WEBRENDER=1 MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox```
