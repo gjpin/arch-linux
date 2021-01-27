@@ -55,10 +55,8 @@ echo "Formatting EFI partition"
 mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
 
 echo "Encrypting and opening system partition"
-# TODO - missing 'yes'
-# TODO - miossing password for both luksformat and open
-cryptsetup luksFormat -h sha512 -s 512 --use-random --type luks2 -c aes-xts-plain64 /dev/disk/by-partlabel/cryptsystem
-cryptsetup open /dev/disk/by-partlabel/cryptsystem system
+printf "%s" "$encryption_passphrase" | cryptsetup luksFormat -h sha512 -s 512 --use-random --type luks2 -c aes-xts-plain64 /dev/disk/by-partlabel/cryptsystem
+printf "%s" "$encryption_passphrase" | cryptsetup open /dev/disk/by-partlabel/cryptsystem system
 
 echo "Setting up encrypted swap"
 cryptsetup open --type plain --key-file /dev/urandom /dev/disk/by-partlabel/cryptswap swap
@@ -126,22 +124,19 @@ sed -i 's/#COMPRESSION="lz4"/COMPRESSION="zstd"/g' /etc/mkinitcpio.conf
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
 
+# TODO - confirm if correct UUIDs are being used
 echo "Setting up grub"
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 
 echo "Configuring grub"
-# /etc/default/grub
 rm /etc/default/grub
 touch /etc/default/grub
 tee -a /etc/default/grub << EOF
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=3
 GRUB_DISTRIBUTOR="Arch Linux"
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap / rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet splash rw"
 GRUB_CMDLINE_LINUX=""
-
-rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap / rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
-# TODO - confirm if correct UUIDs are being used
 
 GRUB_PRELOAD_MODULES="part_gpt"
 
