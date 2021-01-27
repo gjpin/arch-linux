@@ -5,6 +5,10 @@ wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
+echo "Downloading wallpaper"
+mkdir -p ~/Pictures/wallpapers
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.png
+
 echo "Installing i3, dependencies and additional packages"
 sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock arandr pavucontrol brightnessctl #picom
 

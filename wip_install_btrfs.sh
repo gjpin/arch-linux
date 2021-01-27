@@ -120,9 +120,8 @@ echo -en "$user_password\n$user_password" | passwd $username
 echo "Generating initramfs"
 sed -i 's/^HOOKS.*/HOOKS=(base systemd sd-vconsole modconf keyboard block filesystems btrfs sd-encrypt fsck)/' /etc/mkinitcpio.conf
 sed -i 's/^MODULES.*/MODULES=($initramfs_modules)/' /etc/mkinitcpio.conf
-sed -i 's/#COMPRESSION="lz4"/COMPRESSION="zstd"/g' /etc/mkinitcpio.conf
-mkinitcpio -p linux
-mkinitcpio -p linux-lts
+sed -i 's/#COMPRESSION="lz4"/COMPRESSION="lz4"/g' /etc/mkinitcpio.conf
+mkinitcpio -P
 
 # TODO - confirm if correct UUIDs are being used
 echo "Setting up grub"
@@ -134,8 +133,8 @@ touch /etc/default/grub
 tee -a /etc/default/grub << EOB
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=3
-GRUB_DISTRIBUTOR="Arch Linux"
-GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap / rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet splash rw"
+GRUB_DISTRIBUTOR="Arch"
+GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet splash rw"
 GRUB_CMDLINE_LINUX=""
 
 GRUB_PRELOAD_MODULES="part_gpt"

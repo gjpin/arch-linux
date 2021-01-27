@@ -40,10 +40,6 @@ sudo pacman -S --noconfirm mesa lib32-mesa $gpu_drivers vulkan-icd-loader lib32-
 echo "Improving hardware video accelaration"
 sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
 
-# Reference: https://github.com/lutris/docs/blob/master/WineDependencies.md
-# echo "Installing Lutris (with Wine support)"
-# sudo pacman -S --noconfirm lutris wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs
-
 echo "Installing common applications"
 sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
 
@@ -104,11 +100,6 @@ sudo pacman -S --noconfirm xdg-user-dirs
 
 echo "Installing fonts"
 sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome noto-fonts-emoji ttf-hanazono adobe-source-code-pro-fonts ttf-cascadia-code inter-font
-
-echo "Downloading wallpapers and Arch Linux icon"
-mkdir -p ~/Pictures/wallpapers
-wget -P ~/Pictures/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/arch.png
-wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.png
 
 echo "Set environment variables and alias"
 touch ~/.bashrc
@@ -172,8 +163,8 @@ export JAVA_FONTS=/usr/share/fonts/TTF
 EOF
 
 echo "Enabling bluetooth"
-sudo systemctl enable bluetooth.service
 sudo systemctl start bluetooth.service
+sudo systemctl enable bluetooth.service
 
 echo "Disabling root (still allows sudo)"
 passwd --lock root

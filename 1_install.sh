@@ -69,7 +69,7 @@ yes | mkswap /dev/vg0/swap
 swapon /dev/vg0/swap
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware lvm2 device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
+yes '' | pacstrap /mnt base base-devel efibootmgr linux linux-headers linux-lts linux-lts-headers linux-firmware lvm2 device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
 
 echo "Generating fstab"
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -77,7 +77,8 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash <<EOF
 echo "Setting system clock"
-ln -sf /usr/share/zoneinfo/$continent_city /etc/localtime
+timedatectl set-ntp 1
+timedatectl set-timezone $continent_city
 hwclock --systohc --localtime
 
 echo "Setting locales"
@@ -95,16 +96,14 @@ echo "Setting root password"
 echo -en "$root_password\n$root_password" | passwd
 
 echo "Creating new user"
-useradd -m -G wheel -s /bin/bash $username
-usermod -a -G video $username
+useradd -m -G wheel,video -s /bin/bash $username
 echo -en "$user_password\n$user_password" | passwd $username
 
 echo "Generating initramfs"
 sed -i 's/^HOOKS.*/HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block sd-encrypt sd-lvm2 filesystems fsck)/' /etc/mkinitcpio.conf
 sed -i 's/^MODULES.*/MODULES=(ext4 $initramfs_modules)/' /etc/mkinitcpio.conf
 sed -i 's/#COMPRESSION="lz4"/COMPRESSION="lz4"/g' /etc/mkinitcpio.conf
-mkinitcpio -p linux
-mkinitcpio -p linux-lts
+mkinitcpio -P
 
 echo "Setting up systemd-boot"
 bootctl --path=/boot install

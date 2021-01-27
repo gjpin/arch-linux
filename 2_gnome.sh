@@ -45,30 +45,12 @@ sudo systemctl enable gdm-plymouth.service
 echo "Improving media compatibility"
 sudo pacman -S --noconfirm gst-libav
 
+echo "Installing virt-manager"
+sudo pacman -S --noconfirm virt-manager ebtables dnsmasq
+sudo systemctl start libvirtd.service
+sudo systemctl enable libvirtd.service
+
 # echo "Enabling Arch repositories in Gnome Software"
 # sudo pacman -S --noconfirm gnome-software-packagekit-plugin
-
-# echo "Downloading GTK theme"
-# git clone https://github.com/ZorinOS/zorin-desktop-themes
-# mkdir ~/.themes
-# mv ~/zorin-desktop-themes/ZorinGrey-Light/ ~/.themes
-# mv ~/zorin-desktop-themes/ZorinGrey-Dark/ ~/.themes
-# rm -rf ~/zorin-desktop-themes/
-
-# echo "Changing panel/top bar transparency to 1.00"
-# sed -i 's/background-color: rgba(0, 0, 0, 0.5);/background-color: rgba(0, 0, 0, 1.0);/g' ~/.themes/ZorinGrey-Dark/gnome-shell/gnome-shell.css
-
-# echo "Downloading icons"
-# git clone https://github.com/ZorinOS/zorin-icon-themes
-# mkdir -p ~/.local/share/icons/
-# mv ~/zorin-icon-themes/ZorinGrey-Dark/ ~/.local/share/icons/
-# mv ~/zorin-icon-themes/ZorinGrey-Light/ ~/.local/share/icons/
-# rm -rf ~/zorin-icon-themes/
-
-# echo "Setting themes"
-# gsettings set org.gnome.shell enabled-extensions ['user-theme@gnome-shell-extensions.gcampax.github.com']
-# gsettings set org.gnome.desktop.interface gtk-theme 'ZorinGrey-Light'
-# gsettings set org.gnome.desktop.interface icon-theme 'ZorinGrey-Light'
-# gsettings set org.gnome.shell.extensions.user-theme name 'ZorinGrey-Dark'
 
 echo "Your setup is ready. You can reboot now!"
