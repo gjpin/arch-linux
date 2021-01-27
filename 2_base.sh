@@ -41,7 +41,7 @@ echo "Improving hardware video accelaration"
 sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
 
 echo "Installing common applications"
-sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
+sudo pacman -S --noconfirm vi vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
 
 echo "Adding Flathub repositories (Flatpak)"
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
