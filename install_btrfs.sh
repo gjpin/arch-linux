@@ -14,7 +14,7 @@ then
  DRIVE=/dev/nvme0n1
 elif [[ $(lsblk -d -o name) =~ "sda" ]]
 then
- DRIVE=/dev/sda1
+ DRIVE=/dev/sda
 else
  DRIVE=/dev/vda
 fi
@@ -55,6 +55,8 @@ echo "Formatting EFI partition"
 mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
 
 echo "Encrypting and opening system partition"
+# TODO - missing 'yes'
+# TODO - miossing password for both luksformat and open
 cryptsetup luksFormat -h sha512 -s 512 --use-random --type luks2 -c aes-xts-plain64 /dev/disk/by-partlabel/cryptsystem
 cryptsetup open /dev/disk/by-partlabel/cryptsystem system
 
@@ -81,7 +83,7 @@ mkdir /mnt/boot
 mount LABEL=EFI /mnt/boot
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel btrfs-progs grub grub-btrfs snapper gptfdisk linux linux-headers linux-lts linux-lts-headers linux-firmware device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
+yes '' | pacstrap /mnt base base-devel btrfs-progs efibootmgr grub grub-btrfs snapper gptfdisk linux linux-headers linux-lts linux-lts-headers linux-firmware device-mapper e2fsprogs $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
 
 echo "Generating fstab"
 genfstab -L -p /mnt >> /mnt/etc/fstab
@@ -126,6 +128,33 @@ mkinitcpio -p linux-lts
 
 echo "Setting up grub"
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+
+echo "Configuring grub"
+# /etc/default/grub
+rm /etc/default/grub
+touch /etc/default/grub
+tee -a /etc/default/grub << EOF
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=3
+GRUB_DISTRIBUTOR="Arch Linux"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+GRUB_CMDLINE_LINUX=""
+
+rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap / rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
+# TODO - confirm if correct UUIDs are being used
+
+GRUB_PRELOAD_MODULES="part_gpt"
+
+GRUB_TIMEOUT_STYLE=menu
+
+GRUB_TERMINAL_INPUT=console
+
+GRUB_GFXMODE=auto
+
+GRUB_GFXPAYLOAD_LINUX=keep
+
+GRUB_DISABLE_RECOVERY=true
+EOF
 
 echo "Generating new grub config"
 grub-mkconfig -o /boot/grub/grub.cfg
