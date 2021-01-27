@@ -133,6 +133,9 @@ flatpak install --user --assumeyes flathub-beta org.freedesktop.Platform.GL.mesa
 flatpak install --user --assumeyes flathub-beta net.lutris.Lutris//beta
 flatpak install --user --assumeyes flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
 
+# Give Lutris Flatpak access to external drive
+flatpak override --user --filesystem=/mnt/Data/Lutris net.lutris.Lutris
+
 # Install Steam
 flatpak install --user --assumeyes flathub com.valvesoftware.Steam
 flatpak install --user --assumeyes com.valvesoftware.Steam.CompatibilityTool.Proton
@@ -140,8 +143,9 @@ flatpak install --user --assumeyes com.valvesoftware.Steam.CompatibilityTool.Pro
 # Give Steam Flatpak access to external drive
 flatpak override --user --filesystem=/mnt/Data/Games com.valvesoftware.Steam
 
-# Make Steam use mesa-git
+# Make Steam and Lutris Flatpak use mesa-git
 sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," ~/.local/share/flatpak/exports/share/applications/com.valvesoftware.Steam.desktop
+sed -i "s,Exec=,Exec=env FLATPAK_GL_DRIVERS=mesa-git ," ~/.local/share/flatpak/exports/share/applications/net.lutris.Lutris.desktop
 
 # Download latest release from GloriousEggroll/proton-ge-custom and move it to Steam Flatpak
 curl -Ls https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep -wo "https.*tar.gz" | wget -qi -
