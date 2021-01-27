@@ -93,7 +93,7 @@ cryptswap      /dev/disk/by-partlabel/cryptswap             /dev/urandom        
 EOF
 
 echo "Configuring new system"
-arch-chroot /mnt /bin/bash <<EOF
+arch-chroot /mnt /bin/bash << EOF
 echo "Setting system clock"
 timedatectl set-ntp 1
 timedatectl set-timezone $continent_city
@@ -131,7 +131,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 echo "Configuring grub"
 rm /etc/default/grub
 touch /etc/default/grub
-tee -a /etc/default/grub << EOF
+tee -a /etc/default/grub << EOB
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=3
 GRUB_DISTRIBUTOR="Arch Linux"
@@ -149,7 +149,7 @@ GRUB_GFXMODE=auto
 GRUB_GFXPAYLOAD_LINUX=keep
 
 GRUB_DISABLE_RECOVERY=true
-EOF
+EOB
 
 echo "Generating new grub config"
 grub-mkconfig -o /boot/grub/grub.cfg
