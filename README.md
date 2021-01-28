@@ -13,6 +13,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - Hibernate support
 - Kernel: LZ4 compression
 - NMI watchdog disabled
+- Swappiness set to 20
 
 ### Requirements
 

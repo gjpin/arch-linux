@@ -109,7 +109,6 @@ echo "Setting up systemd-boot"
 bootctl --path=/boot install
 
 mkdir -p /boot/loader/
-echo ' ' > /boot/loader/loader.conf
 tee -a /boot/loader/loader.conf << END
 default arch.conf
 timeout 2
@@ -152,6 +151,10 @@ Description = Updating systemd-boot
 When = PostTransaction
 Exec = /usr/bin/bootctl update
 END
+
+echo "Setting swappiness to 20"
+touch /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness=20' > /etc/sysctl.d/99-swappiness.conf
 
 echo "Enabling periodic TRIM"
 systemctl enable fstrim.timer
