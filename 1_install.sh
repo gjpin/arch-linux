@@ -77,7 +77,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash <<EOF
 echo "Setting system clock"
-timedatectl set-ntp 1
+timedatectl set-ntp true
 timedatectl set-timezone $continent_city
 hwclock --systohc --localtime
 
