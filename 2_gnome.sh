@@ -46,7 +46,7 @@ echo "Improving media compatibility"
 sudo pacman -S --noconfirm gst-libav
 
 echo "Installing virt-manager"
-sudo pacman -S --noconfirm virt-manager ebtables dnsmasq
+sudo pacman -S --noconfirm virt-manager dmidecode ebtables dnsmasq
 sudo systemctl start libvirtd.service
 sudo systemctl enable libvirtd.service
 
