@@ -56,7 +56,7 @@ btrfs subvol create /mnt/snapshots/@
 btrfs subvol create /mnt/snapshots/@home
 
 umount /mnt
-mkdir -p /mnt/{boot,home,.snapshots}
+mkdir -p /mnt/{boot,home,.snapshots/root,.snapshots/home}
 mount -o compress=zstd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
 mount -o compress=zstd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
 mount -o compress=zstd,noatime,subvol=/snapshots/@ /dev/mapper/cryptroot /mnt/.snapshots/root
@@ -67,7 +67,7 @@ echo "Installing Arch Linux"
 yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware efibootmgr btrfs-progs dosfstools e2fsprogs lvm2 device-mapper $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
 
 echo "Generating fstab"
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab /mnt >> /mnt/etc/fstab
 
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash << EOF
@@ -153,8 +153,8 @@ truncate -s 0 /swapspace/swapfile
 chattr +C /swapspace/swapfile
 btrfs property set /swapspace/swapfile compression none
 fallocate -l "$swap_size"G /swapspace/swapfile
-mkswap /swapspace/swapfile
 chmod 600 /swapspace/swapfile
+mkswap /swapspace/swapfile
 
 echo "Activating swapfile"
 swapon /swapspace/swapfile
