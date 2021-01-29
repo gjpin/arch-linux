@@ -31,7 +31,7 @@ echo "Syncing packages database"
 pacman -Sy --noconfirm
 
 echo "Wiping drive"
-sgdisk --zap-all $DRIVE
+sgdisk --zap-all /dev/nvme0n1
 
 echo "Creating partition tables"
 printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/nvme0n1
