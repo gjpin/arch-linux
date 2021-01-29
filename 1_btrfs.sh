@@ -38,6 +38,7 @@ printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/vda
 printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/vda
 
 echo "Setting up cryptographic volume"
+mkdir -p -m0700 /run/cryptsetup
 echo "$encryption_passphrase" | cryptsetup -q -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/vda2
 echo "$encryption_passphrase" | cryptsetup luksOpen /dev/vda2 cryptroot
 
@@ -56,7 +57,11 @@ btrfs subvol create /mnt/snapshots/@
 btrfs subvol create /mnt/snapshots/@home
 
 umount /mnt
-mkdir -p /mnt/{boot,home,.snapshots/root,.snapshots/home}
+# mkdir -p /mnt/{boot,home,.snapshots/root,.snapshots/home}
+mkdir -p /mnt/boot
+mkdir -p /mnt/home
+mkdir -p /mnt/.snapshots/root
+mkdir -p /mnt/.snapshots/home
 mount -o compress=zstd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
 mount -o compress=zstd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
 mount -o compress=zstd,noatime,subvol=/snapshots/@ /dev/mapper/cryptroot /mnt/.snapshots/root
