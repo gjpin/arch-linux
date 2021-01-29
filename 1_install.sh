@@ -38,8 +38,8 @@ printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/nvme0n1
 printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/nvme0n1
 
 echo "Setting up cryptographic volume"
-printf "%s" "$encryption_passphrase" | cryptsetup -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/nvme0n1p2
-printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p2 cryptlvm
+echo "$encryption_passphrase" | cryptsetup -q -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/nvme0n1p2
+echo "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p2 cryptlvm
 
 echo "Creating physical volume"
 pvcreate /dev/mapper/cryptlvm

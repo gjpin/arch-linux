@@ -38,8 +38,8 @@ printf "n\n1\n4096\n+512M\nef00\nw\ny\n" | gdisk /dev/vda
 printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/vda
 
 echo "Setting up cryptographic volume"
-printf "%s" "$encryption_passphrase" | cryptsetup -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/vda2
-printf "%s" "$encryption_passphrase" | cryptsetup luksOpen /dev/vda2 cryptroot
+echo "$encryption_passphrase" | cryptsetup -q -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/vda2
+echo "$encryption_passphrase" | cryptsetup luksOpen /dev/vda2 cryptroot
 
 echo "Formatting the partitions"
 mkfs.fat -F32 -n LINUXEFI /dev/vda1
