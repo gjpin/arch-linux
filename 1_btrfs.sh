@@ -57,12 +57,8 @@ btrfs subvol create /mnt/snapshots/@
 btrfs subvol create /mnt/snapshots/@home
 
 umount /mnt
-# mkdir -p /mnt/{boot,home,.snapshots/root,.snapshots/home}
-mkdir -p /mnt/boot
-mkdir -p /mnt/home
-mkdir -p /mnt/.snapshots/root
-mkdir -p /mnt/.snapshots/home
 mount -o compress=zstd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
+mkdir -p /mnt/{boot,home,.snapshots/root,.snapshots/home}
 mount -o compress=zstd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
 mount -o compress=zstd,noatime,subvol=/snapshots/@ /dev/mapper/cryptroot /mnt/.snapshots/root
 mount -o compress=zstd,noatime,subvol=/snapshots/@home /dev/mapper/cryptroot /mnt/.snapshots/home
