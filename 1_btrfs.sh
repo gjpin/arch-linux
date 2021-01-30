@@ -146,24 +146,26 @@ END
 
 echo "Setting up swap"
 echo "Mounting swapfile subvolume"
-mkdir /swapspace
-mount -o noatime,subvol=@swap /dev/mapper/cryptroot /swapspace
+mkdir /swap
+mount -o noatime,subvol=@swap /dev/mapper/cryptroot /swap
 
 echo "Creating swapfile"
-truncate -s 0 /swapspace/swapfile
-chattr +C /swapspace/swapfile
-btrfs property set /swapspace/swapfile compression none
+truncate -s 0 /swap/swapfile
+chattr +C /swap/swapfile
+btrfs property set /swap/swapfile compression none
 fallocate -l "$swap_size"G /swapspace/swapfile
-chmod 600 /swapspace/swapfile
-mkswap /swapspace/swapfile
+
+echo "Setting correct permissions and formatting to swap"
+chmod 600 /swap/swapfile
+mkswap /swap/swapfile
 
 echo "Activating swapfile"
-swapon /swapspace/swapfile
+swapon /swap/swapfile
 
 echo "Adding swap entry to fstab"
 tee -a /etc/crypttab << END
-/dev/mapper/cryptroot /swapspace btrfs rw,noatime,space_cachesubvol=@swap 0 0
-/swapspace/swapfile none swap defaults,discard 0 0
+/dev/mapper/cryptroot /swap btrfs rw,noatime,space_cachesubvol=@swap 0 0
+/swap/swapfile none swap defaults,discard 0 0
 END
 
 echo "Setting swappiness to 20"
