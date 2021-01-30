@@ -125,7 +125,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /$cpu_microcode.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/vda2)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/vda3)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
 END
 
 touch /boot/loader/entries/arch-lts.conf
@@ -134,7 +134,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$cpu_microcode.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/vda2)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/vda3)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
 END
 
 echo "Setting up Pacman hook for automatic systemd-boot updates"
