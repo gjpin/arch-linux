@@ -65,7 +65,7 @@ mount -o compress=zstd,noatime,subvol=/snapshots/@home /dev/mapper/cryptroot /mn
 mount /dev/vda1 /mnt/boot
 
 echo "Installing Arch Linux"
-yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware efibootmgr btrfs-progs dosfstools e2fsprogs lvm2 device-mapper $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
+yes '' | pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware efibootmgr btrfs-progs dosfstools e2fsprogs device-mapper $cpu_microcode cryptsetup networkmanager wget man-db man-pages nano diffutils flatpak lm_sensors
 
 echo "Generating fstab"
 genfstab /mnt >> /mnt/etc/fstab
@@ -163,8 +163,8 @@ echo "Activating swapfile"
 swapon /swap/swapfile
 
 echo "Adding swap entry to fstab"
-tee -a /etc/crypttab << END
-/dev/mapper/cryptroot /swap btrfs rw,noatime,space_cachesubvol=@swap 0 0
+tee -a /etc/fstab << END
+#/dev/mapper/cryptroot /swap btrfs rw,noatime,space_cachesubvol=@swap 0 0
 /swap/swapfile none swap defaults,discard 0 0
 END
 
