@@ -6,22 +6,7 @@ user_password="test"
 hostname="test"
 username="test"
 continent_city="Europe/Paris"
-swap_size="2"
-
-# this block of code is meant for testing. set your DRIVE variable below accordingly
-if [[ $(lsblk -d -o name) =~ "nvme" ]]
-then
- DRIVE=/dev/nvme0n1
-elif [[ $(lsblk -d -o name) =~ "sda" ]]
-then
- DRIVE=/dev/sda
-else
- DRIVE=/dev/vda
-fi
-
-# SET THIS VARIABLE TO SPECIFY YOUR DRIVE
-# DRIVE=/dev/nvme0n1
-
+swap_size="2" # same as ram if using hibernation, otherwise minimum of 8
 
 # Set different microcode, kernel params and initramfs modules according to CPU vendor
 cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
@@ -96,7 +81,7 @@ EOF
 echo "Configuring new system"
 arch-chroot /mnt /bin/bash << EOF
 echo "Setting system clock"
-timedatectl set-ntp 1
+timedatectl set-ntp true
 timedatectl set-timezone $continent_city
 hwclock --systohc --localtime
 
@@ -119,41 +104,69 @@ useradd -m -G wheel,video -s /bin/bash $username
 echo -en "$user_password\n$user_password" | passwd $username
 
 echo "Generating initramfs"
-sed -i 's/^HOOKS.*/HOOKS=(base systemd sd-vconsole modconf keyboard block filesystems btrfs sd-encrypt fsck)/' /etc/mkinitcpio.conf
-sed -i 's/^MODULES.*/MODULES=($initramfs_modules)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS.*/HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block sd-encrypt fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^MODULES.*/MODULES=(btrfs $initramfs_modules)/' /etc/mkinitcpio.conf
 sed -i 's/#COMPRESSION="lz4"/COMPRESSION="lz4"/g' /etc/mkinitcpio.conf
 mkinitcpio -P
 
-# TODO - confirm if correct UUIDs are being used
-echo "Setting up grub"
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+echo "Setting up systemd-boot"
+bootctl --path=/boot install
 
-echo "Configuring grub"
-rm /etc/default/grub
-touch /etc/default/grub
-tee -a /etc/default/grub << EOB
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=3
-GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="rd.luks.name=$(blkid -s UUID -o value /dev/disk/by-partlabel/cryptsystem)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root resume=/dev/mapper/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet splash rw"
-GRUB_CMDLINE_LINUX=""
+mkdir -p /boot/loader/
+tee -a /boot/loader/loader.conf << END
+default arch.conf
+timeout 3
+END
 
-GRUB_PRELOAD_MODULES="part_gpt"
+mkdir -p /boot/loader/entries/
+touch /boot/loader/entries/arch.conf
+tee -a /boot/loader/entries/arch.conf << END
+title Arch Linux
+linux /vmlinuz-linux
+initrd /$cpu_microcode.img
+initrd /initramfs-linux.img
+options rd.luks.name=$(blkid -s UUID -o value /dev/vda2)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
+END
 
-GRUB_TIMEOUT_STYLE=menu
+touch /boot/loader/entries/arch-lts.conf
+tee -a /boot/loader/entries/arch-lts.conf << END
+title Arch Linux LTS
+linux /vmlinuz-linux-lts
+initrd /$cpu_microcode.img
+initrd /initramfs-linux-lts.img
+options rd.luks.name=$(blkid -s UUID -o value /dev/vda2)=cryptsystem root=UUID=$(btrfs filesystem show system | grep -Po 'uuid: \K.*') rootflags=subvol=root rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
+END
 
-GRUB_TERMINAL_INPUT=console
+echo "Setting up Pacman hook for automatic systemd-boot updates"
+mkdir -p /etc/pacman.d/hooks/
+touch /etc/pacman.d/hooks/systemd-boot.hook
+tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
 
-GRUB_GFXMODE=auto
+[Action]
+Description = Updating systemd-boot
+When = PostTransaction
+Exec = /usr/bin/bootctl update
+END
 
-GRUB_GFXPAYLOAD_LINUX=keep
+echo "Setting swappiness to 20"
+touch /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness=20' > /etc/sysctl.d/99-swappiness.conf
 
-GRUB_DISABLE_RECOVERY=true
-EOB
+echo "Enabling periodic TRIM"
+systemctl enable fstrim.timer
 
-echo "Generating new grub config"
-grub-mkconfig -o /boot/grub/grub.cfg
+echo "Enabling NetworkManager"
+systemctl enable NetworkManager
 
 echo "Adding user as a sudoer"
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 EOF
+
+umount -R /mnt
+swapoff -a
+
+echo "Arch Linux is ready. You can reboot now!"

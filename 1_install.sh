@@ -39,7 +39,7 @@ printf "n\n2\n\n\n8e00\nw\ny\n" | gdisk /dev/nvme0n1
 
 echo "Setting up cryptographic volume"
 mkdir -p -m0700 /run/cryptsetup
-echo "$encryption_passphrase" | cryptsetup -q -h sha512 -s 512 --use-random --type luks2 luksFormat /dev/nvme0n1p2
+echo "$encryption_passphrase" | cryptsetup -q --align-payload=8192 -h sha512 -s 512 --use-random --type luks2 -c aes-xts-plain64 luksFormat /dev/nvme0n1p2
 echo "$encryption_passphrase" | cryptsetup luksOpen /dev/nvme0n1p2 cryptlvm
 
 echo "Creating physical volume"
