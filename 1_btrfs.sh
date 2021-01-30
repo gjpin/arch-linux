@@ -153,11 +153,11 @@ echo "Creating swapfile"
 truncate -s 0 /swap/swapfile
 chattr +C /swap/swapfile
 btrfs property set /swap/swapfile compression none
-fallocate -l "$swap_size"G /swapspace/swapfile
+fallocate -l "$swap_size"G /swap/swapfile
 
 echo "Setting correct permissions and formatting to swap"
-chmod 600 /swap/swapfile
 mkswap /swap/swapfile
+chmod 600 /swap/swapfile
 
 echo "Activating swapfile"
 swapon /swap/swapfile
