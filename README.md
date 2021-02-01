@@ -35,7 +35,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─vg0-root |  lvm  |     /      |
 
 ## Post install script
-- KDE / Gnome / Sway (separate scripts)
+- Gnome / KDE / Sway / i3 (separate scripts)
 - UFW (deny incoming, allow outgoing)
 - Automatic login
 - Fonts
@@ -44,11 +44,11 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - yay (AUR helper)
 - Plymouth
 - Flatpak support
-- Lutris with Wine support (commented)
 - Syncthing
 - Browsers:
-  - Chromium: hardware acceleration enabled
   - Firefox: via Flatpak, with hardware acceleration enabled (see below: MISC - Firefox required configs for VA-API support)
+  - Chrome: via Flatpak, with hardware acceleration enabled
+  - Chromium: via Flatpak, with hardware acceleration enabled
 
 ## Installation guide
 
