@@ -49,8 +49,10 @@ flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-
 flatpak update --appstream
 
 echo "Installing Flatpak GTK breeze themes"
-flatpak install --user --assumeyes org.gtk.Gtk3theme.Breeze
-flatpak install --user --assumeyes org.gtk.Gtk3theme.Breeze-Dark
+flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Breeze
+flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Breeze-Dark
+flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Adwaita
+flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Adwaita-dark
 
 echo "Installing Firefox Flatpak"
 flatpak install --user --assumeyes flathub org.mozilla.firefox
