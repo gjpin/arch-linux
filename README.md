@@ -11,7 +11,6 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - Intel/AMD microcode
 - Standard Kernel + LTS kernel as fallback
 - Hibernate support
-- Kernel: LZ4 compression
 - NMI watchdog disabled
 - Swappiness set to 20
 
