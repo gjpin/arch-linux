@@ -20,8 +20,8 @@ then
  vdpau_environment_variable="export VDPAU_DRIVER=va_gl"
 fi
 
-echo "Adding multilib support"
-sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+#echo "Adding multilib support"
+#sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "Syncing repos and updating packages"
 sudo pacman -Syu --noconfirm
