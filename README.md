@@ -77,7 +77,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
   - Note: base script already sets the required environment variables. Only changing these 2 configs suffices
 
 ### How to enable secure boot
-1. sudo pacman -S --noconfirm sbctl
+1. `sudo pacman -S --noconfirm sbctl`
 2. Confirm secure boot is disabled and delete existing keys in the bios (should automatically go into setup mode)
 3. Confirm status (setup mode): `sudo sbctl status`
 4. Create new keys: `sudo sbctl create-keys`
