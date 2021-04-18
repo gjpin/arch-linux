@@ -20,9 +20,6 @@ sudo pacman -S --noconfirm plasma-thunderbolt
 echo "Improve Discover support"
 sudo pacman -S --noconfirm packagekit-qt5
 
-echo "Adding GTK application appearance settings support"
-sudo pacman -S --noconfirm kde-gtk-config
-
 echo "Installing Plasma wayland session"
 sudo pacman -S --noconfirm plasma-wayland-session plasma-wayland-protocols
 
