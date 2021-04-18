@@ -40,7 +40,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - Fonts
 - Wallpapers
 - Multilib
-- yay (AUR helper)
+- paru (AUR helper)
 - Plymouth
 - Flatpak support
 - Syncthing
