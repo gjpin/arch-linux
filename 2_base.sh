@@ -82,7 +82,6 @@ tee -a ~/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
 --enable-zero-copy
 --enable-accelerated-video-decode
 --use-vulkan
---password-store=basic
 EOF
 
 echo "Installing Chromium Flatpak with GPU acceleration"
