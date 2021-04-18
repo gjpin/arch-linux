@@ -106,19 +106,19 @@ sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf
 echo "Set environment variables and alias"
 touch ~/.bashrc
 tee -a ~/.bashrc << EOF
-alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && yay -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
+alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && paru -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 export TERM=xterm
 EOF
 
-echo "Installing yay"
-git clone https://aur.archlinux.org/yay-bin.git
-cd yay-bin
+echo "Installing paru"
+git clone https://aur.archlinux.org/paru-bin.git
+cd paru-bin
 makepkg -si --noconfirm
 cd ..
-rm -rf yay-bin
+rm -rf paru-bin
 
 echo "Installing and configuring Plymouth"
-yay -S --noconfirm plymouth-git
+paru -S --noconfirm plymouth-git
 sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
