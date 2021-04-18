@@ -9,7 +9,7 @@ echo "Installing Xorg"
 sudo pacman -S --noconfirm xorg
 
 echo "Installing Plasma and common applications"
-sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kaccounts-integration kaccounts-providers kate kgpg kmail konsole kwalletmanager okular spectacle kscreen plasma-browser-integration kcalc filelight partitionmanager
+sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kate kgpg konsole kwalletmanager okular spectacle kscreen plasma-browser-integration kcalc filelight partitionmanager
 
 echo "Adding Thunderbolt frontend"
 sudo pacman -S --noconfirm plasma-thunderbolt
