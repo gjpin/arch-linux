@@ -38,8 +38,6 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - UFW (deny incoming, allow outgoing)
 - Automatic login
 - Fonts
-- Wallpapers
-- Multilib
 - paru (AUR helper)
 - Plymouth
 - Flatpak support
