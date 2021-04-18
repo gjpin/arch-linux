@@ -11,6 +11,9 @@ sudo pacman -S --noconfirm xorg
 echo "Installing Plasma and common applications"
 sudo pacman -S --noconfirm plasma ark dolphin dolphin-plugins gwenview kate kgpg konsole kwalletmanager okular spectacle kscreen plasma-browser-integration kcalc filelight partitionmanager
 
+echo "Installing kube email client"
+sudo pacman -S --noconfirm kube
+
 echo "Adding Thunderbolt frontend"
 sudo pacman -S --noconfirm plasma-thunderbolt
 
