@@ -35,6 +35,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 
 ## Post install script
 - Gnome / KDE / Sway / i3 (separate scripts)
+- PipeWire instead of PulseAudio
 - UFW (deny incoming, allow outgoing)
 - Automatic login
 - Fonts
