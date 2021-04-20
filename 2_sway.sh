@@ -142,7 +142,7 @@ flatpak override --user --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.Thunderbird
 # systemctl --user start flatpak-update.timer
 
 echo "Installing wdisplays"
-yay -S --noconfirm wdisplays-git
+paru -S --noconfirm wdisplays-git
 
 echo "Setting some default applications"
 xdg-mime default ristretto.desktop image/jpeg

@@ -117,7 +117,7 @@ cd ..
 rm -rf paru-bin
 
 echo "Installing and configuring Plymouth"
-paru -S --noconfirm plymouth-git
+pacman -S --noconfirm plymouth
 sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf

@@ -38,10 +38,6 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 gsettings set org.gnome.desktop.wm.keybindings close ['<Shift><Super>q']
 gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip ['<Shift><Super>s']
 
-echo "Improving Plymouth support"
-sudo systemctl disable gdm.service
-sudo systemctl enable gdm-plymouth.service
-
 echo "Improving media compatibility"
 sudo pacman -S --noconfirm gst-libav
 

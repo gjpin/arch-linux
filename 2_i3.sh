@@ -13,10 +13,10 @@ echo "Installing i3, dependencies and additional packages"
 sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock arandr pavucontrol brightnessctl #picom
 
 echo "Installing picom-git"
-yay -S --noconfirm picom-git
+paru -S --noconfirm picom-git
 
 echo "Installing polybar"
-yay -S --noconfirm polybar
+paru -S --noconfirm polybar
 
 echo "Configuring i3"
 mkdir -p ~/.config/i3/

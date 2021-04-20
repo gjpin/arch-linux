@@ -77,6 +77,15 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
   - Read original blog post [here](https://mastransky.wordpress.com/2020/06/03/firefox-on-fedora-finally-gets-va-api-on-wayland/)
   - Note: base script already sets the required environment variables. Only changing these 2 configs suffices
 
+### How to install Paru (AUR helper)
+```
+git clone https://aur.archlinux.org/paru-bin.git
+cd paru-bin
+makepkg -si --noconfirm
+cd ..
+rm -rf paru-bin
+```
+
 ### How to enable secure boot
 1. `sudo pacman -S --noconfirm sbctl`
 2. Confirm secure boot is disabled and delete existing keys in the bios (should automatically go into setup mode)
