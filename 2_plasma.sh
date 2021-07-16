@@ -39,8 +39,8 @@ sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-kde breeze-gtk 
 
 echo "Installing KDE Connect and opening required firewall ports"
 sudo pacman -S --noconfirm kdeconnect sshfs
-sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto tcp
-sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto udp
+sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto tcp comment "kde connect"
+sudo ufw allow from 192.168.1.0/24 to any port 1714:1764 proto udp comment "kde connect"
 
 echo "Setting up autologin"
 sudo mkdir -p /etc/sddm.conf.d/

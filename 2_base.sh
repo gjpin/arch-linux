@@ -177,8 +177,8 @@ echo "Install syncthing with autostart on boot"
 sudo pacman -S --noconfirm syncthing
 sudo systemctl enable syncthing@$username.service
 sudo systemctl start syncthing@$username.service
-sudo ufw allow from 192.168.1.0/24 to any port 22000 proto tcp
-sudo ufw allow from 192.168.1.0/24 to any port 21027 proto udp
+sudo ufw allow from 192.168.1.0/24 to any port 22000 proto tcp comment "syncthing"
+sudo ufw allow from 192.168.1.0/24 to any port 21027 proto udp comment "syncthing"
 
 echo "Installing pipewire multimedia framework"
 sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
