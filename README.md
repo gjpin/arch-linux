@@ -101,13 +101,10 @@ rm -rf paru-bin
 7. Confirm what needs to be signed: `sudo sbctl verify`
 8. Sign with new keys:
 
-- `sudo sbctl sign-all`
-- OR
 - `sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI`
 - `sudo sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi`
 - `sudo sbctl sign -s /boot/vmlinuz-linux`
 - `sudo sbctl sign -s /boot/vmlinuz-linux-lts`
-- `sudo sbctl sign -s /usr/lib/fwupd/efi/fwupdx64.efi -o /usr/lib/fwupd/efi/fwupdx64.efi.signed`
 
 9. Reboot and enable secure boot in the bios
 10. Confirm status (secure boot enabled): `sudo sbctl status`
