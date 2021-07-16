@@ -51,4 +51,24 @@ User=$USER
 Session=plasmawayland.desktop
 EOF
 
+echo "Setting Breeze theme in Firefox Flatpak"
+mkdir -p ~/.var/app/org.mozilla.firefox/.mozilla/firefox/config/gtk-3.0
+touch ~/.var/app/org.mozilla.firefox/.mozilla/firefox/config/gtk-3.0/settings.ini
+tee -a ~/.var/app/org.mozilla.firefox/.mozilla/firefox/config/gtk-3.0/settings.ini << EOF
+[Settings]
+gtk-application-prefer-dark-theme=false
+gtk-button-images=true
+gtk-cursor-theme-name=breeze_cursors
+gtk-cursor-theme-size=24
+gtk-decoration-layout=icon:minimize,maximize,close
+gtk-enable-animations=true
+gtk-font-name=Noto Sans,  10
+gtk-icon-theme-name=breeze
+gtk-menu-images=true
+gtk-modules=colorreload-gtk-module:window-decorations-gtk-module
+gtk-primary-button-warps-slider=false
+gtk-theme-name=Breeze
+gtk-toolbar-style=3
+EOF
+
 echo "Your setup is ready. You can reboot now!"
