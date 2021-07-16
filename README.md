@@ -1,4 +1,5 @@
 # Arch Linux install scripts
+
 Note: These scripts are not meant to be another full-fledged Arch installer. They are made to fit my devices: Dell XPS 7390 and custom desktop build (Ryzen 3700X and RX 5700XT). In any case, as long as you don't use a Nvidia GPU, they should work fine.
 
 ## Install script
@@ -24,16 +25,17 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 
 ### Partitions
 
-| Name                                                  | Type  | Mountpoint |
-| ----------------------------------------------------- | :---: | :--------: |
-| nvme0n1                                               | disk  |            |
-| ├─nvme0n1p1                                           | part  |   /boot    |
-| ├─nvme0n1p2                                           | part  |            |
-| &nbsp;&nbsp;&nbsp;└─cryptlvm                        | crypt |            |
+| Name                                                 | Type  | Mountpoint |
+| ---------------------------------------------------- | :---: | :--------: |
+| nvme0n1                                              | disk  |            |
+| ├─nvme0n1p1                                          | part  |   /boot    |
+| ├─nvme0n1p2                                          | part  |            |
+| &nbsp;&nbsp;&nbsp;└─cryptlvm                         | crypt |            |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─vg0-swap |  lvm  |   [SWAP]   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─vg0-root |  lvm  |     /      |
 
 ## Post install script
+
 - Gnome / KDE / Sway / i3 (separate scripts)
 - PipeWire instead of PulseAudio
 - UFW (deny incoming, allow outgoing)
@@ -72,12 +74,14 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 ## Misc guides
 
 ### Firefox required configs for VA-API support
-- Run ```flatpak --user override --socket=wayland --env="MOZ_WEBRENDER=1 MOZ_ENABLE_WAYLAND=1 GTK_USE_PORTAL=1" org.mozilla.firefox```
-- At about:config set ```gfx.webrender.enabled```, ```media.ffmpeg.vaapi.enabled``` ```widget.wayland-dmabuf-vaapi.enabled``` to true and ```media.ffvpx.enabled``` to false and then restart browser
+
+- Run `flatpak --user override --socket=wayland --env=MOZ_WEBRENDER=1 --env=MOZ_ENABLE_WAYLAND=1 --env=GTK_USE_PORTAL=1 org.mozilla.firefox`
+- At about:config set `gfx.webrender.enabled`, `media.ffmpeg.vaapi.enabled` `widget.wayland-dmabuf-vaapi.enabled` to true and `media.ffvpx.enabled` to false and then restart browser
   - Read original blog post [here](https://mastransky.wordpress.com/2020/06/03/firefox-on-fedora-finally-gets-va-api-on-wayland/)
   - Note: base script already sets the required environment variables. Only changing these 2 configs suffices
 
 ### How to install Paru (AUR helper)
+
 ```
 git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin
@@ -87,6 +91,7 @@ rm -rf paru-bin
 ```
 
 ### How to enable secure boot
+
 1. `sudo pacman -S --noconfirm sbctl`
 2. Confirm secure boot is disabled and delete existing keys in the bios (should automatically go into setup mode)
 3. Confirm status (setup mode): `sudo sbctl status`
@@ -95,13 +100,15 @@ rm -rf paru-bin
 6. Confirm status (setup mode should now be disabled): `sudo sbctl status`
 7. Confirm what needs to be signed: `sudo sbctl verify`
 8. Sign with new keys:
-  - `sudo sbctl sign-all`
-  - OR
-  - `sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI`
-  - `sudo sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi`
-  - `sudo sbctl sign -s /boot/vmlinuz-linux`
-  - `sudo sbctl sign -s /boot/vmlinuz-linux-lts`
-  - `sudo sbctl sign -s /usr/lib/fwupd/efi/fwupdx64.efi -o /usr/lib/fwupd/efi/fwupdx64.efi.signed`
+
+- `sudo sbctl sign-all`
+- OR
+- `sudo sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI`
+- `sudo sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi`
+- `sudo sbctl sign -s /boot/vmlinuz-linux`
+- `sudo sbctl sign -s /boot/vmlinuz-linux-lts`
+- `sudo sbctl sign -s /usr/lib/fwupd/efi/fwupdx64.efi -o /usr/lib/fwupd/efi/fwupdx64.efi.signed`
+
 9. Reboot and enable secure boot in the bios
 10. Confirm status (secure boot enabled): `sudo sbctl status`
 
@@ -116,6 +123,7 @@ arch-chroot /mnt
 ```
 
 ### How to install Firefox Gnome theme
+
 ```
 echo "Installing Firefox Flatpak Gnome theme"
 git clone https://github.com/rafaelmardojai/firefox-gnome-theme/ && cd firefox-gnome-theme
