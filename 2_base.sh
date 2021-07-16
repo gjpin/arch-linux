@@ -10,7 +10,7 @@ libva_environment_variable=""
 vdpau_environment_variable=""
 if [[ $cpu_vendor =~ "AuthenticAMD" ]]
 then
- gpu_drivers="xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
+ gpu_drivers="vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
  libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
  vdpau_environment_variable="export VDPAU_DRIVER=radeonsi"
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
@@ -21,7 +21,7 @@ then
 fi
 
 #echo "Adding multilib support"
-#sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "Syncing repos and updating packages"
 sudo pacman -Syu --noconfirm
@@ -181,7 +181,7 @@ sudo ufw allow from 192.168.1.0/24 to any port 22000 proto tcp
 sudo ufw allow from 192.168.1.0/24 to any port 21027 proto udp
 
 echo "Installing pipewire multimedia framework"
-sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack
+sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
 
 echo "Installing Spotify / KeepassXC / LibreOffice Flatpaks"
 flatpak install --user --assumeyes flathub com.spotify.Client
