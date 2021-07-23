@@ -63,13 +63,11 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 6. Change the variables at the top of the file (lines 3 through 9)
    - continent_country must have the following format: Zone/SubZone . e.g. Europe/Berlin
    - run `timedatectl list-timezones` to see full list of zones and subzones
-7. Make the script executable: `chmod +x 1_install.sh`
-8. Run the script: `./1_install.sh`
-9. Reboot into Arch Linux
-10. Connect to wifi with `nmtui`
-11. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
-12. Make the script executable: `chmod +x 2_gnome.sh` or `chmod +x 2_plasma.sh` or `chmod +x 2_sway.sh`
-13. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
+7. Run the script: `./1_install.sh`
+8. Reboot into Arch Linux
+9. Connect to wifi with `nmtui`
+10. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
+11. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
 
 ## Misc guides
 
