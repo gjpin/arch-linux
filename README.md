@@ -59,14 +59,14 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
    - connect to a network: `station wlan0 connect SSID`
 3. Give highest priority to the closest mirror to you on /etc/pacman.d/mirrorlist by moving it to the top
 4. Sync repos: `pacman -Sy` and install wget `pacman -S wget`
-5. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/1_install.sh`
+5. `wget https://raw.githubusercontent.com/gjpin/arch-linux/master/1_install.sh`
 6. Change the variables at the top of the file (lines 3 through 9)
    - continent_country must have the following format: Zone/SubZone . e.g. Europe/Berlin
    - run `timedatectl list-timezones` to see full list of zones and subzones
 7. Run the script: `./1_install.sh`
 8. Reboot into Arch Linux
 9. Connect to wifi with `nmtui`
-10. `wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
+10. `wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
 11. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
 
 ## Misc guides

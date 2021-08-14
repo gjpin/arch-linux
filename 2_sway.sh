@@ -1,38 +1,38 @@
 #!/bin/bash
 
 echo "Downloading and running base script"
-wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_base.sh
+wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Downloading wallpaper"
 mkdir -p ~/Pictures/wallpapers
-wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.png
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/master/images/wallpapers/Viktor_Forgacs.jpg
 
 echo "Installing sway and additional packages"
 sudo pacman -S --noconfirm sway swaylock swayidle waybar rofi light pulseaudio pavucontrol slurp grim ristretto tumbler mousepad
 
 echo "Ricing sway"
 mkdir -p ~/.config/sway
-wget -P ~/.config/sway/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/sway/config
+wget -P ~/.config/sway/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/sway/config
 
 echo "Ricing waybar"
 mkdir -p ~/.config/waybar
-wget -P ~/.config/waybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/waybar/config
-wget -P ~/.config/waybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/waybar/style.css
+wget -P ~/.config/waybar/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/waybar/config
+wget -P ~/.config/waybar/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/waybar/style.css
 
 echo "Ricing rofi"
 mkdir -p ~/.config/rofi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/config.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/base16-one-light.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/base16-onedark.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark-hard.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark-soft.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light-hard.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light-soft.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/config.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/base16-one-light.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/base16-onedark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light.rasi
 
 echo "Enabling sway autostart"
 touch ~/.bash_profile
@@ -45,16 +45,16 @@ EOF
 
 echo "Ricing vim"
 mkdir -p ~/.vim
-wget -P ~/.vim https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/vim/vimrc
+wget -P ~/.vim https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/vim/vimrc
 mkdir -p ~/.vim/colors
-wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/vim/base16-one-light.vim
-wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/vim/base16-onedark.vim
-wget -P ~/.vim/colors https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/vim/gruvbox.vim
+wget -P ~/.vim/colors https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/vim/base16-one-light.vim
+wget -P ~/.vim/colors https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/vim/base16-onedark.vim
+wget -P ~/.vim/colors https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/vim/gruvbox.vim
 
 echo "Installing and ricing Alacritty terminal"
 sudo pacman -S --noconfirm alacritty
 mkdir -p ~/.config/alacritty/
-wget -P ~/.config/alacritty/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/alacritty/alacritty.yml
+wget -P ~/.config/alacritty/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/alacritty/alacritty.yml
 
 echo "Installing thunar with auto-mount and archives creation/deflation support"
 sudo pacman -S --noconfirm thunar gvfs thunar-volman thunar-archive-plugin ark file-roller xarchiver
@@ -66,22 +66,22 @@ echo "Changing GTK and icons themes"
 sudo pacman -S --noconfirm lxappearance
 
 mkdir -p ~/.themes
-wget -P ~/.themes https://raw.githubusercontent.com/exah-io/arch-linux/master/themes-icons/Orchis-light.tar.xz
+wget -P ~/.themes https://raw.githubusercontent.com/gjpin/arch-linux/master/themes-icons/Orchis-light.tar.xz
 tar -xf ~/.themes/Orchis-light.tar.xz -C ~/.themes
 rm -f ~/.themes/Orchis-light.tar.xz
 
 mkdir -p ~/.local/share/icons/
-wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/exah-io/arch-linux/master/themes-icons/01-Tela.tar.xz
+wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/gjpin/arch-linux/master/themes-icons/01-Tela.tar.xz
 tar -xf ~/.themes/01-Tela.tar.xz -C ~/.local/share/icons/
 rm -f ~/.local/share/icons/01-Tela.tar.xz
 
-wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/.gtkrc-2.0
+wget -P ~/.config/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/.gtkrc-2.0
 
 mkdir -p ~/.config/gtk-3.0/
-wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/gtk-3.0/settings.ini
+wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/gtk-3.0/settings.ini
 
 mkdir -p ~/.icons/default/
-wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/index.theme
+wget -P ~/.icons/default/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/index.theme
 
 echo "Enabling suspend and hibernate hotkeys"
 sudo sed -i 's/#HandlePowerKey=poweroff/HandlePowerKey=hibernate/g' /etc/systemd/logind.conf

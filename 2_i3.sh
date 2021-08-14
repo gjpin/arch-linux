@@ -1,13 +1,13 @@
 #!/bin/bash
 
 echo "Downloading and running base script"
-wget https://raw.githubusercontent.com/exah-io/arch-linux/master/2_base.sh
+wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
 echo "Downloading wallpaper"
 mkdir -p ~/Pictures/wallpapers
-wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/exah-io/arch-linux/master/images/wallpapers/2k.png
+wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/master/images/wallpapers/Viktor_Forgacs.jpg
 
 echo "Installing i3, dependencies and additional packages"
 sudo pacman -S --noconfirm xorg xorg-xinit i3-gaps i3lock xorg-xbacklight feh maim rofi pulseaudio network-manager-applet xss-lock arandr pavucontrol brightnessctl #picom
@@ -20,32 +20,32 @@ paru -S --noconfirm polybar
 
 echo "Configuring i3"
 mkdir -p ~/.config/i3/
-wget -P ~/.config/i3/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/i3/config
+wget -P ~/.config/i3/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/i3/config
 
 echo "Configuring picom"
 mkdir -p ~/.config/picom
-wget -P ~/.config/picom/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/picom/picom.conf
+wget -P ~/.config/picom/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/picom/picom.conf
 
 echo "Configuring polybar"
 mkdir -p ~/.config/polybar/
-wget -P ~/.config/polybar/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/polybar/config
+wget -P ~/.config/polybar/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/polybar/config
 
 echo "Ricing rofi"
 mkdir -p ~/.config/rofi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/config.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/base16-one-light.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/base16-onedark.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark-hard.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark-soft.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-dark.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light-hard.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light-soft.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/gruvbox-light.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/ayu-light.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/ayu-dark.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/ayu-mirage.rasi
-wget -P ~/.config/rofi/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/rofi/ayu-light-blue.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/config.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/base16-one-light.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/base16-onedark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-common.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-dark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light-hard.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light-soft.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/gruvbox-light.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/ayu-light.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/ayu-dark.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/ayu-mirage.rasi
+wget -P ~/.config/rofi/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/rofi/ayu-light-blue.rasi
 
 echo "Enabling X server autostart"
 sudo tee -a /etc/profile << EOF
@@ -55,7 +55,7 @@ fi
 EOF
 
 echo "Configuring xinit"
-wget -P ~/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/.xinitrc
+wget -P ~/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/.xinitrc
 
 echo "Enabling autologin"
 sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
@@ -72,7 +72,7 @@ touch ~/.hushlogin
 echo "Installing and ricing Alacritty terminal"
 sudo pacman -S --noconfirm alacritty
 mkdir -p ~/.config/alacritty/
-wget -P ~/.config/alacritty/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/alacritty/alacritty.yml
+wget -P ~/.config/alacritty/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/alacritty/alacritty.yml
 
 echo "Installing Gnome apps (file manager, pdf viewer, image viewer)"
 sudo pacman -S --noconfirm nautilus filemanager-actions file-roller evince eog gedit gnome-calculator
@@ -81,22 +81,22 @@ echo "Changing GTK and icons themes"
 sudo pacman -S --noconfirm lxappearance
 
 mkdir -p ~/.themes
-wget -P ~/.themes https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/themes-icons/Orchis-light.tar.xz
+wget -P ~/.themes https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/themes-icons/Orchis-light.tar.xz
 tar -xf ~/.themes/Orchis-light.tar.xz -C ~/.themes
 rm -f ~/.themes/Orchis-light.tar.xz
 
 mkdir -p ~/.local/share/icons/
-wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/themes-icons/01-Tela.tar.xz
+wget -P ~/.local/share/icons/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/themes-icons/01-Tela.tar.xz
 tar -xf ~/.local/share/icons/01-Tela.tar.xz -C ~/.local/share/icons/
 rm -f ~/.local/share/icons/01-Tela.tar.xz
 
-wget -P ~/.config/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/.gtkrc-2.0
+wget -P ~/.config/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/.gtkrc-2.0
 
 mkdir -p ~/.config/gtk-3.0/
-wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/gtk-3.0/settings.ini
+wget -P ~/.config/gtk-3.0/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/gtk-3.0/settings.ini
 
 mkdir -p ~/.icons/default/
-wget -P ~/.icons/default/ https://raw.githubusercontent.com/exah-io/arch-linux/master/dotfiles/gtk/index.theme
+wget -P ~/.icons/default/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/gtk/index.theme
 
 echo "Setting some default applications"
 xdg-mime default eog.desktop image/jpeg
