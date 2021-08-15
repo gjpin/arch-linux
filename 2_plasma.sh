@@ -58,4 +58,7 @@ wget -P ~/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linu
 echo "Downloading custom shortcuts scheme"
 wget -P ~/Downloads/ https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/plasma/kde_plasma_shortcuts_scheme.kksrc
 
+echo "Setting Firefox Breeze theme"
+flatpak override --user --env=GTK_THEME=Breeze org.mozilla.firefox
+
 echo "Your setup is ready. You can reboot now!"
