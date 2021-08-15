@@ -168,6 +168,6 @@ tar -xzf Proton-* -C ~/.var/app/com.valvesoftware.Steam/data/Steam/compatibility
 # To enable proton ge: https://github.com/GloriousEggroll/proton-ge-custom#enabling
 
 # Allow Steam Link through the Firewall
-sudo ufw allow from 192.168.1.0/24 to any port 27036:27037 proto tcp
-sudo ufw allow from 192.168.1.0/24 to any port 27031:27036 proto udp
+sudo ufw allow from 192.168.1.0/24 to any port 27036:27037 proto tcp comment "steam link"
+sudo ufw allow from 192.168.1.0/24 to any port 27031:27036 proto udp comment "steam link"
 ```
