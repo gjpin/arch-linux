@@ -107,6 +107,7 @@ touch ~/.bashrc
 tee -a ~/.bashrc << EOF
 alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && paru -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 export TERM=xterm
+export LC_ALL=C
 EOF
 
 echo "Installing paru"
