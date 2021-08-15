@@ -181,7 +181,7 @@ sudo ufw allow from 192.168.1.0/24 to any port 22000 proto tcp comment "syncthin
 sudo ufw allow from 192.168.1.0/24 to any port 21027 proto udp comment "syncthing"
 
 echo "Installing pipewire multimedia framework"
-sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
+sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
 
 echo "Installing Spotify / KeepassXC / LibreOffice Flatpaks"
 flatpak install --user --assumeyes flathub com.spotify.Client
