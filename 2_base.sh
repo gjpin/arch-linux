@@ -80,8 +80,8 @@ tee -a ~/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
 --ignore-gpu-blacklist
 --enable-gpu-rasterization
 --enable-zero-copy
---enable-accelerated-video-decode
---use-vulkan
+--enable-features=VaapiVideoDecoder
+--use-gl=desktop
 EOF
 
 echo "Installing Chromium Flatpak with GPU acceleration"
@@ -92,8 +92,8 @@ tee -a ~/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --ignore-gpu-blacklist
 --enable-gpu-rasterization
 --enable-zero-copy
---enable-accelerated-video-decode
---use-vulkan
+--enable-features=VaapiVideoDecoder
+--use-gl=desktop
 EOF
 
 echo "Creating user's folders"
