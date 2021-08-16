@@ -10,18 +10,15 @@ libva_environment_variable=""
 vdpau_environment_variable=""
 if [[ $cpu_vendor =~ "AuthenticAMD" ]]
 then
- gpu_drivers="vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau"
+ gpu_drivers="vulkan-radeon libva-mesa-driver mesa-vdpau"
  libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
  vdpau_environment_variable="export VDPAU_DRIVER=radeonsi"
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
- gpu_drivers="vulkan-intel lib32-vulkan-intel intel-media-driver libvdpau-va-gl"
+ gpu_drivers="vulkan-intel intel-media-driver libvdpau-va-gl"
  libva_environment_variable="export LIBVA_DRIVER_NAME=iHD"
  vdpau_environment_variable="export VDPAU_DRIVER=va_gl"
 fi
-
-#echo "Adding multilib support"
-sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "Syncing repos and updating packages"
 sudo pacman -Syu --noconfirm
@@ -35,7 +32,7 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
 echo "Installing GPU drivers"
-sudo pacman -S --noconfirm mesa lib32-mesa $gpu_drivers vulkan-icd-loader lib32-vulkan-icd-loader
+sudo pacman -S --noconfirm mesa $gpu_drivers vulkan-icd-loader
 
 echo "Improving hardware video accelaration"
 sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
@@ -182,7 +179,7 @@ sudo ufw allow from 192.168.1.0/24 to any port 22000 proto tcp comment "syncthin
 sudo ufw allow from 192.168.1.0/24 to any port 21027 proto udp comment "syncthing"
 
 echo "Installing pipewire multimedia framework"
-sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
+sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack
 
 echo "Installing Spotify / KeepassXC / LibreOffice Flatpaks"
 flatpak install --user --assumeyes flathub com.spotify.Client
