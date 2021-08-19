@@ -105,6 +105,7 @@ tee -a ~/.bashrc << EOF
 alias upa="sudo rm -f /var/lib/pacman/db.lck && sudo pacman -Syu && paru -Syu --aur && flatpak update && fwupdmgr refresh && fwupdmgr update"
 export TERM=xterm
 export LC_ALL=C
+eval $(ssh-agent) &>/dev/null
 EOF
 
 echo "Installing paru"
@@ -187,3 +188,6 @@ sudo pacman -S --noconfirm keepassxc
 echo "Installing Spotify / KeepassXC / LibreOffice Flatpaks"
 flatpak install --user --assumeyes flathub com.spotify.Client
 flatpak install --user --assumeyes flathub org.libreoffice.LibreOffice
+
+echo "Configuring SSH"
+echo 'AddKeysToAgent yes' > ~/.ssh/config
