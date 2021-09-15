@@ -51,23 +51,8 @@ flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Breeze-Dark
 flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Adwaita
 flatpak install --user --assumeyes flathub org.gtk.Gtk3theme.Adwaita-dark
 
-echo "Installing Firefox Flatpak"
-flatpak install --user --assumeyes flathub org.mozilla.firefox
-
-echo "Improving font rendering issues with Firefox Flatpak"
-sudo pacman -S --noconfirm gnome-settings-daemon
-mkdir -p ~/.var/app/org.mozilla.firefox/config/fontconfig	
-touch ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf	
-tee -a ~/.var/app/org.mozilla.firefox/config/fontconfig/fonts.conf << EOF	
-<?xml version='1.0'?>	
-<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>	
-<fontconfig>	
-    <!-- Disable bitmap fonts. -->	
-    <selectfont><rejectfont><pattern>	
-        <patelt name="scalable"><bool>false</bool></patelt>	
-    </pattern></rejectfont></selectfont>	
-</fontconfig>	
-EOF
+echo "Installing Firefox"
+sudo pacman -S --noconfirm firefox
 
 echo "Installing Chrome Flatpak with GPU acceleration"
 flatpak install --user --assumeyes flathub-beta com.google.Chrome
@@ -191,3 +176,6 @@ flatpak install --user --assumeyes flathub org.libreoffice.LibreOffice
 
 echo "Configuring SSH"
 echo 'AddKeysToAgent yes' > ~/.ssh/config
+
+echo "Disabling bitmap fonts"
+sudo ln -s /usr/share/fontconfig/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d/70-no-bitmaps.conf

@@ -46,7 +46,7 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 - Flatpak support
 - Syncthing
 - Browsers:
-  - Firefox: via Flatpak, with hardware acceleration enabled (see below: MISC - Firefox required configs for VA-API support)
+  - Firefox (see below: MISC - Firefox required configs for VA-API support)
   - Chrome: via Flatpak, with hardware acceleration enabled
   - Chromium: via Flatpak, with hardware acceleration enabled
 
