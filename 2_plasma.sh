@@ -13,7 +13,7 @@ sudo systemctl enable sddm
 # Install other Plasma applications
 sudo pacman -S --noconfirm plasma-wayland-session xdg-desktop-portal ark dolphin dolphin-plugins gwenview \
 kate kgpg konsole kwalletmanager okular spectacle kscreen kcalc filelight partitionmanager \
-krunner kfind plasma-systemmonitor phonon-qt5-gstreamer gst-libav
+krunner kfind plasma-systemmonitor phonon-qt5-gstreamer gst-libav libdbusmenu-glib
 
 flatpak install -y flathub org.kde.keysmith
 

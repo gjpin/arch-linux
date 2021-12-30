@@ -22,7 +22,7 @@ sudo pacman -Syu --noconfirm
 
 # Create user directories
 sudo pacman -S --noconfirm xdg-user-dirs
-mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons mkdir -p ${HOME}/.local/share/fonts
+mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons ${HOME}/.local/share/fonts
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
 touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
 mkdir -p ${HOME}/.config/systemd/user
@@ -45,7 +45,7 @@ sudo pacman -S --noconfirm mesa $gpu_drivers vulkan-icd-loader
 sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
 
 # Install common applications
-sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar
+sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
 
 # Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -67,7 +67,6 @@ sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.fi
 xdg-settings set default-web-browser org.mozilla.firefox.desktop
 
 # Install Flatpak applications
-flatpak install -y flathub com.visualstudio.code
 flatpak install -y flathub com.spotify.Client
 flatpak install -y flathub org.gimp.GIMP
 flatpak install -y flathub org.blender.Blender
@@ -90,6 +89,10 @@ sudo flatpak override --nodevice=all org.keepassxc.KeePassXC
 sudo flatpak override --nosocket=x11 org.keepassxc.KeePassXC
 sudo flatpak override --unshare=network org.keepassxc.KeePassXC
 sudo flatpak override --filesystem=${HOME}/Sync/credentials org.keepassxc.KeePassXC
+
+# Allow Flatpaks to access themes and icons
+sudo flatpak override --filesystem=xdg-data/themes:ro
+sudo flatpak override --filesystem=xdg-data/icons:ro
 
 # Chrome - Enable GPU acceleration
 mkdir -p ${HOME}/.var/app/com.google.Chrome/config
@@ -175,3 +178,31 @@ systemctl enable --now --user syncthing@${USER}.service
 # Install wireplumber and pipewire
 sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
 systemctl enable --now --user pipewire.service
+
+# Install VSCode
+paru -S --noconfirm visual-studio-code-bin
+
+# VSCode - Import user settings
+mkdir -p ${HOME}/.config/Code/User
+tee -a ${HOME}/.config/Code/User/settings.json << EOF
+{
+    "telemetry.telemetryLevel": "off",
+    "window.menuBarVisibility": "toggle",
+    "workbench.startupEditor": "none",
+    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false
+}
+EOF
+
+# VSCode - install extensions
+code --install-extension GitHub.github-vscode-theme
+code --install-extension PKief.material-icon-theme
+code --install-extension golang.Go
+
+# Force electron apps to run under wayland
+mkdir -p ${HOME}/.config/
+tee -a ${HOME}/.config/electron-flags.conf << EOF
+--enable-features=UseOzonePlatform
+--ozone-platform=wayland
+EOF
