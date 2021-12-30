@@ -95,7 +95,7 @@ echo $hostname > /etc/hostname
 echo -en "$root_password\n$root_password" | passwd
 
 # Create new user
-useradd -m -G wheel,video -s /bin/bash $username
+useradd -m -G wheel -s /bin/bash $username
 echo -en "$user_password\n$user_password" | passwd $username
 
 # Generate initramfs
