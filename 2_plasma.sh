@@ -2,10 +2,11 @@
 
 # Download and run base script
 wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_base.sh
+chmod +x 2_base.sh
 sh ./2_base.sh
 
 # Install Plasma group
-sudo pacman -S --noconfirm plasma --ignore discover
+sudo pacman -S --noconfirm plasma --ignore=discover
 
 # Enable SDDM
 sudo systemctl enable sddm
@@ -32,9 +33,6 @@ User=$USER
 Session=plasmawayland
 EOF
 
-# Set Firefox Breeze theme
-# flatpak override --env=GTK_THEME=Breeze org.mozilla.firefox
-
 # Customize bash
 tee -a ${HOME}/.bashrc.d/prompt << EOF
 PS1="\[\e[1;36m\]\w\[\e[m\] \[\e[1;33m\]\\$\[\e[m\] "
@@ -43,11 +41,11 @@ EOF
 
 # Download wallpaper
 mkdir $HOME/Pictures/wallpapers/
-wget -P $HOME/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/main/images/wallpapers/Snow-Capped_Mountain.jpg
+wget -P $HOME/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/master/images/wallpapers/Snow-Capped_Mountain.jpg
 
 # Import konsole Github color schemes
-wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/dark.colorscheme
-wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/light.colorscheme
+wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/dark.colorscheme
+wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/light.colorscheme
 
 # Configure Plasma
 kwriteconfig5 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezetwilight.desktop"

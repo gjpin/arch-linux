@@ -13,7 +13,7 @@ then
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
  gpu_drivers="vulkan-intel intel-media-driver libvdpau-va-gl"
- libva_environment_variable="export LIBVA_DRIVER_NAME=i965"
+ libva_environment_variable="export LIBVA_DRIVER_NAME=iHD"
  vdpau_environment_variable="export VDPAU_DRIVER=va_gl"
 fi
 
@@ -28,6 +28,30 @@ touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
 mkdir -p ${HOME}/.config/systemd/user
 mkdir -p ${HOME}/.bashrc.d
 mkdir -p ${HOME}/src
+
+# bashrc configurations
+tee -a ${HOME}/.bashrc << EOF
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+        for rc in ~/.bashrc.d/*; do
+                if [ -f "$rc" ]; then
+                        . "$rc"
+                fi
+        done
+fi
+
+unset rc
+EOF
 
 # Install fonts
 sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
@@ -173,10 +197,10 @@ passwd --lock root
 
 # Install syncthing and enable service
 sudo pacman -S --noconfirm syncthing
-systemctl enable --now --user syncthing@${USER}.service
+sudo systemctl enable --now syncthing@${USER}.service
 
 # Install wireplumber and pipewire
-sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
+sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
 systemctl enable --now --user pipewire.service
 
 # Install VSCode
@@ -191,7 +215,9 @@ tee -a ${HOME}/.config/Code/User/settings.json << EOF
     "workbench.startupEditor": "none",
     "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
     "workbench.enableExperiments": false,
-    "workbench.settings.enableNaturalLanguageSearch": false
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "GitHub Dark"
 }
 EOF
 
