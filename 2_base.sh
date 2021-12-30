@@ -20,6 +20,18 @@ fi
 # Sync repos and update packages
 sudo pacman -Syu --noconfirm
 
+# Create user directories
+sudo pacman -S --noconfirm xdg-user-dirs
+mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons mkdir -p ${HOME}/.local/share/fonts
+mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
+touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
+mkdir -p ${HOME}/.config/systemd/user
+
+# Install fonts
+sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
+ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome \
+noto-fonts-emoji ttf-hanazono adobe-source-code-pro-fonts ttf-cascadia-code inter-font
+
 # Install and enable firewalld
 sudo pacman -S --noconfirm firewalld
 sudo systemctl enable --now firewalld.service
@@ -53,7 +65,6 @@ sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.fi
 xdg-settings set default-web-browser org.mozilla.firefox.desktop
 
 # Install Flatpak applications
-flatpak install -y flathub com.belmoussaoui.Authenticator
 flatpak install -y flathub com.visualstudio.code
 flatpak install -y flathub com.spotify.Client
 flatpak install -y flathub org.gimp.GIMP
@@ -78,10 +89,6 @@ sudo flatpak override --nosocket=x11 org.keepassxc.KeePassXC
 sudo flatpak override --unshare=network org.keepassxc.KeePassXC
 sudo flatpak override --filesystem=${HOME}/Sync/credentials org.keepassxc.KeePassXC
 
-# Authenticator permissions override
-sudo flatpak override --nodevice=all com.belmoussaoui.Authenticator
-sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
-
 # Chrome - Enable GPU acceleration
 mkdir -p ${HOME}/.var/app/com.google.Chrome/config
 tee -a ${HOME}/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
@@ -101,18 +108,6 @@ tee -a ${HOME}/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --enable-features=VaapiVideoDecoder
 --use-vulkan
 EOF
-
-# Create user directories
-sudo pacman -S --noconfirm xdg-user-dirs
-mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons mkdir -p ${HOME}/.local/share/fonts
-mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
-touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
-mkdir -p ${HOME}/.config/systemd/user
-
-# Install fonts
-sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
-ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome \
-noto-fonts-emoji ttf-hanazono adobe-source-code-pro-fonts ttf-cascadia-code inter-font
 
 # Install paru
 git clone https://aur.archlinux.org/paru-bin.git

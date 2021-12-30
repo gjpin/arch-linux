@@ -67,7 +67,7 @@ swapon /dev/vg0/swap
 
 # Install Arch Linux
 yes '' | pacstrap /mnt base base-devel efibootmgr linux linux-headers linux-lts linux-lts-headers \
-linux-firmware lvm2 device-mapper dosfstools e2fsprogs $cpu_microcode cryptsetup networkmanager\
+linux-firmware lvm2 device-mapper dosfstools e2fsprogs $cpu_microcode cryptsetup networkmanager \
 wget man-db man-pages nano diffutils flatpak lm_sensors apparmor
 
 # Generate fstab
@@ -120,8 +120,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /$cpu_microcode.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
-lsm=landlock,lockdown,yama,apparmor,bpf
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
 tee -a /boot/loader/entries/arch-lts.conf << END
@@ -129,8 +128,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$cpu_microcode.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 quiet rw
-lsm=landlock,lockdown,yama,apparmor,bpf
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
 # Setup Pacman hook for automatic systemd-boot updates
@@ -145,7 +143,7 @@ Target = systemd
 [Action]
 Description = Updating systemd-boot
 When = PostTransaction
-Exec = /usr/bin/bootctl update
+Exec = /usr/bin/systemctl restart systemd-boot-update.service
 END
 
 # Set swappiness to 20
