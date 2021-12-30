@@ -36,14 +36,14 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 
 ## Post install script
 
-- KDE (or Gnome / Sway / i3)
-- PipeWire instead of PulseAudio
+- KDE or Gnome
+- PipeWire
 - firewalld
 - Automatic login
 - Fonts
 - paru (AUR helper)
 - Plymouth
-- Flatpak support
+- Flatpak
 - Syncthing
 
 ## Installation guide

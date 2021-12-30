@@ -26,6 +26,8 @@ mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons mkdir -p ${HOME}
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
 touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
 mkdir -p ${HOME}/.config/systemd/user
+mkdir -p ${HOME}/.bashrc.d
+mkdir -p ${HOME}/src
 
 # Install fonts
 sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \

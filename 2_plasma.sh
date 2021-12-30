@@ -35,4 +35,58 @@ EOF
 # Set Firefox Breeze theme
 # flatpak override --env=GTK_THEME=Breeze org.mozilla.firefox
 
+# Customize bash
+tee -a ${HOME}/.bashrc.d/prompt << EOF
+PS1="\[\e[1;36m\]\w\[\e[m\] \[\e[1;33m\]\\$\[\e[m\] "
+PROMPT_COMMAND="export PROMPT_COMMAND=echo"
+EOF
+
+# Download wallpaper
+mkdir $HOME/Pictures/wallpapers/
+wget -P $HOME/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/main/images/wallpapers/Snow-Capped_Mountain.jpg
+
+# Import konsole Github color schemes
+wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/dark.colorscheme
+wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/light.colorscheme
+
+# Configure Plasma
+kwriteconfig5 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezetwilight.desktop"
+kwriteconfig5 --file kdeglobals --group KDE --key SingleClick --type bool true
+kwriteconfig5 --file kdeglobals --group KDE --key AnimationDurationFactor "0.5"
+kwriteconfig5 --file kdeglobals --group General --key Name "Breeze Light"
+
+# Enable OpenGL 3.1
+kwriteconfig5 --file kwinrc --group Compositing --key GLCore --type bool true
+kwriteconfig5 --file kwinrc --group Compositing --key OpenGLIsUnsafe --type bool false
+
+# Enable 2 desktops
+kwriteconfig5 --file kwinrc --group Desktops --key Name_2 "Desktop 2"
+kwriteconfig5 --file kwinrc --group Desktops --key Number "2"
+kwriteconfig5 --file kwinrc --group Desktops --key Rows "1"
+
+# Change window decorations
+kwriteconfig5 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft ""
+kwriteconfig5 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight "IAX"
+kwriteconfig5 --file kwinrc --group org.kde.kdecoration2 --key ShowToolTips --type bool false
+kwriteconfig5 --file breezerc --group Common --key OutlineCloseButton --type bool false
+
+# Disable baloo file indexer
+kwriteconfig5 --file baloofilerc --group "Basic Settings" --key Indexing-Enabled --type bool false
+
+# Configure Konsole
+kwriteconfig5 --file konsolerc --group KonsoleWindow --key SaveGeometryOnExit --type bool false
+kwriteconfig5 --file konsolerc --group KonsoleWindow --key ShowMenuBarByDefault --type bool false
+kwriteconfig5 --file konsolerc --group MainWindow --key MenuBar "Disabled"
+kwriteconfig5 --file konsolerc --group MainWindow --key StatusBar "Disabled"
+kwriteconfig5 --file konsolerc --group MainWindow --key ToolBarsMovable "Disabled"
+
+# Disable screen edges
+kwriteconfig5 --file kwinrc --group Effect-PresentWindows --key BorderActivateAll "9"
+kwriteconfig5 --file kwinrc --group TabBox --key BorderActivate "9"
+
+# Set wallpaper
+kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
+kwriteconfig5 --file plasmarc --group Wallpapers --key usersWallpapers "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
+kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 1 --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
+
 echo "Your setup is ready. You can reboot now!"

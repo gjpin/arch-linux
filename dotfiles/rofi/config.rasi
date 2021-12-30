@@ -1,6 +1,0 @@
-configuration {
- modi: "window,drun,ssh,combi";
- theme: "ayu-light-blue";
- font: "Roboto Regular 10";
- combi-modi: "window,drun,ssh";
- }
