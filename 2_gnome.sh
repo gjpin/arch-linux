@@ -1,28 +1,35 @@
 #!/bin/bash
 
-echo "Downloading and running base script"
+# Download and run base script
 wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
-echo "Installing Gnome and a few extra apps"
-sudo pacman -S --noconfirm gnome gnome-tweaks gnome-usage gitg geary gvfs-goa dconf-editor
+# Install Gnome group
+# --noconfirm is omitted in order to prevent some packages from being installed
+sudo pacman -S gnome --ignore=vino,yelp,orca,simple-scan,gnome-user-docs,gnome-software,gnome-font-viewer,gnome-contacts,gnome-characters,gnome-books
+
+# Install extra applications
+sudo pacman -S --noconfirm gnome-tweaks gnome-shell-extensions gitg geary dconf-editor gnome-themes-extra
+
+# Install Secrets (Password Safe)
+flatpak install -y flathub org.gnome.PasswordSafe
+
+# Install Authenticator
+flatpak install -y flathub com.belmoussaoui.Authenticator
+sudo flatpak override --nodevice=all com.belmoussaoui.Authenticator
+sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
+
+# Enable GDM service
+sudo systemctl enable gdm.service
 
 echo "Enabling automatic login"
 sudo tee -a /etc/gdm/custom.conf << EOF
 # Enable automatic login for user
 [daemon]
-AutomaticLogin=$USER
+AutomaticLogin=${USER}
 AutomaticLoginEnable=True
 EOF
-
-echo "Improving media compatibility"
-sudo pacman -S --noconfirm gst-libav
-
-echo "Installing virt-manager"
-sudo pacman -S --noconfirm virt-manager dmidecode ebtables dnsmasq
-sudo systemctl start libvirtd.service
-sudo systemctl enable libvirtd.service
 
 # Set fonts
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 9'
@@ -79,5 +86,35 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 
 ## Screenshots
 gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip "['<Super><Shift>s']"
+
+# Install Firefox and GTK Fluent theme
+flatpak run org.mozilla.firefox --headless --new-tab "javascript:top.window.close()"
+git clone https://github.com/vinceliuice/Fluent-gtk-theme.git
+cd Fluent-gtk-theme
+./install.sh -t grey -s standard -i arch -d ${HOME}/.local/share/themes --tweaks noborder solid
+cp -r src/firefox/chrome/ ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
+cp src/firefox/configuration/user.js ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
+cd ..
+rm -rf Fluent-gtk-theme
+
+# Install Tela icons
+git clone https://github.com/vinceliuice/Tela-icon-theme.git
+cd Tela-icon-theme
+./install.sh -d ${HOME}/.local/share/icons standard
+cd ..
+rm -rf Tela-icon-theme
+
+# Set GTK and icon themes
+gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-light'
+gsettings set org.gnome.desktop.interface icon-theme 'Tela'
+
+# Set Gnome Shell theme
+dconf write /org/gnome/shell/extensions/user-theme/name "'Fluent-grey'"
+
+# Add bash aliases
+tee -a ${HOME}/.bashrc.d/aliases << EOF
+alias dark="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-dark' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey-dark'\""
+alias light="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-light' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey'\""
+EOF
 
 echo "Your setup is ready. You can reboot now!"

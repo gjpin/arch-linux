@@ -64,7 +64,7 @@ sudo systemctl enable --now firewalld.service
 sudo pacman -S --noconfirm mesa $gpu_drivers vulkan-icd-loader
 
 # Improve hardware video accelaration
-sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo
+sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo gst-libav
 
 # Install common applications
 sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
@@ -73,12 +73,6 @@ sudo pacman -S --noconfirm vim git openssh links upower htop powertop p7zip ripg
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update --appstream
-
-# Install Flatpak themes
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze-Dark
-flatpak install -y flathub org.gtk.Gtk3theme.Adwaita
-flatpak install -y flathub org.gtk.Gtk3theme.Adwaita-dark
 
 # Install Firefox Flatpak
 flatpak install -y flathub org.mozilla.firefox
@@ -94,7 +88,6 @@ flatpak install -y flathub org.gimp.GIMP
 flatpak install -y flathub org.blender.Blender
 flatpak install -y flathub org.videolan.VLC
 flatpak install -y flathub org.chromium.Chromium
-flatpak install -y flathub org.keepassxc.KeePassXC
 flatpak install -y flathub com.github.tchx84.Flatseal
 flatpak install -y flathub-beta com.google.Chrome
 flatpak install -y flathub com.usebottles.bottles
@@ -104,13 +97,6 @@ flatpak install -y flathub org.libreoffice.LibreOffice
 # flatpak install flathub-beta net.lutris.Lutris//beta
 # flatpak install -y flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
 # sudo flatpak override --filesystem=/run/media/${USER}/data/games/lutris net.lutris.Lutris
-
-# KeePassXC permissions override
-sudo flatpak override --nofilesystem=host org.keepassxc.KeePassXC
-sudo flatpak override --nodevice=all org.keepassxc.KeePassXC
-sudo flatpak override --nosocket=x11 org.keepassxc.KeePassXC
-sudo flatpak override --unshare=network org.keepassxc.KeePassXC
-sudo flatpak override --filesystem=${HOME}/Sync/credentials org.keepassxc.KeePassXC
 
 # Allow Flatpaks to access themes and icons
 sudo flatpak override --filesystem=xdg-data/themes:ro
@@ -214,13 +200,11 @@ tee -a ${HOME}/.config/Code/User/settings.json << EOF
     "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
     "workbench.enableExperiments": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.colorTheme": "GitHub Dark"
+    "workbench.iconTheme": "material-icon-theme"
 }
 EOF
 
 # VSCode - install extensions
-code --install-extension GitHub.github-vscode-theme
 code --install-extension PKief.material-icon-theme
 code --install-extension golang.Go
 
