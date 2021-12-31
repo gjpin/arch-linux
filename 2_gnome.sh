@@ -7,7 +7,7 @@ sh ./2_base.sh
 
 # Install Gnome group
 # --noconfirm is omitted in order to prevent some packages from being installed
-sudo pacman -S gnome --ignore=vino,yelp,orca,simple-scan,gnome-user-docs,gnome-software,gnome-font-viewer,gnome-contacts,gnome-characters,gnome-books
+sudo pacman -S gnome --ignore=vino,yelp,orca,simple-scan,gnome-user-docs,gnome-software,gnome-font-viewer,gnome-contacts,gnome-characters,gnome-books,epiphany
 
 # Install extra applications
 sudo pacman -S --noconfirm gnome-tweaks gnome-shell-extensions gitg geary dconf-editor gnome-themes-extra
@@ -23,13 +23,17 @@ sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
 # Enable GDM service
 sudo systemctl enable gdm.service
 
-echo "Enabling automatic login"
+# Enable automatic login
 sudo tee -a /etc/gdm/custom.conf << EOF
 # Enable automatic login for user
 [daemon]
 AutomaticLogin=${USER}
 AutomaticLoginEnable=True
 EOF
+
+# Enable Gnome Shell extensions
+gsettings set org.gnome.shell disabled-extensions []
+gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com']"
 
 # Set fonts
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 9'
@@ -40,6 +44,12 @@ gsettings set org.gnome.desktop.interface monospace-font-name 'Noto Sans Mono 10
 # Misc changes
 gsettings set org.gnome.desktop.calendar show-weekdate true
 
+## Terminal
+gsettings set org.gnome.terminal.legacy theme-variant "'dark"
+GNOME_TERMINAL_PROFILE=`gsettings get org.gnome.Terminal.ProfilesList default | awk -F \' '{print $2}'`
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-columns 110
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ palette "['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)', 'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)', 'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)', 'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)', 'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)', 'rgb(253,246,227)']"
+
 ## Nautilus
 gsettings set org.gtk.Settings.FileChooser sort-directories-first true
 gsettings set org.gnome.nautilus.preferences click-policy 'single'
@@ -48,6 +58,7 @@ gsettings set org.gnome.nautilus.icon-view default-zoom-level 'standard'
 ## Text editor
 dconf write /org/gnome/gedit/preferences/ui/side-panel-visible true
 dconf write /org/gnome/gedit/preferences/editor/wrap-mode "'none'"
+dconf write /org/gnome/gedit/preferences/editor/highlight-current-line false
 
 ## Laptop specific
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
@@ -58,6 +69,7 @@ then
 fi
 
 ## Gnome Terminal padding
+mkdir -p ${HOME}/.config/gtk-3.0/
 tee -a ${HOME}/.config/gtk-3.0/gtk.css << EOF
 VteTerminal,
 TerminalScreen,
@@ -88,7 +100,7 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip "['<Super><Shift>s']"
 
 # Install Firefox and GTK Fluent theme
-flatpak run org.mozilla.firefox --headless --new-tab "javascript:top.window.close()"
+timeout 5 flatpak run org.mozilla.firefox --headless
 git clone https://github.com/vinceliuice/Fluent-gtk-theme.git
 cd Fluent-gtk-theme
 ./install.sh -t grey -s standard -i arch -d ${HOME}/.local/share/themes --tweaks noborder solid
