@@ -206,6 +206,7 @@ EOF
 
 # VSCode - install extensions
 code --install-extension PKief.material-icon-theme
+code --install-extension fkrull.gtk-dark-titlebar
 code --install-extension golang.Go
 
 # Force electron apps to run under wayland
