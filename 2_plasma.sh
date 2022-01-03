@@ -101,6 +101,15 @@ kwriteconfig5 --file kwinrc --group TabBox --key BorderActivate "9"
 kwriteconfig5 --file kwinrc --group TabBox --key HighlightWindows --type bool false
 kwriteconfig5 --file kwinrc --group TabBox --key LayoutName "thumbnail_grid"
 
+# Disable splash screen
+kwriteconfig5 --file ksplashrc --group KSplash --key Engine "none"
+kwriteconfig5 --file ksplashrc --group KSplash --key Theme "none"
+
+# Change date time formats
+kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 4 --group Applets --group 21 --group Configuration --group Appearance --key customDateFormat "dd MM yyyy"
+kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 4 --group Applets --group 21 --group Configuration --group Appearance --key dateFormat "custom"
+kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 4 --group Applets --group 21 --group Configuration --group Appearance --key use24hFormat "2"
+
 # Set wallpaper
 kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg"
 kwriteconfig5 --file plasmarc --group Wallpapers --key usersWallpapers "$HOME/Pictures/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg"
