@@ -6,7 +6,7 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 # Install Plasma group
-sudo pacman -S plasma --ignore=discover
+sudo pacman -S plasma --ignore=discover,plasma-sdk
 
 # Enable SDDM
 sudo systemctl enable sddm
