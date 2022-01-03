@@ -13,10 +13,10 @@ sudo pacman -S gnome --ignore=vino,yelp,orca,simple-scan,gnome-user-docs,gnome-s
 sudo pacman -S --noconfirm gnome-tweaks gnome-shell-extensions gitg geary dconf-editor gnome-themes-extra
 
 # Install Secrets (Password Safe)
-flatpak install -y flathub org.gnome.PasswordSafe
+sudo flatpak install -y flathub org.gnome.PasswordSafe
 
 # Install Authenticator
-flatpak install -y flathub com.belmoussaoui.Authenticator
+sudo flatpak install -y flathub com.belmoussaoui.Authenticator
 sudo flatpak override --nodevice=all com.belmoussaoui.Authenticator
 sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
 
@@ -104,7 +104,6 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip "['<Super><Shift>s']"
 
 # Install Firefox and GTK Fluent theme
-timeout 5 flatpak run org.mozilla.firefox --headless
 git clone https://github.com/vinceliuice/Fluent-gtk-theme.git
 cd Fluent-gtk-theme
 ./install.sh -t grey -s standard -i arch -d ${HOME}/.local/share/themes --tweaks noborder solid

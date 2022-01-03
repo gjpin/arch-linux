@@ -70,13 +70,13 @@ sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo gst-l
 sudo pacman -S --noconfirm vim git openssh upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
 
 # Add Flathub repositories
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update --appstream
 
 # Install Firefox Flatpak
-flatpak install -y flathub org.mozilla.firefox
-flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/21.08
+sudo flatpak install -y flathub org.mozilla.firefox
+sudo flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/21.08
 sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
 # Open Firefox in headless mode and then close it to create profile folder
@@ -91,19 +91,19 @@ EOF
 cd
 
 # Install Flatpak applications
-flatpak install -y flathub com.spotify.Client
-flatpak install -y flathub org.gimp.GIMP
-flatpak install -y flathub org.blender.Blender
-flatpak install -y flathub org.videolan.VLC
-flatpak install -y flathub org.chromium.Chromium
-flatpak install -y flathub com.github.tchx84.Flatseal
-flatpak install -y flathub-beta com.google.Chrome
-flatpak install -y flathub com.usebottles.bottles
-flatpak install -y flathub org.libreoffice.LibreOffice
-# flatpak install -y flathub com.valvesoftware.Steam
+sudo flatpak install -y flathub com.spotify.Client
+sudo flatpak install -y flathub org.gimp.GIMP
+sudo flatpak install -y flathub org.blender.Blender
+sudo flatpak install -y flathub org.videolan.VLC
+sudo flatpak install -y flathub org.chromium.Chromium
+sudo flatpak install -y flathub com.github.tchx84.Flatseal
+sudo flatpak install -y flathub-beta com.google.Chrome
+sudo flatpak install -y flathub com.usebottles.bottles
+sudo flatpak install -y flathub org.libreoffice.LibreOffice
+# sudo flatpak install -y flathub com.valvesoftware.Steam
 # sudo flatpak override --filesystem=/run/media/${USER}/data/games/steam com.valvesoftware.Steam
-# flatpak install flathub-beta net.lutris.Lutris//beta
-# flatpak install -y flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
+# sudo flatpak install flathub-beta net.lutris.Lutris//beta
+# sudo flatpak install -y flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
 # sudo flatpak override --filesystem=/run/media/${USER}/data/games/lutris net.lutris.Lutris
 
 # Chrome - Enable GPU acceleration

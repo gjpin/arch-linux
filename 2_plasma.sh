@@ -16,13 +16,13 @@ sudo pacman -S --noconfirm plasma-wayland-session xdg-desktop-portal ark dolphin
 kate kgpg konsole kwalletmanager okular spectacle kscreen kcalc filelight partitionmanager \
 krunner kfind plasma-systemmonitor phonon-qt5-gstreamer libdbusmenu-glib
 
-flatpak install -y flathub org.kde.keysmith
+sudo flatpak install -y flathub org.kde.keysmith
 
 # Install KDE Connect
 sudo pacman -S --noconfirm kdeconnect sshfs
 
 # Install KeePassXC
-flatpak install -y flathub org.keepassxc.KeePassXC
+sudo flatpak install -y flathub org.keepassxc.KeePassXC
 sudo flatpak override --nofilesystem=host org.keepassxc.KeePassXC
 sudo flatpak override --nodevice=all org.keepassxc.KeePassXC
 sudo flatpak override --nosocket=x11 org.keepassxc.KeePassXC
@@ -30,8 +30,8 @@ sudo flatpak override --unshare=network org.keepassxc.KeePassXC
 sudo flatpak override --filesystem=${HOME}/Sync/credentials org.keepassxc.KeePassXC
 
 # Install Breeze-GTK flatpak theme and allow Flatpaks to access GTK configs
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze-dark
+sudo flatpak install -y flathub org.gtk.Gtk3theme.Breeze
+sudo flatpak install -y flathub org.gtk.Gtk3theme.Breeze-dark
 sudo flatpak override --filesystem=xdg-config/gtk-3.0:ro
 sudo flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
