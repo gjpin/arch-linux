@@ -101,10 +101,10 @@ sudo flatpak install -y flathub-beta com.google.Chrome
 sudo flatpak install -y flathub com.usebottles.bottles
 sudo flatpak install -y flathub org.libreoffice.LibreOffice
 # sudo flatpak install -y flathub com.valvesoftware.Steam
-# sudo flatpak override --filesystem=/run/media/${USER}/data/games/steam com.valvesoftware.Steam
+# sudo flatpak override --filesystem=/mnt/data/games/steam com.valvesoftware.Steam
 # sudo flatpak install flathub-beta net.lutris.Lutris//beta
 # sudo flatpak install -y flathub org.gnome.Platform.Compat.i386 org.freedesktop.Platform.GL32.default org.freedesktop.Platform.GL.default
-# sudo flatpak override --filesystem=/run/media/${USER}/data/games/lutris net.lutris.Lutris
+# sudo flatpak override --filesystem=/mnt/data/games/lutris net.lutris.Lutris
 
 # Chrome - Enable GPU acceleration
 mkdir -p ${HOME}/.var/app/com.google.Chrome/config
