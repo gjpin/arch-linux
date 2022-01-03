@@ -55,7 +55,7 @@ EOF
 
 # Download wallpaper
 mkdir $HOME/Pictures/wallpapers/
-wget -P $HOME/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/master/images/wallpapers/Snow-Capped_Mountain.jpg
+wget -P $HOME/Pictures/wallpapers/ https://raw.githubusercontent.com/gjpin/arch-linux/master/images/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg
 
 # Import konsole Github color schemes
 wget -P ${HOME}/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/dark.colorscheme
@@ -102,8 +102,8 @@ kwriteconfig5 --file kwinrc --group TabBox --key HighlightWindows --type bool fa
 kwriteconfig5 --file kwinrc --group TabBox --key LayoutName "thumbnail_grid"
 
 # Set wallpaper
-kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
-kwriteconfig5 --file plasmarc --group Wallpapers --key usersWallpapers "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
-kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 1 --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
+kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg"
+kwriteconfig5 --file plasmarc --group Wallpapers --key usersWallpapers "$HOME/Pictures/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg"
+kwriteconfig5 --file plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 1 --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/hans-isaacson-MC5tMO1V-vs-unsplash.jpg"
 
 echo "Your setup is ready. You can reboot now!"
