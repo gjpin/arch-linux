@@ -227,3 +227,10 @@ EOF
 
 # Install NodeJS LTS (16) and package managers
 sudo pacman -S --noconfirm nodejs-lts-gallium npm yarn
+
+# Install Docker and enable docker service
+sudo pacman -S --noconfirm docker
+sudo systemctl enable --now docker.service
+
+# Install Hashi stack
+sudo pacman -S --noconfirm terraform nomad consul vault
