@@ -21,7 +21,7 @@ fi
 sudo pacman -Syu --noconfirm
 
 # Create user directories
-sudo pacman -S --noconfirm xdg-user-dirs
+sudo pacman -S xdg-user-dirs
 mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons ${HOME}/.local/share/fonts
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
 touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
@@ -52,22 +52,22 @@ unset rc
 EOF
 
 # Install fonts
-sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
+sudo pacman -S ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
 ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome \
 noto-fonts-emoji ttf-hanazono adobe-source-code-pro-fonts ttf-cascadia-code inter-font
 
 # Install and enable firewalld
-sudo pacman -S --noconfirm firewalld
+sudo pacman -S firewalld
 sudo systemctl enable --now firewalld.service
 
 # Installing GPU drivers
-sudo pacman -S --noconfirm mesa $gpu_drivers vulkan-icd-loader
+sudo pacman -S mesa $gpu_drivers vulkan-icd-loader
 
 # Improve hardware video accelaration
-sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo gst-libav
+sudo pacman -S ffmpeg libva-utils libva-vdpau-driver vdpauinfo gst-libav
 
 # Install common applications
-sudo pacman -S --noconfirm vim git openssh upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
+sudo pacman -S vim git openssh upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
 
 # Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -130,7 +130,7 @@ cd ..
 rm -rf paru-bin
 
 # Install and configure Plymouth
-paru -S --noconfirm plymouth
+paru -S plymouth
 sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
 sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
@@ -141,7 +141,7 @@ sudo plymouth-set-default-theme -R bgrt
 # Install and start thermald
 if [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
-sudo pacman -S --noconfirm thermald
+sudo pacman -S thermald
 sudo systemctl enable --now thermald.service
 fi
 
@@ -180,15 +180,15 @@ sudo systemctl enable --now bluetooth.service
 passwd --lock root
 
 # Install syncthing and enable service
-sudo pacman -S --noconfirm syncthing
+sudo pacman -S syncthing
 sudo systemctl enable --now syncthing@${USER}.service
 
 # Install wireplumber and pipewire
-sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
+sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
 systemctl enable --now --user pipewire.service
 
 # Install VSCode
-paru -S --noconfirm visual-studio-code-bin
+paru -S visual-studio-code-bin
 
 # VSCode - Import user settings
 mkdir -p ${HOME}/.config/Code/User
