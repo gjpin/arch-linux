@@ -133,7 +133,6 @@ END
 
 # Setup Pacman hook for automatic systemd-boot updates
 mkdir -p /etc/pacman.d/hooks/
-touch /etc/pacman.d/hooks/systemd-boot.hook
 tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
 [Trigger]
 Type = Package
