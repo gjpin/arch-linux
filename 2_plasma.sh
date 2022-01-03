@@ -96,6 +96,11 @@ kwriteconfig5 --file konsolerc --group MainWindow --key ToolBarsMovable "Disable
 kwriteconfig5 --file kwinrc --group Effect-PresentWindows --key BorderActivateAll "9"
 kwriteconfig5 --file kwinrc --group TabBox --key BorderActivate "9"
 
+# Change Task Switcher behaviour
+kwriteconfig5 --file kwinrc --group TabBox --key BorderActivate "9"
+kwriteconfig5 --file kwinrc --group TabBox --key HighlightWindows --type bool false
+kwriteconfig5 --file kwinrc --group TabBox --key LayoutName "thumbnail_grid"
+
 # Set wallpaper
 kwriteconfig5 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
 kwriteconfig5 --file plasmarc --group Wallpapers --key usersWallpapers "$HOME/Pictures/wallpapers/Snow-Capped_Mountain.jpg"
