@@ -84,6 +84,26 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 
 9. Reboot and enable secure boot in the bios
 10. Confirm status (secure boot enabled): `sudo sbctl status`
+11. Setup hook to auto-sign on package changes:
+```
+sudo tee -a /etc/pacman.d/hooks/sbctl.hook << END
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = boot/*
+Target = efi/*
+Target = usr/lib/modules/*/vmlinuz
+Target = usr/lib/initcpio/*
+Target = usr/lib/**/efi/*.efi*
+
+[Action]
+Description = Signing EFI binaries...
+When = PostTransaction
+Exec = /usr/bin/sbctl sign-all -g
+END
+```
 
 ### How to chroot
 
