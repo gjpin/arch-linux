@@ -12,14 +12,14 @@ sudo pacman -S plasma --ignore=discover,plasma-sdk
 sudo systemctl enable sddm
 
 # Install other Plasma applications
-sudo pacman -S plasma-wayland-session xdg-desktop-portal ark dolphin dolphin-plugins gwenview \
+sudo pacman -S --noconfirm plasma-wayland-session xdg-desktop-portal ark dolphin dolphin-plugins gwenview \
 kate kgpg konsole kwalletmanager okular spectacle kscreen kcalc filelight partitionmanager \
 krunner kfind plasma-systemmonitor phonon-qt5-gstreamer libdbusmenu-glib
 
 flatpak install -y flathub org.kde.keysmith
 
 # Install KDE Connect
-sudo pacman -S kdeconnect sshfs
+sudo pacman -S --noconfirm kdeconnect sshfs
 
 # Install KeePassXC
 flatpak install -y flathub org.keepassxc.KeePassXC
@@ -28,6 +28,12 @@ sudo flatpak override --nodevice=all org.keepassxc.KeePassXC
 sudo flatpak override --nosocket=x11 org.keepassxc.KeePassXC
 sudo flatpak override --unshare=network org.keepassxc.KeePassXC
 sudo flatpak override --filesystem=${HOME}/Sync/credentials org.keepassxc.KeePassXC
+
+# Install Breeze-GTK flatpak theme and allow Flatpaks to access GTK configs
+flatpak install -y flathub org.gtk.Gtk3theme.Breeze
+flatpak install -y flathub org.gtk.Gtk3theme.Breeze-dark
+sudo flatpak override --filesystem=xdg-config/gtk-3.0:ro
+sudo flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
 # Disable baloo (file indexer)
 balooctl suspend

@@ -20,6 +20,10 @@ flatpak install -y flathub com.belmoussaoui.Authenticator
 sudo flatpak override --nodevice=all com.belmoussaoui.Authenticator
 sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
 
+# Allow Flatpaks to access themes and icons
+sudo flatpak override --filesystem=xdg-data/themes:ro
+sudo flatpak override --filesystem=xdg-data/icons:ro
+
 # Enable GDM service
 sudo systemctl enable gdm.service
 
@@ -109,6 +113,14 @@ cp src/firefox/configuration/user.js ${HOME}/.var/app/org.mozilla.firefox/.mozil
 cd ..
 rm -rf Fluent-gtk-theme
 
+# Re-add Firefox user preferences
+cd ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
+tee -a user.js << EOF
+user_pref("media.ffmpeg.vaapi.enabled", true);
+user_pref("media.rdd-ffmpeg.enabled", true);
+EOF
+cd
+
 # Install Tela icons
 git clone https://github.com/vinceliuice/Tela-icon-theme.git
 cd Tela-icon-theme
@@ -128,5 +140,8 @@ tee -a ${HOME}/.bashrc.d/aliases << EOF
 alias dark="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-dark' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey-dark'\""
 alias light="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-light' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey'\""
 EOF
+
+# VSCode - Install GTK titlebar extension
+code --install-extension fkrull.gtk-dark-titlebar
 
 echo "Your setup is ready. You can reboot now!"
