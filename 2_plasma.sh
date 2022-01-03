@@ -6,21 +6,20 @@ chmod +x 2_base.sh
 sh ./2_base.sh
 
 # Install Plasma group
-# --noconfirm is omitted in order to prevent some packages from being installed
-sudo pacman -S --noconfirm plasma --ignore=discover
+sudo pacman -S plasma --ignore=discover
 
 # Enable SDDM
 sudo systemctl enable sddm
 
 # Install other Plasma applications
-sudo pacman -S --noconfirm plasma-wayland-session xdg-desktop-portal ark dolphin dolphin-plugins gwenview \
+sudo pacman -S plasma-wayland-session xdg-desktop-portal ark dolphin dolphin-plugins gwenview \
 kate kgpg konsole kwalletmanager okular spectacle kscreen kcalc filelight partitionmanager \
 krunner kfind plasma-systemmonitor phonon-qt5-gstreamer libdbusmenu-glib
 
 flatpak install -y flathub org.kde.keysmith
 
 # Install KDE Connect
-sudo pacman -S --noconfirm kdeconnect sshfs
+sudo pacman -S kdeconnect sshfs
 
 # Install KeePassXC
 flatpak install -y flathub org.keepassxc.KeePassXC
