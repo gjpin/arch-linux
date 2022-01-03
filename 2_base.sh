@@ -218,3 +218,12 @@ tee -a ${HOME}/.config/electron-flags.conf << EOF
 --enable-features=UseOzonePlatform
 --ozone-platform=wayland
 EOF
+
+# Install Go and update $PATH
+sudo pacman -S --noconfirm go
+tee -a ${HOME}/.bashrc.d/exports << EOF
+export PATH="\$PATH:\$HOME/go/bin"
+EOF
+
+# Install NodeJS LTS (16) and package managers
+sudo pacman -S --noconfirm nodejs-lts-gallium npm yarn
