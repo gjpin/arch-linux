@@ -62,8 +62,8 @@ Note: These scripts are not meant to be another full-fledged Arch installer. The
 7. Run the script: `./1_install.sh`
 8. Reboot into Arch Linux
 9. Connect to wifi with `nmtui`
-10. `wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_gnome.sh` or `2_plasma.sh` or `2_sway.sh`
-11. Run the script: `./2_gnome.sh` or `./2_plasma.sh` or `./2_sway.sh`
+10. `wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_gnome.sh` or `2_plasma.sh`
+11. Run the script: `./2_gnome.sh` or `./2_plasma.sh`
 
 ## Misc guides
 ### How to enable secure boot
