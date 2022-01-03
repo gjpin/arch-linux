@@ -66,7 +66,7 @@ yes | mkswap /dev/vg0/swap
 swapon /dev/vg0/swap
 
 # Install Arch Linux
-yes '' | pacstrap /mnt base base-devel efibootmgr linux linux-headers linux-lts linux-lts-headers \
+pacstrap /mnt base base-devel efibootmgr linux linux-headers linux-lts linux-lts-headers \
 linux-firmware lvm2 device-mapper dosfstools e2fsprogs $cpu_microcode cryptsetup networkmanager \
 wget man-db man-pages nano diffutils flatpak lm_sensors apparmor
 
