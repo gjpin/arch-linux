@@ -136,8 +136,8 @@ rm -rf paru-bin
 # Install and configure Plymouth
 paru -S --noconfirm plymouth
 sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
-sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
-sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.udev.log_priority=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
+sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
+sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
 sudo mkinitcpio -p linux
 sudo mkinitcpio -p linux-lts
 sudo plymouth-set-default-theme -R bgrt

@@ -120,7 +120,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /$cpu_microcode.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nowatchdog lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
 tee -a /boot/loader/entries/arch-lts.conf << END
@@ -128,7 +128,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$cpu_microcode.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nmi_watchdog=0 lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptlvm root=/dev/vg0/root resume=/dev/vg0/swap rd.luks.options=discard$kernel_options nowatchdog lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
 # Setup Pacman hook for automatic systemd-boot updates
