@@ -232,3 +232,4 @@ sudo pacman -S --noconfirm terraform nomad consul vault
 
 # Install Ansible
 sudo pacman -S --noconfirm ansible
+ansible-galaxy collection install ansible.posix
