@@ -229,3 +229,6 @@ sudo systemctl enable --now docker.service
 
 # Install Hashi stack
 sudo pacman -S --noconfirm terraform nomad consul vault
+
+# Install Ansible
+sudo pacman -S --noconfirm ansible
