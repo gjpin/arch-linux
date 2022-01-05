@@ -51,6 +51,10 @@ fi
 unset rc
 EOF
 
+tee -a ${HOME}/.bashrc.d/defaults << EOF
+export EDITOR=vim
+EOF
+
 # Install fonts
 sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
 ttf-liberation ttf-hack noto-fonts ttf-fira-code ttf-fira-mono ttf-font-awesome \
