@@ -23,6 +23,7 @@ sudo pacman -Syu --noconfirm
 # Create user directories
 sudo pacman -S --noconfirm xdg-user-dirs
 mkdir -p ${HOME}/.local/share/themes ${HOME}/.local/share/icons ${HOME}/.local/share/fonts
+mkdir -p ${HOME}/.local/bin
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh/
 touch ${HOME}/.ssh/config && chmod 600 ${HOME}/.ssh/config
 mkdir -p ${HOME}/.config/systemd/user
