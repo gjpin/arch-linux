@@ -81,7 +81,6 @@ flatpak update --appstream
 
 # Install Firefox Flatpak
 sudo flatpak install -y flathub org.mozilla.firefox
-sudo flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/21.08
 sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
 # Open Firefox in headless mode and then close it to create profile folder
