@@ -96,13 +96,10 @@ cd
 
 # Install Flatpak applications
 sudo flatpak install -y flathub com.spotify.Client
-sudo flatpak install -y flathub org.gimp.GIMP
 sudo flatpak install -y flathub org.blender.Blender
 sudo flatpak install -y flathub org.videolan.VLC
 sudo flatpak install -y flathub org.chromium.Chromium
-sudo flatpak install -y flathub com.github.tchx84.Flatseal
 sudo flatpak install -y flathub-beta com.google.Chrome
-sudo flatpak install -y flathub com.usebottles.bottles
 sudo flatpak install -y flathub org.libreoffice.LibreOffice
 
 # Chrome - Enable GPU acceleration
@@ -112,7 +109,6 @@ tee -a ${HOME}/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
 --enable-gpu-rasterization
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
---use-vulkan
 EOF
 
 # Chromium - Enable GPU acceleration
@@ -122,7 +118,6 @@ tee -a ${HOME}/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --enable-gpu-rasterization
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
---use-vulkan
 EOF
 
 # Install paru
@@ -200,16 +195,18 @@ tee -a ${HOME}/.config/Code/User/settings.json << EOF
     "telemetry.telemetryLevel": "off",
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
-    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', monospace, 'Droid Sans Fallback'",
     "workbench.enableExperiments": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
-    "workbench.iconTheme": "material-icon-theme"
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.fontWeight": "500"
 }
 EOF
 
 # VSCode - install extensions
 code --install-extension PKief.material-icon-theme
 code --install-extension golang.Go
+code --install-extension HashiCorp.terraform
 
 # Force electron apps to run under wayland
 mkdir -p ${HOME}/.config/
