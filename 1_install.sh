@@ -20,7 +20,7 @@ then
 elif [[ $cpu_vendor =~ "GenuineIntel" ]]
 then
  cpu_microcode="intel-ucode"
- kernel_options=" i915.enable_fbc=1 i915.enable_guc=2"
+ kernel_options=" i915.enable_fbc=1"
  initramfs_modules="intel_agp i915"
 fi
 
