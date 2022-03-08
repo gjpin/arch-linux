@@ -182,7 +182,7 @@ sudo pacman -S --noconfirm syncthing
 sudo systemctl enable --now syncthing@${USER}.service
 
 # Install wireplumber and pipewire
-sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
+sudo pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber
 systemctl enable --now --user pipewire.service
 
 # Install VSCode
