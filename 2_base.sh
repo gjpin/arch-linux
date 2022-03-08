@@ -50,6 +50,9 @@ if [ -d ~/.bashrc.d ]; then
 fi
 
 unset rc
+
+# Keychain
+eval $(keychain --eval --quiet id_ed25519 ~/.ssh/id_ed25519)
 EOF
 
 tee -a ${HOME}/.bashrc.d/defaults << EOF
@@ -72,7 +75,7 @@ sudo pacman -S --noconfirm mesa $gpu_drivers vulkan-icd-loader
 sudo pacman -S --noconfirm ffmpeg libva-utils libva-vdpau-driver vdpauinfo gst-libav
 
 # Install common applications
-sudo pacman -S --noconfirm neovim git openssh upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion
+sudo pacman -S --noconfirm neovim git openssh upower htop powertop p7zip ripgrep unzip fwupd unrar bash-completion keychain
 
 # Add Flathub repositories
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
