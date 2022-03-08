@@ -81,8 +81,8 @@ kwriteconfig5 --file ksplashrc --group KSplash --key Engine "none"
 kwriteconfig5 --file ksplashrc --group KSplash --key Theme "none"
 
 # Import Konsole Github color schemes
-wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/fedora-kde/main/konsole/dark.colorscheme
-wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/fedora-kde/main/konsole/light.colorscheme
+wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/dark.colorscheme
+wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/light.colorscheme
 
 # Customize bash
 tee -a ~/.bashrc.d/prompt << EOF
@@ -93,11 +93,6 @@ EOF
 # Disable app launch feedback
 kwriteconfig5 --file klaunchrc --group BusyCursorSettings --key "Bouncing" --type bool false
 kwriteconfig5 --file klaunchrc --group FeedbackStyle --key "BusyCursor" --type bool false
-
-# Autologin
-sudo kwriteconfig5 --file /etc/sddm.conf.d/kde_settings.conf --group Autologin --key "Relogin" --type bool false
-sudo kwriteconfig5 --file /etc/sddm.conf.d/kde_settings.conf --group Autologin --key "Session" "plasma"
-sudo kwriteconfig5 --file /etc/sddm.conf.d/kde_settings.conf --group Autologin --key "User" "${USER}"
 
 # SDDM theme
 sudo kwriteconfig5 --file /etc/sddm.conf.d/kde_settings.conf --group Theme --key "Current" "breeze"
