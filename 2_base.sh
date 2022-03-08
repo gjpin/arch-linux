@@ -90,13 +90,11 @@ timeout 5 flatpak run org.mozilla.firefox --headless
 cd ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
 tee -a user.js << EOF
 user_pref("media.ffmpeg.vaapi.enabled", true);
-user_pref("media.rdd-ffmpeg.enabled", true);
 EOF
 cd
 
 # Install Flatpak applications
 sudo flatpak install -y flathub com.spotify.Client
-sudo flatpak install -y flathub org.blender.Blender
 sudo flatpak install -y flathub org.videolan.VLC
 sudo flatpak install -y flathub org.chromium.Chromium
 sudo flatpak install -y flathub-beta com.google.Chrome
@@ -109,6 +107,7 @@ tee -a ${HOME}/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
 --enable-gpu-rasterization
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
+--ozone-platform-hint=auto
 EOF
 
 # Chromium - Enable GPU acceleration
@@ -118,6 +117,7 @@ tee -a ${HOME}/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --enable-gpu-rasterization
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
+--ozone-platform-hint=auto
 EOF
 
 # Install paru
@@ -195,18 +195,31 @@ tee -a ${HOME}/.config/Code/User/settings.json << EOF
     "telemetry.telemetryLevel": "off",
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
-    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', monospace, 'Droid Sans Fallback'",
+    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
     "workbench.enableExperiments": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.iconTheme": "material-icon-theme",
-    "editor.fontWeight": "500"
+    "editor.fontWeight": "500",
+    "redhat.telemetry.enabled": false,
+    "files.associations": {
+        "*.j2": "terraform",
+        "*.hcl": "terraform",
+        "*.bu": "yaml",
+        "*.ign": "json"
+    },
+    "workbench.colorTheme": "GitHub Dark",
+    "extensions.ignoreRecommendations": true
 }
 EOF
 
-# VSCode - install extensions
 code --install-extension PKief.material-icon-theme
 code --install-extension golang.Go
 code --install-extension HashiCorp.terraform
+code --install-extension redhat.ansible
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension editorconfig.editorconfig
+code --install-extension octref.vetur
+code --install-extension github.github-vscode-theme
 
 # Force electron apps to run under wayland
 mkdir -p ${HOME}/.config/
@@ -229,8 +242,7 @@ sudo pacman -S --noconfirm docker
 sudo systemctl enable --now docker.service
 
 # Install Hashi stack
-sudo pacman -S --noconfirm terraform nomad consul vault
+sudo pacman -S --noconfirm terraform packer nomad consul vault
 
 # Install Ansible
 sudo pacman -S --noconfirm ansible
-ansible-galaxy collection install ansible.posix
