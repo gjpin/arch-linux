@@ -39,7 +39,7 @@ sudo mkdir -p /etc/sddm.conf.d/
 sudo tee -a /etc/sddm.conf.d/autologin.conf << EOF
 [Autologin]
 User=$USER
-Session=plasma
+Session=plasmawayland
 EOF
 
 # Configure Plasma
