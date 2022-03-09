@@ -208,7 +208,8 @@ tee -a ${HOME}/.config/Code/User/settings.json << EOF
         "*.j2": "terraform",
         "*.hcl": "terraform",
         "*.bu": "yaml",
-        "*.ign": "json"
+        "*.ign": "json",
+        "*.service": "ini"
     },
     "workbench.colorTheme": "GitHub Dark",
     "extensions.ignoreRecommendations": true
