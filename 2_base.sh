@@ -83,6 +83,7 @@ sudo flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-re
 flatpak update --appstream
 
 # Install Firefox Flatpak
+sudo flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full
 sudo flatpak install -y flathub org.mozilla.firefox
 sudo flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
