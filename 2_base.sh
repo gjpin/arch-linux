@@ -111,6 +111,7 @@ tee -a ${HOME}/.var/app/com.google.Chrome/config/chrome-flags.conf << EOF
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
 --ozone-platform-hint=auto
+--enable-webrtc-pipewire-capturer
 EOF
 
 # Chromium - Enable GPU acceleration
@@ -121,6 +122,7 @@ tee -a ${HOME}/.var/app/org.chromium.Chromium/config/chromium-flags.conf << EOF
 --enable-zero-copy
 --enable-features=VaapiVideoDecoder
 --ozone-platform-hint=auto
+--enable-webrtc-pipewire-capturer
 EOF
 
 # Install paru
