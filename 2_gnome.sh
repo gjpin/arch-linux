@@ -13,11 +13,10 @@ sudo pacman -S gnome --ignore=vino,yelp,orca,simple-scan,gnome-user-docs,gnome-s
 sudo pacman -S --noconfirm gnome-tweaks gnome-shell-extensions gitg geary dconf-editor gnome-themes-extra
 
 # Install Secrets (Password Safe)
-sudo flatpak install -y flathub org.gnome.PasswordSafe
+sudo flatpak install -y flathub org.gnome.World.Secrets
 
 # Install Authenticator
 sudo flatpak install -y flathub com.belmoussaoui.Authenticator
-sudo flatpak override --nodevice=all com.belmoussaoui.Authenticator
 sudo flatpak override --unshare=network com.belmoussaoui.Authenticator
 
 # Allow Flatpaks to access themes and icons
@@ -60,7 +59,6 @@ gsettings set org.gnome.nautilus.preferences click-policy 'single'
 gsettings set org.gnome.nautilus.icon-view default-zoom-level 'standard'
 
 ## Text editor
-dconf write /org/gnome/gedit/preferences/ui/side-panel-visible true
 dconf write /org/gnome/gedit/preferences/editor/wrap-mode "'none'"
 dconf write /org/gnome/gedit/preferences/editor/highlight-current-line false
 
@@ -71,17 +69,6 @@ then
     gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
     gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing false
 fi
-
-## Gnome Terminal padding
-mkdir -p ${HOME}/.config/gtk-3.0/
-tee -a ${HOME}/.config/gtk-3.0/gtk.css << EOF
-VteTerminal,
-TerminalScreen,
-vte-terminal {
-    padding: 5px 5px 5px 5px;
-    -VteTerminal-inner-border: 5px 5px 5px 5px;
-}
-EOF
 
 # Shortcuts
 ## Terminal
@@ -103,42 +90,9 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/or
 ## Screenshots
 gsettings set org.gnome.settings-daemon.plugins.media-keys area-screenshot-clip "['<Super><Shift>s']"
 
-# Install Firefox and GTK Fluent theme
-git clone https://github.com/vinceliuice/Fluent-gtk-theme.git
-cd Fluent-gtk-theme
-./install.sh -t grey -s standard -i arch -d ${HOME}/.local/share/themes --tweaks noborder solid
-cp -r src/firefox/chrome/ ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
-cp src/firefox/configuration/user.js ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
-cd ..
-rm -rf Fluent-gtk-theme
-
-# Re-add Firefox user preferences
-cd ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*-release
-tee -a user.js << EOF
-user_pref("media.ffmpeg.vaapi.enabled", true);
-user_pref("media.rdd-ffmpeg.enabled", true);
-EOF
-cd
-
-# Install Tela icons
-git clone https://github.com/vinceliuice/Tela-icon-theme.git
-cd Tela-icon-theme
-./install.sh -d ${HOME}/.local/share/icons standard
-cd ..
-rm -rf Tela-icon-theme
-
-# Set GTK and icon themes
-gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-light'
-gsettings set org.gnome.desktop.interface icon-theme 'Tela'
-
-# Set Gnome Shell theme
-dconf write /org/gnome/shell/extensions/user-theme/name "'Fluent-grey'"
-
-# Add bash aliases
-tee -a ${HOME}/.bashrc.d/aliases << EOF
-alias dark="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-dark' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey-dark'\""
-alias light="gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-grey-light' && dconf write /org/gnome/shell/extensions/user-theme/name \"'Fluent-grey'\""
-EOF
+# Install GTK theme
+paru -S adw-gtk3-git
+gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
 
 # VSCode - Install GTK titlebar extension
 code --install-extension fkrull.gtk-dark-titlebar
