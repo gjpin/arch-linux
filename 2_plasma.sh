@@ -72,10 +72,6 @@ kwriteconfig5 --file kwinrc --group TabBox --key BorderActivate "9"
 kwriteconfig5 --file kwinrc --group TabBox --key HighlightWindows  --type bool false
 kwriteconfig5 --file kwinrc --group TabBox --key LayoutName "thumbnail_grid"
 
-# Use Scale window animation
-kwriteconfig5 --file kwinrc --group Plugins --key kwin4_effect_fadeEnabled --type bool false
-kwriteconfig5 --file kwinrc --group Plugins --key kwin4_effect_scaleEnabled --type bool true
-
 # Disable splash screen
 kwriteconfig5 --file ksplashrc --group KSplash --key Engine "none"
 kwriteconfig5 --file ksplashrc --group KSplash --key Theme "none"
