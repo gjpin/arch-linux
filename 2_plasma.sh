@@ -42,6 +42,10 @@ User=$USER
 Session=plasmawayland
 EOF
 
+# Enable OpenGL 3.1
+kwriteconfig5 --file kwinrc --group Compositing --key GLCore --type bool true
+kwriteconfig5 --file kwinrc --group Compositing --key OpenGLIsUnsafe --type bool false
+
 # Configure Plasma
 kwriteconfig5 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezetwilight.desktop"
 kwriteconfig5 --file kdeglobals --group KDE --key SingleClick --type bool true
