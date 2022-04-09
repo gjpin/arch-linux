@@ -52,7 +52,7 @@ fi
 unset rc
 
 # Keychain
-eval $(keychain --eval --quiet id_ed25519 ~/.ssh/id_ed25519)
+eval \$(keychain --eval --quiet id_ed25519 ~/.ssh/id_ed25519)
 EOF
 
 tee -a ${HOME}/.bashrc.d/defaults << EOF
