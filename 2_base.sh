@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# (Variables) GPU vendor (it's actually checking for CPU vendor for now)
-if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "AuthenticAMD" ]]
+# (Variables) GPU vendor
+if [[ $(lspci | grep VGA) =~ "Radeon" ]]
 then
  gpu_drivers="vulkan-radeon libva-mesa-driver mesa-vdpau"
  libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
  vdpau_environment_variable="export VDPAU_DRIVER=radeonsi"
-elif [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
+elif [[ $(lspci | grep VGA) =~ "Intel" ]]
 then
  gpu_drivers="vulkan-intel intel-media-driver libvdpau-va-gl"
  libva_environment_variable="export LIBVA_DRIVER_NAME=iHD"
@@ -54,6 +54,9 @@ EOF
 tee -a ${HOME}/.bashrc.d/defaults << EOF
 export EDITOR=nvim
 EOF
+
+# Install common applications
+sudo pacman -S --noconfirm flatpak wget man-db man-pages nano nvim lm_sensors
 
 # Install fonts
 sudo pacman -S --noconfirm ttf-roboto ttf-roboto-mono ttf-droid ttf-opensans ttf-dejavu \
@@ -140,20 +143,17 @@ fi
 ## Enable audio power saving features
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]
 then
-sudo touch /etc/modprobe.d/audio_powersave.conf
-sudo tee -a /etc/modprobe.d/audio_powersave.conf << EOF
+sudo tee /etc/modprobe.d/audio_powersave.conf << EOF
 options snd_hda_intel power_save=1
 EOF
 
 ## Enable wifi (iwlwifi) power saving features
-sudo touch /etc/modprobe.d/iwlwifi.conf
-sudo tee -a /etc/modprobe.d/iwlwifi.conf << EOF
+sudo tee /etc/modprobe.d/iwlwifi.conf << EOF
 options iwlwifi power_save=1
 EOF
 
 ## Reduce VM writeback time
-sudo touch /etc/sysctl.d/dirty.conf
-sudo tee -a /etc/sysctl.d/dirty.conf << EOF
+sudo tee /etc/sysctl.d/dirty.conf << EOF
 vm.dirty_writeback_centisecs = 1500
 EOF
 fi

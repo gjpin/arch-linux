@@ -1,6 +1,11 @@
 # Arch Linux install scripts
+## Requirements
+- UEFI mode
+- NVMe SSD
+- Single GPU (either Intel or Radeon)
+
 ## Install script
-- Encrypted root and swap (LUKS)
+- Encrypted root and swap (LUKS2)
 - Secure boot with custom keys
 - systemd-boot (with Pacman hook for automatic updates)
 - SSD Periodic TRIM

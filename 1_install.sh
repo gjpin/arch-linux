@@ -61,7 +61,7 @@ mkfs.fat -F32 /dev/nvme0n1p1
 mount --mkdir /dev/nvme0n1p1 /mnt/boot
 
 # Install Arch Linux
-pacstrap /mnt base base-devel linux linux-lts linux-firmware apparmor iwd "$CPU_MICROCODE"
+pacstrap /mnt base base-devel linux linux-lts linux-firmware apparmor tpm2-tools networkmanager "$CPU_MICROCODE"
 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
