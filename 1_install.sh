@@ -147,6 +147,33 @@ systemctl enable apparmor.service
 # Install and configure sudo
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
+# Setup secure boot
+pacman -S --noconfirm sbctl
+sbctl create-keys
+sbctl enroll-keys
+sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi
+sbctl sign -s /boot/vmlinuz-linux
+sbctl sign -s /boot/vmlinuz-linux-lts
+
+tee /etc/pacman.d/hooks/sbctl.hook << END
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = boot/*
+Target = efi/*
+Target = usr/lib/modules/*/vmlinuz
+Target = usr/lib/initcpio/*
+Target = usr/lib/**/efi/*.efi*
+
+[Action]
+Description = Signing EFI binaries...
+When = PostTransaction
+Exec = /usr/bin/sbctl sign-all -g
+END
+
 exit
 EOF
 
