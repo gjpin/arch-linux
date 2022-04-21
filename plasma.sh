@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download and run base script
-wget https://raw.githubusercontent.com/gjpin/arch-linux/master/2_base.sh
+curl https://raw.githubusercontent.com/gjpin/arch-linux/master/base.sh -o base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
@@ -32,12 +32,11 @@ sudo flatpak install -y flathub org.gtk.Gtk3theme.Breeze
 balooctl suspend
 balooctl disable
 
-# Setup autologin
+# Run SDDM under Wayland
 sudo mkdir -p /etc/sddm.conf.d/
-sudo tee -a /etc/sddm.conf.d/autologin.conf << EOF
-[Autologin]
-User=$USER
-Session=plasmawayland
+sudo tee /etc/sddm.conf.d/10-wayland.conf << EOF
+[Wayland]
+CompositorCommand=kwin_wayland --no-lockscreen
 EOF
 
 # Enable OpenGL 3.1
