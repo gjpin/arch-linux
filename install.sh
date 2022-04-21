@@ -108,7 +108,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf rw quiet splash
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf nowatchdog rw quiet splash
 END
 
 tee /boot/loader/entries/arch-lts.conf << END
@@ -116,7 +116,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf rw quiet splash
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf nowatchdog rw quiet splash
 END
 
 # Setup Pacman hook for automatic systemd-boot updates

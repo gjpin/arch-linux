@@ -22,11 +22,11 @@ sudo pacman -S --noconfirm tpm2-tools
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p2
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 /dev/nvme0n1p3
 
-sudo sed -i 's#=swap#& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto#' /boot/loader/entries/arch.conf
-sudo sed -i 's#=root#& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p3)=tpm2-device=auto#' /boot/loader/entries/arch.conf
+sudo sed -i 's#=swap#& rd.luks.options='"$(blkid -s UUID -o value /dev/nvme0n1p2)"'=tpm2-device=auto#' /boot/loader/entries/arch.conf
+sudo sed -i 's#=root#& rd.luks.options='"$(blkid -s UUID -o value /dev/nvme0n1p3)"'=tpm2-device=auto#' /boot/loader/entries/arch.conf
 
-sudo sed -i 's#=swap#& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto#' /boot/loader/entries/arch-lts.conf
-sudo sed -i 's#=root#& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p3)=tpm2-device=auto#' /boot/loader/entries/arch-lts.conf
+sudo sed -i 's#=swap#& rd.luks.options='"$(blkid -s UUID -o value /dev/nvme0n1p2)"'=tpm2-device=auto#' /boot/loader/entries/arch-lts.conf
+sudo sed -i 's#=root#& rd.luks.options='"$(blkid -s UUID -o value /dev/nvme0n1p3)"'=tpm2-device=auto#' /boot/loader/entries/arch-lts.conf
 
 # Create user directories
 sudo pacman -S --noconfirm xdg-user-dirs
@@ -149,6 +149,14 @@ if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
 then
 sudo pacman -S --noconfirm thermald
 sudo systemctl enable --now thermald.service
+fi
+
+# Disable watchdog (confirm with: lsmod | grep -e dog -e wdt)
+if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
+then
+sudo tee /etc/modprobe.d/nowatchdog.conf << EOF
+blacklist iTCO_wdt
+EOF
 fi
 
 # Laptop battery life improvements

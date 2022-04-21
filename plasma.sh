@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download and run base script
-curl https://raw.githubusercontent.com/gjpin/arch-linux/master/base.sh -o base.sh
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/base.sh -o base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
@@ -78,8 +78,8 @@ kwriteconfig5 --file ksplashrc --group KSplash --key Engine "none"
 kwriteconfig5 --file ksplashrc --group KSplash --key Theme "none"
 
 # Import Konsole Github color schemes
-wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/dark.colorscheme
-wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/master/dotfiles/konsole/light.colorscheme
+wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/dark.colorscheme
+wget -P $HOME/.local/share/konsole https://raw.githubusercontent.com/gjpin/arch-linux/main/dotfiles/konsole/light.colorscheme
 
 # Customize bash
 tee -a ~/.bashrc.d/prompt << EOF

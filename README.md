@@ -46,13 +46,13 @@
    - connect to a network: `station wlan0 connect SSID`
 4. Give highest priority to the closest mirror to you on `/etc/pacman.d/mirrorlist` by moving it to the top
 5. Sync repos: `pacman -Sy`
-6. Download install script: `curl https://raw.githubusercontent.com/gjpin/arch-linux/master/install.sh -o install.sh`
+6. Download install script: `curl https://raw.githubusercontent.com/gjpin/arch-linux/main/install.sh -o install.sh`
 7. Make script executable: `chmod +x install.sh`
 8. Run script: `./install.sh`
 9. Reboot and re-enable secure boot
 10. Boot into new installation
 11. Connect to network with ```nmtui```
-12. Download KDE Plasma or Gnome install script. eg. `curl https://raw.githubusercontent.com/gjpin/arch-linux/master/plasma.sh -o plasma.sh`
+12. Download KDE Plasma or Gnome install script. eg. `curl https://raw.githubusercontent.com/gjpin/arch-linux/main/plasma.sh -o plasma.sh`
 
 ## Misc guides
 ### How to chroot

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download and run base script
-curl https://raw.githubusercontent.com/gjpin/arch-linux/master/base.sh -o base.sh
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/base.sh -o base.sh
 chmod +x 2_base.sh
 sh ./2_base.sh
 
