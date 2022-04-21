@@ -25,10 +25,8 @@ sudo pacman -S --noconfirm kdeconnect sshfs
 sudo flatpak install -y flathub org.keepassxc.KeePassXC
 sudo flatpak override --unshare=network org.keepassxc.KeePassXC
 
-# Install Breeze-GTK flatpak theme and allow Flatpaks to access GTK configs
+# Install Breeze-GTK flatpak theme
 sudo flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-#sudo flatpak override --filesystem=xdg-config/gtk-3.0:ro
-#sudo flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
 # Disable baloo (file indexer)
 balooctl suspend
@@ -118,9 +116,6 @@ EOF
 
 chmod +x ~/.config/plasma-workspace/env/askpass.sh
 
-#SSH_ASKPASS='/usr/bin/ksshaskpass'
-#ssh-add ~/.ssh/id_ed25519 </dev/null
-
 ##### SHORTCUTS
 # Desktop switch
 kwriteconfig5 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"
@@ -164,4 +159,5 @@ kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+
 
 # Spectacle
 kwriteconfig5 --file kglobalshortcutsrc --group "org.kde.spectacle.desktop" --key "RectangularRegionScreenShot" "Meta+Shift+S,none,Capture Rectangular Region"
+
 echo "Your setup is ready. You can reboot now!"

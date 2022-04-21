@@ -1,16 +1,12 @@
 #!/bin/bash
 
-# Set environment variables according to GPU vendor (Intel, AMDGPU) 
-cpu_vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
-gpu_drivers=""
-libva_environment_variable=""
-vdpau_environment_variable=""
-if [[ $cpu_vendor =~ "AuthenticAMD" ]]
+# (Variables) GPU vendor (it's actually checking for CPU vendor for now)
+if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "AuthenticAMD" ]]
 then
  gpu_drivers="vulkan-radeon libva-mesa-driver mesa-vdpau"
  libva_environment_variable="export LIBVA_DRIVER_NAME=radeonsi"
  vdpau_environment_variable="export VDPAU_DRIVER=radeonsi"
-elif [[ $cpu_vendor =~ "GenuineIntel" ]]
+elif [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
 then
  gpu_drivers="vulkan-intel intel-media-driver libvdpau-va-gl"
  libva_environment_variable="export LIBVA_DRIVER_NAME=iHD"
@@ -133,17 +129,8 @@ makepkg -si --noconfirm
 cd ..
 rm -rf paru-bin
 
-# Install and configure Plymouth
-paru -S --noconfirm plymouth
-sudo sed -i 's/base systemd autodetect/base systemd sd-plymouth autodetect/g' /etc/mkinitcpio.conf
-sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch.conf
-sudo sed -i 's/quiet rw/quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 rw/g' /boot/loader/entries/arch-lts.conf
-sudo mkinitcpio -p linux
-sudo mkinitcpio -p linux-lts
-sudo plymouth-set-default-theme -R bgrt
-
 # Install and start thermald
-if [[ $cpu_vendor =~ "GenuineIntel" ]]
+if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
 then
 sudo pacman -S --noconfirm thermald
 sudo systemctl enable --now thermald.service

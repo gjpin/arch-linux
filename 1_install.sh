@@ -61,7 +61,7 @@ mkfs.fat -F32 /dev/nvme0n1p1
 mount --mkdir /dev/nvme0n1p1 /mnt/boot
 
 # Install Arch Linux
-pacstrap /mnt base base-devel linux linux-lts linux-firmware apparmor "$CPU_MICROCODE"
+pacstrap /mnt base base-devel linux linux-lts linux-firmware apparmor iwd "$CPU_MICROCODE"
 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -150,7 +150,7 @@ echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 # Setup secure boot
 pacman -S --noconfirm sbctl
 sbctl create-keys
-sbctl enroll-keys
+sbctl enroll-keys --yes-this-might-brick-my-machine
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
 sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi
 sbctl sign -s /boot/vmlinuz-linux
