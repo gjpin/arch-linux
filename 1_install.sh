@@ -141,6 +141,9 @@ END
 # Enable periodic TRIM
 systemctl enable fstrim.timer
 
+# Enable NetworkManager service
+systemctl enable NetworkManager.service
+
 # Enable Apparmor service
 systemctl enable apparmor.service
 
