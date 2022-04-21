@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Variables
+# (Variables) User input
 LUKS_PASSWORD=""
 USERNAME=""
 USER_PASSWORD=""
@@ -13,22 +13,18 @@ read -p "User password: " USER_PASSWORD
 read -p "Hostname: " HOSTNAME
 read -p "Timezone (timedatectl list-timezones): " TIMEZONE
 
-CPU_VENDOR=$(cat /proc/cpuinfo | grep vendor | uniq)
-CPU_MICROCODE=""
-INITRAMFS_MODULES=""
-KERNEL_OPTIONS=""
-
-if [[ $CPU_VENDOR =~ "AuthenticAMD" ]]
+# (Variables) CPU vendor
+if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "AuthenticAMD" ]]
 then
  CPU_MICROCODE="amd-ucode"
  INITRAMFS_MODULES="amdgpu"
-elif [[ $CPU_VENDOR =~ "GenuineIntel" ]]
+elif [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]
 then
  CPU_MICROCODE="intel-ucode"
  INITRAMFS_MODULES="i915"
- KERNEL_OPTIONS=" i915.enable_fbc=1"
 fi
 
+# (Variables) Swap size
 TOTAL_MEM=$(free -g | grep Mem: | awk '{print $2}')
 SWAP_SIZE=$(( $TOTAL_MEM + 1 ))
 
@@ -65,10 +61,7 @@ mkfs.fat -F32 /dev/nvme0n1p1
 mount --mkdir /dev/nvme0n1p1 /mnt/boot
 
 # Install Arch Linux
-pacstrap /mnt base linux linux-lts linux-firmware $CPU_MICROCODE
-
-# pacstrap /mnt device-mapper dosfstools e2fsprogs cryptsetup networkmanager \
-# wget man-db man-pages nano diffutils flatpak lm_sensors apparmor
+pacstrap /mnt base linux linux-lts linux-firmware apparmor "$CPU_MICROCODE"
 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -103,34 +96,32 @@ mkinitcpio -P
 # Setup systemd-boot
 bootctl --path=/boot install
 
-mkdir -p /boot/loader/
-tee -a /boot/loader/loader.conf << END
+tee /boot/loader/loader.conf << END
 default arch.conf
 timeout 2
 console-mode max
 editor no
 END
 
-mkdir -p /boot/loader/entries/
-tee -a /boot/loader/entries/arch.conf << END
+tee /boot/loader/entries/arch.conf << END
 title Arch Linux
 linux /vmlinuz-linux
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.options=discard$KERNEL_OPTIONS nowatchdog lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
-tee -a /boot/loader/entries/arch-lts.conf << END
+tee /boot/loader/entries/arch-lts.conf << END
 title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.options=discard$KERNEL_OPTIONS nowatchdog lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
 END
 
 # Setup Pacman hook for automatic systemd-boot updates
 mkdir -p /etc/pacman.d/hooks/
-tee -a /etc/pacman.d/hooks/systemd-boot.hook << END
+tee /etc/pacman.d/hooks/systemd-boot.hook << END
 [Trigger]
 Type = Package
 Operation = Upgrade
@@ -143,20 +134,21 @@ Exec = /usr/bin/systemctl restart systemd-boot-update.service
 END
 
 # Set swappiness to 20
-touch /etc/sysctl.d/99-swappiness.conf
-echo 'vm.swappiness=20' > /etc/sysctl.d/99-swappiness.conf
+tee /etc/sysctl.d/99-swappiness.conf << END
+vm.swappiness=20
+END
 
 # Enable periodic TRIM
 systemctl enable fstrim.timer
 
-# Enable NetworkManager service
-systemctl enable NetworkManager.service
-
 # Enable Apparmor service
 systemctl enable apparmor.service
 
-# Add user as a sudoer
+# Install and configure sudo
+pacman -S --noconfirm sudo
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
+
+exit
 EOF
 
 umount -R /mnt
