@@ -61,7 +61,7 @@ mkfs.fat -F32 /dev/nvme0n1p1
 mount --mkdir /dev/nvme0n1p1 /mnt/boot
 
 # Install Arch Linux
-pacstrap /mnt base linux linux-lts linux-firmware apparmor "$CPU_MICROCODE"
+pacstrap /mnt base base-devel linux linux-lts linux-firmware apparmor "$CPU_MICROCODE"
 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -108,7 +108,7 @@ title Arch Linux
 linux /vmlinuz-linux
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf rw quiet splash
 END
 
 tee /boot/loader/entries/arch-lts.conf << END
@@ -116,7 +116,7 @@ title Arch Linux LTS
 linux /vmlinuz-linux-lts
 initrd /$CPU_MICROCODE.img
 initrd /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf quiet rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p3)=root root=/dev/mapper/root rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=swap resume=/dev/mapper/swap rd.luks.options=discard lsm=landlock,lockdown,yama,apparmor,bpf rw quiet splash
 END
 
 # Setup Pacman hook for automatic systemd-boot updates
@@ -145,7 +145,6 @@ systemctl enable fstrim.timer
 systemctl enable apparmor.service
 
 # Install and configure sudo
-pacman -S --noconfirm sudo
 echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 
 exit
