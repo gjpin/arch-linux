@@ -526,45 +526,6 @@ tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
 EOF
 
 ################################################
-##### VSCode
-################################################
-
-# Install and configure Visual Studio Code
-pacman -S --noconfirm code
-
-# (Temporary - reverted at cleanup) Install Virtual framebuffer X server (required to install VSCode extensions without a display server)
-pacman -S --noconfirm xorg-server-xvfb
-
-sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
-sudo -u ${NEW_USER} xvfb-run code --install-extension vue.volar
-
-mkdir -p "/home/${NEW_USER}/.config/Code - OSS/User"
-tee "/home/${NEW_USER}/.config/Code - OSS/User/settings.json" << EOF
-{
-    "telemetry.telemetryLevel": "off",
-    "workbench.enableExperiments": false,
-    "workbench.settings.enableNaturalLanguageSearch": false,
-    "window.menuBarVisibility": "toggle",
-    "workbench.startupEditor": "none",
-    "window.titleBarStyle": "native",
-    "editor.fontWeight": "500",
-    "files.associations": {
-      "*.j2": "terraform",
-      "*.hcl": "terraform",
-      "*.bu": "yaml",
-      "*.ign": "json",
-      "*.service": "ini"
-    },
-    "extensions.ignoreRecommendations": true,
-    "editor.formatOnSave": true,
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.autofetch": true,
-}
-EOF
-
-################################################
 ##### thermald
 ################################################
 
@@ -797,6 +758,45 @@ cd paru-bin
 sudo -u ${NEW_USER} makepkg -si --noconfirm
 cd ..
 rm -rf paru-bin
+
+################################################
+##### VSCode
+################################################
+
+# Install and configure Visual Studio Code
+sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
+
+# (Temporary - reverted at cleanup) Install Virtual framebuffer X server (required to install VSCode extensions without a display server)
+pacman -S --noconfirm xorg-server-xvfb
+
+sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
+sudo -u ${NEW_USER} xvfb-run code --install-extension vue.volar
+
+mkdir -p "/home/${NEW_USER}/.config/Code/User"
+tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
+{
+    "telemetry.telemetryLevel": "off",
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "window.menuBarVisibility": "toggle",
+    "workbench.startupEditor": "none",
+    "window.titleBarStyle": "native",
+    "editor.fontWeight": "500",
+    "files.associations": {
+      "*.j2": "terraform",
+      "*.hcl": "terraform",
+      "*.bu": "yaml",
+      "*.ign": "json",
+      "*.service": "ini"
+    },
+    "extensions.ignoreRecommendations": true,
+    "editor.formatOnSave": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+}
+EOF
 
 ################################################
 ##### Applications

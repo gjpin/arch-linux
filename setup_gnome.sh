@@ -71,7 +71,7 @@ EOF
 
 # Install VSCode's Adwaita theme
 sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code - OSS/User/settings.json"
+sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
 
 # Improve integration of QT applications
 pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6

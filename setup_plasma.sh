@@ -249,6 +249,10 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 ##### Theming
 ################################################
 
+# Install VSCode's Breeze theme
+sudo -u ${NEW_USER} xvfb-run code --install-extension kde.breeze
+sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code/User/settings.json"
+
 # Use Breeze's color scheme in GTK4 applications
 ln -s /home/${NEW_USER}/gtk-3.0/colors.css /home/${NEW_USER}/gtk-4.0/colors-breeze.css
 
