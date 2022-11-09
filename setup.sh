@@ -236,6 +236,7 @@ mkinitcpio -P
 # https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Password_protection_of_GRUB_menu
 # https://www.gnu.org/software/grub/manual/grub/grub.html
 # https://archlinux.org/news/grub-bootloader-upgrade-and-configuration-incompatibilities/
+# https://wiki.archlinux.org/title/silent_boot
 
 # Install GRUB packages
 pacman -S --noconfirm grub efibootmgr
@@ -269,6 +270,9 @@ sed -i "s|CLASS=\"--class gnu-linux --class gnu --class os.*\"|CLASS=\"--class g
 
 # Do not display 'Loading ...' messages
 sed -i '/echo/d' /boot/grub/grub.cfg
+
+# Reduce boot verbosity (silent boot)
+sed -i "s|quiet|& loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0|" /etc/default/grub
 
 # Generate GRUB's configuration file
 grub-mkconfig -o /boot/grub/grub.cfg
