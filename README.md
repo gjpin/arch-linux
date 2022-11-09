@@ -30,8 +30,8 @@
 | zram0                                                | rom   |         |   [SWAP]   |      8GB      |
 | nvme0n1                                              | disk  |         |            |               |
 | ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    512MiB     |
-| ├─nvme0n1p2                                          | part  |         |            |               |
-| &nbsp;&nbsp;&nbsp;cryptdev                           | crypt |  BTRFS  |     /      |  Rest of disk |
+| ├─nvme0n1p2                                          | part  |  LUKS2  |            |               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──cryptdev            | crypt |  BTRFS  |     /      |  Rest of disk |
 
 ## Installation guide
 1. Disable secure boot and delete existing keys (go into setup mode)
