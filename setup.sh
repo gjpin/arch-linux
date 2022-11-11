@@ -377,14 +377,38 @@ pacman -S --noconfirm libva-utils
 pacman -S --noconfirm vulkan-tools
 
 ################################################
+##### GStreamer
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/GStreamer
+
+# Install GStreamer
+pacman -S --noconfirm \
+    gstreamer \
+    gst-libav \
+    gst-plugins-base \
+    gst-plugins-good \
+    gst-plugins-bad \
+    gst-plugins-ugly \
+    gst-plugin-pipewire \
+    gstreamer-vaapi
+
+################################################
 ##### PipeWire
 ################################################
 
-# References
+# References:
 # https://wiki.archlinux.org/title/PipeWire
 
 # Install PipeWire and WirePlumber
-pacman -S --noconfirm pipewire pipewire-alsa pipewire-jack pipewire-pulse libpulse wireplumber
+pacman -S --noconfirm \
+    pipewire \
+    pipewire-alsa \
+    pipewire-jack \
+    pipewire-pulse \
+    libpulse \
+    wireplumber
 
 # Enable PipeWire's user service
 sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
@@ -412,7 +436,8 @@ flatpak override --filesystem=xdg-config/gtk-4.0:ro
 flatpak install -y flathub \
    rest.insomnia.Insomnia \
    com.spotify.Client \
-   net.cozic.joplin_desktop
+   net.cozic.joplin_desktop \
+   com.usebottles.bottles
 
 ################################################
 ##### Podman (rootless)
