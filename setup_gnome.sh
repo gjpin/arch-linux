@@ -171,13 +171,19 @@ monospace-font-name='Noto Sans Mono 10'
 titlebar-font='Noto Sans Bold 10'
 
 [org/gnome/shell]
+disable-user-extensions=false
+
+[org/gnome/shell]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu']
 
 [org/gnome/shell/extensions/dark-variant]
-applications=['code-oss.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'gimp.desktop', 'com.heroicgameslauncher.hgl.desktop']
+applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'gimp.desktop', 'com.heroicgameslauncher.hgl.desktop']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
+
+[org/gnome/terminal/legacy/keybindings]
+next-tab='<Primary>Tab'
 
 [org/gnome/settings-daemon/plugins/media-keys]
 custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']

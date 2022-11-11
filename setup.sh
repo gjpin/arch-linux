@@ -269,7 +269,8 @@ EOF
 sed -i "s|CLASS=\"--class gnu-linux --class gnu --class os.*\"|CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\"|g" /etc/grub.d/10_linux
 
 # Do not display 'Loading ...' messages
-sed -i '/echo/d' /boot/grub/grub.cfg
+sed -i '/Loading initial ramdisk/d' /etc/grub.d/10_linux
+sed -i '/Loading Linux/d' /etc/grub.d/10_linux
 
 # Reduce boot verbosity (silent boot)
 sed -i "s|quiet|& loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0|" /etc/default/grub
@@ -280,7 +281,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # GRUB upgrade hooks
 mkdir -p /etc/pacman.d/hooks
 
-tee /etc/pacman.d/hooks/94-grub-unrestricted.hook << EOF
+tee /etc/pacman.d/hooks/90-grub-unrestricted.hook << EOF
 [Trigger]
 Type = Package
 Operation = Upgrade
@@ -292,7 +293,19 @@ When = PostTransaction
 Exec = /usr/bin/sed -i "s|CLASS=\"--class gnu-linux --class gnu --class os.*\"|CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\"|g" /etc/grub.d/10_linux
 EOF
 
-tee /etc/pacman.d/hooks/95-grub-upgrade.hook << EOF
+tee /etc/pacman.d/hooks/91-grub-hide-messages.hook << EOF
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = grub
+
+[Action]
+Description = Hiding GRUB boot messages...
+When = PostTransaction
+Exec = /usr/bin/sh -c "sed -i '/Loading initial ramdisk/d' /etc/grub.d/10_linux; sed -i '/Loading Linux/d' /etc/grub.d/10_linux"
+EOF
+
+tee /etc/pacman.d/hooks/92-grub-upgrade.hook << EOF
 [Trigger]
 Type = Package
 Operation = Upgrade
@@ -301,7 +314,7 @@ Target = grub
 [Action]
 Description = Upgrading GRUB...
 When = PostTransaction
-Exec = /usr/bin/sh -c "grub-install --target=x86_64-efi --efi-directory=/boot --boot-directory=/boot --bootloader-id=GRUB; grub-mkconfig -o /boot/grub/grub.cfg; sed -i '/echo/d' /boot/grub/grub.cfg"
+Exec = /usr/bin/sh -c "grub-install --target=x86_64-efi --efi-directory=/boot --boot-directory=/boot --bootloader-id=GRUB; grub-mkconfig -o /boot/grub/grub.cfg"
 EOF
 
 ################################################
