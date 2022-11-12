@@ -10,7 +10,7 @@
 
 # Add Flathub beta repository
 flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
-flatpak update
+flatpak update -y
 
 # Install Mesa git
 flatpak install -y flathub-beta \
