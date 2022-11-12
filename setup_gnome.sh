@@ -115,9 +115,8 @@ sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting
 # Install adw-gtk3 theme
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
 
-flatpak install -y flathub \
-    org.gtk.Gtk3theme.adw-gtk3 \
-    org.gtk.Gtk3theme.adw-gtk3-dark
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 ################################################
 ##### Firefox configurations

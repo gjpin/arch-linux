@@ -474,9 +474,8 @@ pacman -S --noconfirm adwaita-icon-theme
 
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
 
-flatpak install -y flathub \
-    org.gtk.Gtk3theme.adw-gtk3 \
-    org.gtk.Gtk3theme.adw-gtk3-dark
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 mkdir -p /home/${NEW_USER}/.config/{gtk-3.0,gtk-4.0}
 

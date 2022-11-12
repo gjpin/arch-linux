@@ -13,9 +13,8 @@ flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/fl
 flatpak update -y
 
 # Install Mesa git
-flatpak install -y flathub-beta \
-    org.freedesktop.Platform.GL.mesa-git//22.08 \
-    org.freedesktop.Platform.GL32.mesa-git//22.08
+flatpak install -y flathub-beta org.freedesktop.Platform.GL.mesa-git//22.08
+flatpak install -y flathub-beta org.freedesktop.Platform.GL32.mesa-git//22.08
 
 # Set default Flatpak GL drivers to mesa-git
 flatpak override --env=FLATPAK_GL_DRIVERS=mesa-git
@@ -31,8 +30,7 @@ EOF
 ################################################
 
 # Install MangoHud
-flatpak install -y flathub \
-   org.freedesktop.Platform.VulkanLayer.MangoHud//22.08
+flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//22.08
 
 # Configure MangoHud
 mkdir -p /home/${NEW_USER}/.config/MangoHud
@@ -50,10 +48,9 @@ flatpak override --filesystem=xdg-config/MangoHud:ro
 ################################################
 
 # Install Steam
-flatpak install -y flathub \
-   com.valvesoftware.Steam \
-   com.valvesoftware.Steam.Utility.gamescope \
-   com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak install -y flathub com.valvesoftware.Steam
+flatpak install -y flathub com.valvesoftware.Steam.Utility.gamescope
+flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 
 # Allow Steam to access external directory
 flatpak override --filesystem=/mnt/data/games/steam com.valvesoftware.Steam
@@ -71,8 +68,7 @@ EOF
 ################################################
 
 # Install Heroic Games Launcher
-flatpak install -y flathub \
-   com.heroicgameslauncher.hgl
+flatpak install -y flathub com.heroicgameslauncher.hgl
 
 # Allow Heroic to access external directory
 flatpak override --filesystem=/mnt/data/games/heroic com.heroicgameslauncher.hgl

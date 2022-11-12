@@ -439,10 +439,9 @@ flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
 # Install Flatpak applications
-flatpak install -y flathub \
-   rest.insomnia.Insomnia \
-   com.spotify.Client \
-   com.usebottles.bottles
+flatpak install -y flathub rest.insomnia.Insomnia
+flatpak install -y flathub com.spotify.Client
+flatpak install -y flathub com.usebottles.bottles
 
 ################################################
 ##### Podman (rootless)
