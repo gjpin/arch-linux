@@ -449,7 +449,6 @@ flatpak override --filesystem=xdg-config/gtk-4.0:ro
 flatpak install -y flathub \
    rest.insomnia.Insomnia \
    com.spotify.Client \
-   net.cozic.joplin_desktop \
    com.usebottles.bottles
 
 ################################################
@@ -566,6 +565,10 @@ tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
 --enable-features=WaylandWindowDecorations
 --ozone-platform-hint=auto
 EOF
+
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron17-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron18-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
 
 ################################################
 ##### thermald
@@ -840,6 +843,9 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 }
 EOF
 
+# Run VSCode under Wayland
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
+
 ################################################
 ##### Applications
 ################################################
@@ -850,7 +856,8 @@ pacman -S --noconfirm \
     nextcloud-client \
     keepassxc \
     libreoffice-fresh \
-    gimp
+    gimp \
+    obsidian
 
 # Install applications from AUR
 sudo -u ${NEW_USER} paru -S --noconfirm \
