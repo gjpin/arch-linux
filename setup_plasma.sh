@@ -287,11 +287,11 @@ flatpak override --filesystem=/home/${NEW_USER}/.icons:ro
 pacman -S --noconfirm gnome-settings-daemon gsettings-desktop-schemas gsettings-qt
 
 # Use Breeze's color scheme in GTK4 applications
-ln -s /home/${NEW_USER}/gtk-3.0/colors.css /home/${NEW_USER}/gtk-4.0/colors-breeze.css
+ln -s /home/${NEW_USER}/.config/gtk-3.0/colors.css /home/${NEW_USER}/.config/gtk-4.0/colors-breeze.css
 
-echo '@import "colors-adwaita.css"' > /home/${NEW_USER}/gtk-4.0/gtk.css
+echo '@import "colors-adwaita.css"' > /home/${NEW_USER}/.config/gtk-4.0/gtk.css
 
-tee /home/${NEW_USER}/gtk-4.0/colors-adwaita.css << EOF
+tee /home/${NEW_USER}/.config/gtk-4.0/colors-adwaita.css << EOF
 @import "colors-breeze.css";
 
 @define-color accent_color @theme_selected_bg_color_breeze;

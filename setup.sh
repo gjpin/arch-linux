@@ -644,6 +644,9 @@ user_pref("signon.rememberSignons", false);
 // Disable default browser check
 user_pref("browser.shell.checkDefaultBrowser", false);
 
+// Enable scrolling with middle mouse button
+user_pref("general.autoScroll", true);
+
 // Enable Firefox Tracking Protection
 user_pref("browser.contentblocking.category", "strict");
 user_pref("privacy.trackingprotection.enabled", true);
