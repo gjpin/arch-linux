@@ -5,7 +5,6 @@
 # https://aur.archlinux.org/cgit/aur.git/tree/INSTALL.md?h=firefox-gnome-theme-git
 # https://github.com/rafaelmardojai/firefox-gnome-theme/blob/master/configuration/user.js
 # https://github.com/lassekongo83/adw-gtk3
-# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#Adwaita
 # https://wiki.archlinux.org/title/GDM
 # https://help.gnome.org/admin/system-admin-guide/stable/dconf-custom-defaults.html.en
 # https://wiki.archlinux.org/title/mpv#Hardware_video_acceleration
@@ -66,15 +65,52 @@ vo=gpu
 EOF
 
 ################################################
+##### Better Qt / GTK integration
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications
+# https://github.com/GabePoel/KvLibadwaita
+# https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
+
+# Improve integration of QT applications
+pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6
+sed -i '/# Qt/a QT_QPA_PLATFORMTHEME=gnome' /etc/environment
+
+# Fix cursor for Qt Wayland applications under Gnome
+sed -i '/# Qt/a XCURSOR_THEME=Adwaita' /etc/environment
+sed -i '/# Qt/a XCURSOR_SIZE=24' /etc/environment
+
+# Install kvantum
+pacman -S --noconfirm kvantum
+
+# Create kvantum's configurations directory
+mkdir -p /home/${NEW_USER}/Kvantum
+
+# Set Kvantum for all Qt applications
+sed -i '/# Qt/a QT_STYLE_OVERRIDE=kvantum' /etc/environment
+
+# Download and install KvLibadwaita
+git clone https://github.com/GabePoel/KvLibadwaita.git
+cp -R KvLibadwaita/src/KvLibadwaita /home/${NEW_USER}/Kvantum
+rm -rf KvLibadwaita
+
+# Set KvLibadwaita as kvantum theme
+echo 'theme=KvLibadwaita' > /home/${NEW_USER}/Kvantum/kvantum.kvconfig
+
+# Hide kvantum manager icon
+cp /usr/share/applications/kvantummanager.desktop /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
+echo "NoDisplay=true" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
+echo "Hidden=true" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
+echo "NotShowIn=GNOME" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
+
+################################################
 ##### Theming
 ################################################
 
 # Install VSCode's Adwaita theme
 sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
 sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
-
-# Improve integration of QT applications
-pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6
 
 # Install adw-gtk3 theme
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
@@ -160,7 +196,7 @@ show-weekdate=true
 sort-directories-first=true
 
 [org/gnome/nautilus/icon-view]
-default-zoom-level='standard'
+default-zoom-level='small'
 
 [org/gnome/desktop/interface]
 font-name='Noto Sans 10'

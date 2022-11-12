@@ -20,10 +20,10 @@ flatpak install -y flathub-beta \
 # Set default Flatpak GL drivers to mesa-git
 flatpak override --env=FLATPAK_GL_DRIVERS=mesa-git
 
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+tee -a /etc/environment << EOF
 
 # Flatpak
-export FLATPAK_GL_DRIVERS=mesa-git
+FLATPAK_GL_DRIVERS=mesa-git
 EOF
 
 ################################################

@@ -36,11 +36,11 @@ fi
 if lspci | grep "VGA" | grep "Intel" > /dev/null; then
     export GPU_PACKAGES="vulkan-intel intel-media-driver intel-gpu-tools"
     export MKINITCPIO_MODULES=" i915"
-    export LIBVA_ENV_VAR="export LIBVA_DRIVER_NAME=iHD"
+    export LIBVA_ENV_VAR="LIBVA_DRIVER_NAME=iHD"
 elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
     export GPU_PACKAGES="vulkan-radeon libva-mesa-driver radeontop"
     export MKINITCPIO_MODULES=" amdgpu"
-    export LIBVA_ENV_VAR="export LIBVA_DRIVER_NAME=radeonsi"
+    export LIBVA_ENV_VAR="LIBVA_DRIVER_NAME=radeonsi"
 fi
 
 ################################################

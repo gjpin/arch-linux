@@ -4,8 +4,6 @@
 # https://wiki.archlinux.org/title/KDE
 # https://wiki.archlinux.org/title/KDE_Wallet#Using_the_KDE_Wallet_to_store_ssh_key_passphrases
 # https://wiki.archlinux.org/title/Baloo
-# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#Breeze
-# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#GTK_apps_do_not_fully_use_KDE_system_settings
 # https://wiki.archlinux.org/title/SDDM
 # https://www.reddit.com/r/linux_gaming/comments/vc2xfb/comment/icghppf/
 
@@ -62,17 +60,8 @@ systemctl enable bluetooth.service
 # Improve Nextcloud integration with Dolphin
 pacman -S --noconfirm kio
 
-# Improve integration of GTK applications
-pacman -S --noconfirm breeze-gtk kde-gtk-config
-
 # Install Phonon backend
 pacman -S --noconfirm phonon-qt5-vlc
-
-# Install Breeze theme (Flatpak)
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-
-# Support Qt bindings for GTK
-pacman -S --noconfirm gnome-settings-daemon gsettings-desktop-schemas gsettings-qt
 
 # Use the KDE Wallet to store ssh key passphrases
 pacman -S --noconfirm ksshaskpass
@@ -96,7 +85,7 @@ EOF
 ################################################
 
 # Set environment variable required by Firefox's file picker
-sed -i '/export MOZ_ENABLE_WAYLAND=1/a export GTK_USE_PORTAL=1' /home/${NEW_USER}/.zshenv
+sed -i '/# Firefox/a GTK_USE_PORTAL=1' /etc/environment
 
 for FIREFOX_PROFILE_PATH in /home/${NEW_USER}/.mozilla/firefox/*.default*
 do
@@ -274,6 +263,29 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 sudo -u ${NEW_USER} xvfb-run code --install-extension kde.breeze
 sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code/User/settings.json"
 
+################################################
+##### Better Qt / GTK integration
+################################################
+
+# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#Breeze
+# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#GTK_apps_do_not_fully_use_KDE_system_settings
+
+# Improve integration of GTK applications
+pacman -S --noconfirm breeze-gtk kde-gtk-config
+
+# Install Breeze theme (Flatpak)
+flatpak install -y flathub org.gtk.Gtk3theme.Breeze
+
+# Make Flatpak GTK3 apps use Breeze cursor
+mkdir -p /home/${NEW_USER}/.icons
+
+cp -R /usr/share/icons/* /home/${NEW_USER}/.icons
+
+flatpak override --filesystem=/home/${NEW_USER}/.icons:ro
+
+# Support Qt bindings for GTK
+pacman -S --noconfirm gnome-settings-daemon gsettings-desktop-schemas gsettings-qt
+
 # Use Breeze's color scheme in GTK4 applications
 ln -s /home/${NEW_USER}/gtk-3.0/colors.css /home/${NEW_USER}/gtk-4.0/colors-breeze.css
 
@@ -317,10 +329,3 @@ tee /home/${NEW_USER}/gtk-4.0/colors-adwaita.css << EOF
 
 @define-color scrollbar_outline_color @borders_breeze;
 EOF
-
-# Make Flatpak GTK3 apps use Breeze cursor
-mkdir -p /home/${NEW_USER}/.icons
-
-cp -R /usr/share/icons/* /home/${NEW_USER}/.icons
-
-flatpak override --filesystem=/home/${NEW_USER}/.icons:ro

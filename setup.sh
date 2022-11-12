@@ -172,16 +172,10 @@ mkdir -p /home/${NEW_USER}/{.ssh,src}
 chown 700 /home/${NEW_USER}/.ssh
 
 # Configure ZSH
-tee /home/${NEW_USER}/.zshrc.local << 'EOF'
+tee /home/${NEW_USER}/.zshrc.local << EOF
 # ZSH configs
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-EOF
-
-# Set XDG directories
-tee -a /home/${NEW_USER}/.zshenv << EOF
-# XDG
-XDG_CONFIG_HOME=/home/${NEW_USER}/.config
 EOF
 
 ################################################
@@ -368,18 +362,17 @@ sbctl sign -s /boot/vmlinuz-linux-lts
 pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Override VA-API driver via environment variable
-tee -a /home/${NEW_USER}/.zshenv << EOF
-
+tee -a /etc/environment << EOF
 # VA-API
 ${LIBVA_ENV_VAR}
 EOF
 
 # If GPU is AMD, use RADV's Vulkan driver
 if lspci | grep "VGA" | grep "AMD" > /dev/null; then
-tee -a /home/${NEW_USER}/.zshenv << EOF
+tee -a /etc/environment << EOF
 
 # Vulkan
-export AMD_VULKAN_ICD=RADV
+AMD_VULKAN_ICD=RADV
 EOF
 fi
 
@@ -492,17 +485,6 @@ EOF
 # Install NodeJS
 pacman -S --noconfirm nodejs npm
 
-mkdir -p /home/${NEW_USER}/.npm-global
-tee /home/${USERNAME}/.npmrc << EOF
-prefix=/home/${USERNAME}/.npm-global
-EOF
-
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# NodeJS
-export PATH=$HOME/.npm-global/bin:$PATH
-EOF
-
 # Install Typescript and LSP
 pacman -S --noconfirm typescript typescript-language-server
 
@@ -512,11 +494,11 @@ pacman -S --noconfirm bash-language-server
 # Install Go and LSP
 pacman -S --noconfirm go go-tools gopls
 
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+tee -a /etc/environment << 'EOF'
 
 # Go
-export GOPATH="$HOME/.go"
-export PATH="$GOPATH/bin:$PATH"
+GOPATH="$HOME/.go"
+PATH="$GOPATH/bin:$PATH"
 EOF
 
 # Install Python and LSP
@@ -532,11 +514,11 @@ alias vi=nvim
 alias vim=nvim
 EOF
 
-tee -a /home/${NEW_USER}/.zshenv << EOF
+tee -a /etc/environment << EOF
 
 # Neovim
-export EDITOR=nvim
-export VISUAL=nvim
+EDITOR=nvim
+VISUAL=nvim
 EOF
 
 ################################################
@@ -554,9 +536,9 @@ pacman -S --noconfirm xorg-xwayland
 # Run QT applications natively under Wayland
 pacman -S --noconfirm qt5-wayland qt6-wayland
 
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+tee -a /etc/environment << EOF
 
-# QT
+# Qt
 QT_QPA_PLATFORM="wayland;xcb"
 EOF
 
@@ -622,10 +604,10 @@ sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
 sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
 
 # Run Firefox natively under Wayland
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+tee -a /etc/environment << EOF
 
 # Firefox
-export MOZ_ENABLE_WAYLAND=1
+MOZ_ENABLE_WAYLAND=1
 EOF
 
 # Open Firefox in headless mode and then close it to create profile folder
