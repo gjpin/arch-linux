@@ -166,8 +166,8 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Number "2
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Rows "1"
 
 # Force BreezeDark titlebar color scheme for specific applications
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count "7"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count "9"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9"
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key Description "Application settings for code-oss"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key clientmachine "localhost"
@@ -217,6 +217,20 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key decocolor "
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key decocolorrule "2"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key wmclass "obsidian"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key wmclassmatch "2"
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key Description "Application settings for obsidian"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key decocolor "BreezeDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key wmclass "godot"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key wmclassmatch "2"
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key Description "Application settings for obsidian"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolor "BreezeDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclass "blender"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclassmatch "2"
 
 # Desktop shortcuts
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"

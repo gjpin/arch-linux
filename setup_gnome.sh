@@ -177,7 +177,7 @@ disable-user-extensions=false
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu']
 
 [org/gnome/shell/extensions/dark-variant]
-applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'gimp.desktop', 'com.heroicgameslauncher.hgl.desktop', 'obsidian.desktop']
+applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'gimp.desktop', 'com.heroicgameslauncher.hgl.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender' ,'blender.desktop']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
