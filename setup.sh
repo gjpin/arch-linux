@@ -824,6 +824,7 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.autofetch": true,
+    "workbench.iconTheme": null,
 }
 EOF
 
