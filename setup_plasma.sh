@@ -259,9 +259,17 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 ##### Theming
 ################################################
 
-# Install VSCode's Breeze theme
-sudo -u ${NEW_USER} xvfb-run code --install-extension kde.breeze
-sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code/User/settings.json"
+# References:
+# https://marketplace.visualstudio.com/items?itemName=kde.breeze
+
+# Downlaod and install VSCode's Breeze theme
+curl https://KDE.gallery.vsassets.io/_apis/public/gallery/publisher/KDE/extension/breeze/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage -o breeze.vsix
+
+sudo -u ${NEW_USER} xvfb-run code --install-extension breeze.vsix
+
+sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code - OSS/User/settings.json"
+
+rm breeze.vsix
 
 ################################################
 ##### Better Qt / GTK integration

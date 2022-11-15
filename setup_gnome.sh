@@ -110,7 +110,7 @@ echo "NotShowIn=GNOME" >> /home/${NEW_USER}/.local/share/applications/kvantumman
 
 # Install VSCode's Adwaita theme
 sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
+sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code - OSS/User/settings.json"
 
 # Install adw-gtk3 theme
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
