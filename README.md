@@ -17,7 +17,8 @@
 - Hardware video acceleration
 - Pipewire
 - Flatpak
-- Podman (rootless)
+- Docker
+- AppArmor
 - ZSH
 - KDE Plasma or Gnome
    - SwayWM: working, but unfinished
