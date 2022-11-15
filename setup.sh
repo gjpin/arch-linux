@@ -323,6 +323,7 @@ pacman -S --noconfirm tpm2-tools tpm2-tss
 
 # Configure initramfs to unlock the encrypted volume
 sed -i "s|=cryptdev|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
 
 ################################################
 ##### Secure boot
@@ -908,6 +909,27 @@ if [ ${GAMING} = "yes" ]; then
     ./setup_gaming.sh
     rm setup_gaming.sh
 fi
+
+################################################
+##### AppArmor
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/AppArmor
+
+# Install AppArmor
+pacman -S --noconfirm apparmor
+
+# Enable AppArmor service
+systemctl enable apparmor.service
+
+# Enable AppArmor as default security model
+sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Enable caching AppArmor profiles
+sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
+sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 
 ################################################
 ##### Cleanup

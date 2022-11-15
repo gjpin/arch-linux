@@ -107,25 +107,10 @@ gamescope -f -e -- mangohud %command%
 gamescope -h 1080 -H 1440 -U -f -e -- mangohud %command%
 ```
 
-## How to install AppArmor
+## Additional AppArmor profiles
 ```bash
 # References:
-# https://wiki.archlinux.org/title/AppArmor
 # https://github.com/roddhjav/apparmor.d
-
-# Install AppArmor
-sudo pacman -S --noconfirm apparmor
-
-# Enable AppArmor service
-sudo systemctl enable apparmor.service
-
-# Enable AppArmor as default security model
-sudo sed -i "s|=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /etc/default/grub
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-# Enable caching AppArmor profiles
-sudo sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
-sudo sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 
 # Install additional AppArmor profiles in enforce mode
 git clone https://aur.archlinux.org/apparmor.d-git.git
