@@ -298,6 +298,7 @@ pacman -S --noconfirm gnome-settings-daemon gsettings-desktop-schemas gsettings-
 ln -s /home/${NEW_USER}/.config/gtk-3.0/colors.css /home/${NEW_USER}/.config/gtk-4.0/colors-breeze.css
 
 echo '@import "colors-adwaita.css"' > /home/${NEW_USER}/.config/gtk-4.0/gtk.css
+chattr +i /home/${NEW_USER}/.config/gtk-4.0/gtk.css
 
 tee /home/${NEW_USER}/.config/gtk-4.0/colors-adwaita.css << EOF
 @import "colors-breeze.css";
