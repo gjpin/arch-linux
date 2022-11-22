@@ -937,6 +937,7 @@ pacman -Rs --noconfirm xorg-server-xvfb
 # https://wiki.archlinux.org/title/snapper
 # https://www.dwarmstrong.org/btrfs-snapshots-rollbacks/
 # https://wiki.archlinux.org/title/System_backup#Snapshots_and_/boot_partition
+# https://stackoverflow.com/questions/20300971/rsync-copy-directory-contents-but-not-directory-itself
 
 # Install Snapper, Pacman hooks for snapshots and GRUB snapshots boot options 
 pacman -S --noconfirm snapper snap-pac grub-btrfs
@@ -1022,5 +1023,5 @@ Target = usr/lib/modules/*/vmlinuz
 Depends = rsync
 Description = Backing up /boot...
 When = PostTransaction
-Exec = /usr/bin/rsync -a --delete /boot/* /.bootbackup
+Exec = /usr/bin/rsync -a --delete /boot/ /.bootbackup
 EOF
