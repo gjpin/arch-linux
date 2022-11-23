@@ -57,9 +57,6 @@ systemctl enable sddm.service
 # Enable bluetooth
 systemctl enable bluetooth.service
 
-# Improve Nextcloud integration with Dolphin
-pacman -S --noconfirm kio
-
 # Install Phonon backend
 pacman -S --noconfirm phonon-qt5-vlc
 

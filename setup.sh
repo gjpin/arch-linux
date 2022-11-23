@@ -168,7 +168,7 @@ pacman -S --noconfirm xdg-user-dirs
 sudo -u ${NEW_USER} xdg-user-dirs-update
 
 # Create common directories
-mkdir -p /home/${NEW_USER}/{.ssh,src}
+mkdir -p /home/${NEW_USER}/{.ssh,src,.local/share/applications}
 chown 700 /home/${NEW_USER}/.ssh
 
 # Configure ZSH
@@ -431,8 +431,9 @@ sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
 sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
 
-# Add Flathub repository
+# Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update
 
 # Allow read-only access to GTK configs
@@ -440,9 +441,45 @@ flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
 # Install Flatpak applications
-flatpak install -y flathub rest.insomnia.Insomnia
 flatpak install -y flathub com.spotify.Client
+flatpak install -y flathub org.libreoffice.LibreOffice
+flatpak install -y flathub com.bitwarden.desktop
+flatpak install -y flathub org.keepassxc.KeePassXC
+flatpak install -y flathub org.godotengine.Godot
+
+# Install Bottles
 flatpak install -y flathub com.usebottles.bottles
+flatpak override --filesystem=xdg-data/applications com.usebottles.bottles
+
+# Install Insomnia
+flatpak install -y flathub rest.insomnia.Insomnia
+flatpak override --socket=wayland rest.insomnia.Insomnia
+cp /var/lib/flatpak/app/rest.insomnia.Insomnia/current/active/files/share/applications/rest.insomnia.Insomnia.desktop /home/${NEW_USER}/.local/share/applications
+sed -i "s|Exec=/app/bin/insomnia|Exec=flatpak run rest.insomnia.Insomnia --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/rest.insomnia.Insomnia.desktop
+
+# Install Blender
+flatpak install -y flathub org.blender.Blender
+flatpak override --socket=wayland org.blender.Blender
+
+# Install Obsidian
+flatpak install -y flathub md.obsidian.Obsidian
+flatpak override --env=OBSIDIAN_USE_WAYLAND=1 md.obsidian.Obsidian
+
+# Install GIMP beta (has native wayland support)
+flatpak install -y flathub-beta org.gimp.GIMP
+
+################################################
+##### Syncthing
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/syncthing
+
+# Install Syncthing
+pacman -S --noconfirm syncthing
+
+# Enable Syncthing's user service
+sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
 ##### Docker
@@ -771,6 +808,10 @@ sudo -u ${NEW_USER} makepkg -si --noconfirm
 cd ..
 rm -rf paru-bin
 
+# Install applications from AUR
+sudo -u ${NEW_USER} paru -S --noconfirm \
+    downgrade
+
 ################################################
 ##### VSCode
 ################################################
@@ -818,23 +859,6 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
-##### Applications
-################################################
-
-# Install applications
-pacman -S --noconfirm \
-    bitwarden \
-    nextcloud-client \
-    keepassxc \
-    libreoffice-fresh \
-    gimp \
-    obsidian
-
-# Install applications from AUR
-sudo -u ${NEW_USER} paru -S --noconfirm \
-    downgrade
-
-################################################
 ##### Desktop Environment
 ################################################
 
@@ -868,9 +892,7 @@ elif [ ${DESKTOP_ENVIRONMENT} = "sway" ]; then
 fi
 
 # Hide applications from menus
-mkdir -p /home/${NEW_USER}/.local/share/applications
-
-APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron19' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'libreoffice-xsltfilter' 'libreoffice-startcenter' 'mpv')
+APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron19' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'mpv')
 for APPLICATION in "${APPLICATIONS[@]}"
 do
     # Create a local copy of the desktop files and append properties
@@ -882,18 +904,6 @@ do
         echo "NotShowIn=KDE;GNOME;" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
     fi
 done
-
-################################################
-##### Gaming
-################################################
-
-# Install and configure gaming with Flatpak
-if [ ${GAMING} = "yes" ]; then
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_gaming.sh -O
-    chmod +x setup_gaming.sh
-    ./setup_gaming.sh
-    rm setup_gaming.sh
-fi
 
 ################################################
 ##### AppArmor
@@ -915,6 +925,18 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # Enable caching AppArmor profiles
 sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
 sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
+
+################################################
+##### Gaming
+################################################
+
+# Install and configure gaming with Flatpak
+if [ ${GAMING} = "yes" ]; then
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_gaming.sh -O
+    chmod +x setup_gaming.sh
+    ./setup_gaming.sh
+    rm setup_gaming.sh
+fi
 
 ################################################
 ##### Cleanup

@@ -42,9 +42,6 @@ systemctl enable gdm.service
 # Enable bluetooth
 systemctl enable bluetooth.service
 
-# Improve Nextcloud integration with Nautilus
-pacman -S --noconfirm python-nautilus
-
 # Enable support for WEBP images in eog
 pacman -S --noconfirm webp-pixbuf-loader
 
@@ -212,7 +209,7 @@ disable-user-extensions=false
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu']
 
 [org/gnome/shell/extensions/dark-variant]
-applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'gimp.desktop', 'com.heroicgameslauncher.hgl.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender' ,'blender.desktop']
+applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'

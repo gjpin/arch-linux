@@ -48,7 +48,10 @@
 8. Boot into new installation
 9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
 10. Create /boot backup: `sudo rsync -a --delete /boot/ /.bootbackup`
-11. Create snapper snapshot: `sudo snapper -c root create -d "**System install**"`
+11. Import WireGuard config to /etc/wireguard
+12. Enable WireGuard connection: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
+13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
+14. Create snapper snapshot: `sudo snapper -c root create -d "**System install**"`
 
 ## Misc guides
 ### How to chroot

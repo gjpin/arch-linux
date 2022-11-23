@@ -8,10 +8,6 @@
 ##### Mesa-git
 ################################################
 
-# Add Flathub beta repository
-flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
-flatpak update -y
-
 # Install Mesa git
 flatpak install -y flathub-beta org.freedesktop.Platform.GL.mesa-git//22.08
 flatpak install -y flathub-beta org.freedesktop.Platform.GL32.mesa-git//22.08
