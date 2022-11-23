@@ -96,6 +96,18 @@ Press ESC during boot
 10. reboot -f
 ```
 
+## How to revert to a previous Flatpak commit
+```bash
+# List available commits
+flatpak remote-info --log flathub org.godotengine.Godot
+
+# Downgrade to specific version
+sudo flatpak update --commit=${HASH} org.godotengine.Godot
+
+# Pin version
+flatpak mask org.godotengine.Godot
+```
+
 ### How to use Gamescope + MangoHud in Steam
 ```bash
 # MangoHud
