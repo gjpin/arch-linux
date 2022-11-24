@@ -152,8 +152,8 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Number "2
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Rows "1"
 
 # Force BreezeDark titlebar color scheme for specific applications
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count "9"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count "10"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10"
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key Description "Application settings for code"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key clientmachine "localhost"
@@ -217,6 +217,13 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolor "
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolorrule "2"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclass "blender"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclassmatch "2"
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key Description "Application settings for discord"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolor "BreezeDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclass "discord"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclassmatch "2"
 
 # Desktop shortcuts
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"

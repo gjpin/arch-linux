@@ -440,30 +440,25 @@ flatpak update
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
-# Install Flatpak applications
+# Install Spotify
 flatpak install -y flathub com.spotify.Client
-flatpak install -y flathub org.libreoffice.LibreOffice
-flatpak install -y flathub com.bitwarden.desktop
-flatpak install -y flathub org.keepassxc.KeePassXC
+
+# Install Godot
 flatpak install -y flathub org.godotengine.Godot
 
 # Install Bottles
 flatpak install -y flathub com.usebottles.bottles
 flatpak override --filesystem=xdg-data/applications com.usebottles.bottles
 
-# Install Insomnia
-flatpak install -y flathub rest.insomnia.Insomnia
-flatpak override --socket=wayland rest.insomnia.Insomnia
-cp /var/lib/flatpak/app/rest.insomnia.Insomnia/current/active/files/share/applications/rest.insomnia.Insomnia.desktop /home/${NEW_USER}/.local/share/applications
-sed -i "s|Exec=/app/bin/insomnia|Exec=flatpak run rest.insomnia.Insomnia --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/rest.insomnia.Insomnia.desktop
+# Install Discord
+flatpak install -y flathub com.discordapp.Discord
+flatpak override --socket=wayland com.discordapp.Discord
+cp /var/lib/flatpak/app/com.discordapp.Discord/current/active/files/share/applications/com.discordapp.Discord.desktop /home/${NEW_USER}/.local/share/applications
+sed -i "s|Exec=discord|Exec=flatpak run com.discordapp.Discord --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/com.discordapp.Discord.desktop
 
 # Install Blender
 flatpak install -y flathub org.blender.Blender
 flatpak override --socket=wayland org.blender.Blender
-
-# Install Obsidian
-flatpak install -y flathub md.obsidian.Obsidian
-flatpak override --env=OBSIDIAN_USE_WAYLAND=1 md.obsidian.Obsidian
 
 # Install GIMP beta (has native wayland support)
 flatpak install -y flathub-beta org.gimp.GIMP
@@ -808,9 +803,27 @@ sudo -u ${NEW_USER} makepkg -si --noconfirm
 cd ..
 rm -rf paru-bin
 
+################################################
+##### Applications
+################################################
+
+# Install applications
+pacman -S --noconfirm \
+    bitwarden \
+    libreoffice-fresh \
+    keepassxc \
+    obsidian
+
+# Install Chromium with native Wayland support
+pacman -S --noconfirm chromium
+tee /home/${NEW_USER}/.config/chromium-flags.conf << EOF
+--ozone-platform-hint=auto
+EOF
+
 # Install applications from AUR
 sudo -u ${NEW_USER} paru -S --noconfirm \
-    downgrade
+    downgrade \
+    insomnia-bin
 
 ################################################
 ##### VSCode
@@ -892,7 +905,7 @@ elif [ ${DESKTOP_ENVIRONMENT} = "sway" ]; then
 fi
 
 # Hide applications from menus
-APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron19' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'mpv')
+APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron19' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'libreoffice-xsltfilter' 'libreoffice-startcenter' 'mpv')
 for APPLICATION in "${APPLICATIONS[@]}"
 do
     # Create a local copy of the desktop files and append properties

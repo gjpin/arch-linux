@@ -8,6 +8,7 @@
 # https://wiki.archlinux.org/title/GDM
 # https://help.gnome.org/admin/system-admin-guide/stable/dconf-custom-defaults.html.en
 # https://wiki.archlinux.org/title/mpv#Hardware_video_acceleration
+# https://archlinux.org/groups/x86_64/gnome/
 
 ################################################
 ##### Gnome
@@ -15,23 +16,31 @@
 
 # Install Gnome
 pacman -S --noconfirm \
-    gnome-shell \
-    gnome-control-center \
-    nautilus \
-    gnome-backgrounds \
-    gnome-calculator \
-    gnome-disk-utility \
-    gnome-keyring \
 	eog \
     evince \
     file-roller \
-    gnome-system-monitor \
-    gnome-shell-extensions \
-    xdg-user-dirs-gtk \
-    celluloid \
-    kooha \
+    gnome-backgrounds \
+    gnome-calculator \
+    gnome-calendar \
+    gnome-color-manager \
     gnome-console \
+    gnome-control-center \
+    gnome-disk-utility \
+    gnome-keyring \
+    gnome-music \
+    gnome-session \
+    gnome-settings-daemon \
+    gnome-shell \
+    gnome-shell-extensions \
+    gnome-system-monitor \
     gnome-text-editor \
+    grilo-plugins \
+    malcontent \
+    mutter \
+    nautilus \
+    sushi \
+    totem \
+    xdg-user-dirs-gtk \
     xdg-desktop-portal-gnome \
     libappindicator-gtk3
 
@@ -51,15 +60,6 @@ flatpak install -y flathub com.belmoussaoui.Authenticator
 # Install Gnome shell extensions
 sudo -u ${NEW_USER} paru -S --noconfirm gnome-shell-extension-dark-variant
 pacman -S --noconfirm gnome-shell-extension-appindicator
-
-# Import mpv's configuration
-mkdir -p /home/${NEW_USER}/.config/mpv
-tee /home/${NEW_USER}/.config/mpv/mpv.conf << EOF
-gpu-context=wayland
-gpu-api=vulkan
-hwdec=vaapi
-vo=gpu
-EOF
 
 ################################################
 ##### Better Qt / GTK integration
@@ -209,7 +209,7 @@ disable-user-extensions=false
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu']
 
 [org/gnome/shell/extensions/dark-variant]
-applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop']
+applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop', 'com.discordapp.Discord.desktop']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
