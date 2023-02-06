@@ -443,9 +443,6 @@ flatpak override --filesystem=xdg-config/gtk-4.0:ro
 # Install Spotify
 flatpak install -y flathub com.spotify.Client
 
-# Install Godot
-flatpak install -y flathub org.godotengine.Godot
-
 # Install Bottles
 flatpak install -y flathub com.usebottles.bottles
 flatpak override --filesystem=xdg-data/applications com.usebottles.bottles
@@ -455,13 +452,6 @@ flatpak install -y flathub com.discordapp.Discord
 flatpak override --socket=wayland com.discordapp.Discord
 cp /var/lib/flatpak/app/com.discordapp.Discord/current/active/files/share/applications/com.discordapp.Discord.desktop /home/${NEW_USER}/.local/share/applications
 sed -i "s|Exec=discord|Exec=flatpak run com.discordapp.Discord --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/com.discordapp.Discord.desktop
-
-# Install Blender
-flatpak install -y flathub org.blender.Blender
-flatpak override --socket=wayland org.blender.Blender
-
-# Install GIMP beta (has native wayland support)
-flatpak install -y flathub-beta org.gimp.GIMP
 
 ################################################
 ##### Syncthing
@@ -518,6 +508,9 @@ EOF
 # Install Python and LSP
 pacman -S --noconfirm python python-lsp-server
 
+# Install clang/llvm
+pacman -S --noconfirm clang lld lldb llvm cmake scons
+
 # Install Neovim
 pacman -S --noconfirm neovim
 
@@ -565,6 +558,8 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron17-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron18-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
 
 ################################################
 ##### thermald
@@ -839,17 +834,20 @@ pacman -S --noconfirm xorg-server-xvfb
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
 sudo -u ${NEW_USER} xvfb-run code --install-extension llvm-vs-code-extensions.vscode-clangd
-sudo -u ${NEW_USER} xvfb-run code --install-extension geequlim.godot-tools
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code - OSS/User"
 tee "/home/${NEW_USER}/.config/Code - OSS/User/settings.json" << EOF
 {
     "telemetry.telemetryLevel": "off",
-    "workbench.enableExperiments": false,
-    "workbench.settings.enableNaturalLanguageSearch": false,
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
+    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
+    "editor.fontLigatures": true,
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "workbench.iconTheme": null,
+    "workbench.tree.indent": 12,
     "window.titleBarStyle": "native",
     "editor.fontWeight": "500",
     "files.associations": {
@@ -861,10 +859,10 @@ tee "/home/${NEW_USER}/.config/Code - OSS/User/settings.json" << EOF
     },
     "extensions.ignoreRecommendations": true,
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.autofetch": true,
-    "workbench.iconTheme": null,
 }
 EOF
 
