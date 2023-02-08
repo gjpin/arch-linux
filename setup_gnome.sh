@@ -40,26 +40,62 @@ pacman -S --noconfirm \
     nautilus \
     sushi \
     totem \
+    gitg \
     xdg-user-dirs-gtk \
     xdg-desktop-portal-gnome \
-    libappindicator-gtk3
+    libappindicator-gtk3 \
+    xorg-xprop
 
 # Install and enable GDM
 pacman -S --noconfirm gdm
 systemctl enable gdm.service
 
-# Enable bluetooth
-systemctl enable bluetooth.service
-
 # Enable support for WEBP images in eog
 pacman -S --noconfirm webp-pixbuf-loader
 
-# Install Authenticator
-flatpak install -y flathub com.belmoussaoui.Authenticator
+# Install Gnome's default file associations
+sudo -u ${NEW_USER} paru -S --noconfirm shared-mime-info-gnome
 
-# Install Gnome shell extensions
-sudo -u ${NEW_USER} paru -S --noconfirm gnome-shell-extension-dark-variant
-pacman -S --noconfirm gnome-shell-extension-appindicator
+# Install Flatpaks
+flatpak install -y flathub com.belmoussaoui.Authenticator
+flatpak install -y flathub com.github.marhkb.Pods
+
+################################################
+##### Gnome Shell extensions
+################################################
+
+# References:
+# https://extensions.gnome.org/extension/615/appindicator-support/
+# https://extensions.gnome.org/extension/1319/gsconnect/
+# https://extensions.gnome.org/extension/4488/dark-variant/
+# https://extensions.gnome.org/extension/5237/rounded-window-corners/
+
+# Create Gnome shell extensions folder
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
+
+# AppIndicator and KStatusNotifierItem Support
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v46.shell-extension.zip -o /home/{NEW_USER}/shell-extension.zip
+chown {NEW_USER}:{NEW_USER} /home/{NEW_USER}/shell-extension.zip
+sudo -u ${NEW_USER} gnome-extensions install /home/{NEW_USER}/shell-extension.zip
+rm -f /home/{NEW_USER}/shell-extension.zip
+
+# GSConnect
+curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v54.shell-extension.zip -o /home/{NEW_USER}/shell-extension.zip
+chown {NEW_USER}:{NEW_USER} /home/{NEW_USER}/shell-extension.zip
+sudo -u ${NEW_USER} gnome-extensions install /home/{NEW_USER}/shell-extension.zip
+rm -f /home/{NEW_USER}/shell-extension.zip
+
+# Dark Variant
+curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v8.shell-extension.zip -o /home/{NEW_USER}/shell-extension.zip
+chown {NEW_USER}:{NEW_USER} /home/{NEW_USER}/shell-extension.zip
+sudo -u ${NEW_USER} gnome-extensions install /home/{NEW_USER}/shell-extension.zip
+rm -f /home/{NEW_USER}/shell-extension.zip
+
+# Rounded Window Corners
+curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v10.shell-extension.zip -o /home/{NEW_USER}/shell-extension.zip
+chown {NEW_USER}:{NEW_USER} /home/{NEW_USER}/shell-extension.zip
+sudo -u ${NEW_USER} gnome-extensions install /home/{NEW_USER}/shell-extension.zip
+rm -f /home/{NEW_USER}/shell-extension.zip
 
 ################################################
 ##### Better Qt / GTK integration
@@ -105,30 +141,49 @@ echo "NotShowIn=GNOME" >> /home/${NEW_USER}/.local/share/applications/kvantumman
 ##### Theming
 ################################################
 
+# Install adw-gtk3 flatpak
+sudo flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
+sudo flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
+
+# Download and install latest adw-gtk3 release
+URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
+curl -sSL ${URL} -O
+tar -xf adw-*.tar.xz -C /home/${NEW_USER}/.local/share/themes/
+rm -f adw-*.tar.xz
+
+# GTK theme updater
+tee /home/${NEW_USER}/.local/bin/update-gtk-theme << 'EOF'
+#!/usr/bin/bash
+URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
+curl -sSL ${URL} -O
+rm -rf /home/${NEW_USER}/.local/share/themes/adw-gtk3*
+tar -xf adw-*.tar.xz -C /home/${NEW_USER}/.local/share/themes/
+rm -f adw-*.tar.xz
+EOF
+
+chmod +x /home/${NEW_USER}/.local/bin/update-gtk-theme
+
+sed -i "/flatpak update -y/a \n    # Update GTK theme\n    update-gtk-theme" /home/${NEW_USER}/.zshrc.local
+
 # Install VSCode's Adwaita theme
 sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code - OSS/User/settings.json"
-
-# Install adw-gtk3 theme
-sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
-
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
+sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
 
 ################################################
-##### Firefox configurations
+##### Firefox theming
 ################################################
+
+# References:
+# https://github.com/rafaelmardojai/firefox-gnome-theme
+
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
 # Install Firefox Gnome theme
-sudo -u ${NEW_USER} paru -S --noconfirm \
-    firefox-gnome-theme-git
-
-for FIREFOX_PROFILE_PATH in /home/${NEW_USER}/.mozilla/firefox/*.default*
-do
-# Configure Firefox Gnome theme
 mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
 echo "@import \"firefox-gnome-theme/userChrome.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
+echo "@import \"firefox-gnome-theme/userContent.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
 tee -a ${FIREFOX_PROFILE_PATH}/user.js << EOF
 
 // Enable customChrome.css
@@ -139,8 +194,22 @@ user_pref("browser.uidensity", 0);
 
 // Enable SVG context-propertes
 user_pref("svg.context-properties.content.enabled", true);
+
+// Add more contrast to the active tab
+user_pref("gnomeTheme.activeTabContrast", true);
 EOF
-done
+
+# Firefox theme updater
+tee /home/${NEW_USER}/.local/bin/update-firefox-theme << 'EOF'
+#!/usr/bin/bash
+# Update Firefox theme
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+EOF
+
+chmod +x /home/${NEW_USER}/.local/bin/update-firefox-theme
+
+sed -i "/flatpak update -y/a \n    # Update Firefox theme\n    update-firefox-theme" /home/${NEW_USER}/.zshrc.local
 
 ################################################
 ##### Gnome configurations
@@ -192,7 +261,7 @@ show-weekdate=true
 sort-directories-first=true
 
 [org/gnome/nautilus/icon-view]
-default-zoom-level='small'
+default-zoom-level='small-plus'
 
 [org/gnome/desktop/interface]
 font-name='Noto Sans 10'
@@ -206,10 +275,10 @@ titlebar-font='Noto Sans Bold 10'
 disable-user-extensions=false
 
 [org/gnome/shell]
-enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu']
+enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'rounded-window-corners@yilozt']
 
 [org/gnome/shell/extensions/dark-variant]
-applications=['code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop', 'com.discordapp.Discord.desktop']
+applications=['code.desktop', 'code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop', 'com.discordapp.Discord.desktop']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'

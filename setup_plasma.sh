@@ -54,9 +54,6 @@ sudo -u ${NEW_USER} balooctl purge
 pacman -S --noconfirm sddm sddm-kcm
 systemctl enable sddm.service
 
-# Enable bluetooth
-systemctl enable bluetooth.service
-
 # Install Phonon backend
 pacman -S --noconfirm phonon-qt5-vlc
 
@@ -84,8 +81,9 @@ EOF
 # Set environment variable required by Firefox's file picker
 sed -i '/# Firefox/a GTK_USE_PORTAL=1' /etc/environment
 
-for FIREFOX_PROFILE_PATH in /home/${NEW_USER}/.mozilla/firefox/*.default*
-do
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+
 # Install Firefox's Plasma Integration extension
 curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
 
@@ -99,7 +97,6 @@ user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 // Prevent duplicate entries in KDE Plasma's media player widget
 user_pref("media.hardwaremediakeys.enabled", false);
 EOF
-done
 
 ################################################
 ##### KDE Plasma configurations
@@ -266,14 +263,9 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 # References:
 # https://marketplace.visualstudio.com/items?itemName=kde.breeze
 
-# Downlaod and install VSCode's Breeze theme
-curl https://KDE.gallery.vsassets.io/_apis/public/gallery/publisher/KDE/extension/breeze/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage -o breeze.vsix
-
-sudo -u ${NEW_USER} xvfb-run code --install-extension breeze.vsix
-
-sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code - OSS/User/settings.json"
-
-rm breeze.vsix
+# Install VSCode's Breeze theme
+sudo -u ${NEW_USER} xvfb-run code --install-extension kde.breeze
+sed -i '/{/a "workbench.colorTheme": "Breeze Dark",' "/home/${NEW_USER}/.config/Code/User/settings.json"
 
 ################################################
 ##### Better Qt / GTK integration

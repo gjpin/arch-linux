@@ -70,6 +70,7 @@ pacman -S --noconfirm zsh zsh-completions grml-zsh-config zsh-autosuggestions zs
 
 # Install common applications
 pacman -S --noconfirm \
+    coreutils \
     htop \
     git \
     p7zip \
@@ -167,15 +168,36 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 pacman -S --noconfirm xdg-user-dirs
 sudo -u ${NEW_USER} xdg-user-dirs-update
 
-# Create common directories
-mkdir -p /home/${NEW_USER}/{.ssh,src,.local/share/applications}
-chown 700 /home/${NEW_USER}/.ssh
-
 # Configure ZSH
 tee /home/${NEW_USER}/.zshrc.local << EOF
 # ZSH configs
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+EOF
+
+# Create common directories and configure them
+mkdir -p /home/${NEW_USER}/{.ssh,src,.local/share/applications,.local/bin,.local/share/themes}
+
+chown 700 /home/${NEW_USER}/.ssh
+
+tee /home/${NEW_USER}/.zshenv << 'EOF'
+# Add $HOME/.local/bin/ to the PATH
+export PATH="$HOME/.local/bin/:$PATH"
+EOF
+
+# Updater helper
+tee -a /home/${NEW_USER}/.zshrc.local << EOF
+# Updater helper
+update-all() {
+    # Update system
+    sudo pacman -Syu
+
+    # Update AUR packages
+    paru -Syu
+    
+    # Update Flatpak apps
+    flatpak update -y
+}
 EOF
 
 ################################################
@@ -440,6 +462,25 @@ flatpak update
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
+# Global override to deny all applications the permission to access certain directories
+flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
+
+################################################
+##### Flatpak runtimes
+################################################
+
+# Install runtimes
+flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/22.08
+flatpak install -y flathub-beta org.freedesktop.Platform.GL.mesa-git/x86_64/22.08
+flatpak install -y flathub-beta org.freedesktop.Platform.GL32.mesa-git/x86_64/22.08
+
+################################################
+##### Flatpak applications
+################################################
+
 # Install Spotify
 flatpak install -y flathub com.spotify.Client
 
@@ -452,6 +493,22 @@ flatpak install -y flathub com.discordapp.Discord
 flatpak override --socket=wayland com.discordapp.Discord
 cp /var/lib/flatpak/app/com.discordapp.Discord/current/active/files/share/applications/com.discordapp.Discord.desktop /home/${NEW_USER}/.local/share/applications
 sed -i "s|Exec=discord|Exec=flatpak run com.discordapp.Discord --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/com.discordapp.Discord.desktop
+
+# Insomnia
+flatpak install -y flathub rest.insomnia.Insomnia
+flatpak override --socket=wayland rest.insomnia.Insomnia
+cp /var/lib/flatpak/app/rest.insomnia.Insomnia/current/active/files/share/applications/rest.insomnia.Insomnia.desktop /home/${NEW_USER}/.local/share/applications
+sed -i "s|Exec=/app/bin/insomnia|Exec=flatpak run rest.insomnia.Insomnia --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/rest.insomnia.Insomnia.desktop
+
+# LibreOffice
+flatpak install -y flathub org.libreoffice.LibreOffice
+
+# Godot
+flatpak install -y flathub org.godotengine.Godot
+
+# Blender
+flatpak install -y flathub org.blender.Blender
+flatpak override --socket=wayland org.blender.Blender
 
 ################################################
 ##### Syncthing
@@ -467,51 +524,91 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker and dependencies
-pacman -S --noconfirm docker docker-compose
+# Install Podman, Buildah and dependencies
+pacman -S --noconfirm podman fuse-overlayfs slirp4netns netavark buildah
 
-# Enable Docker service
-systemctl enable docker.service
+# Enable kernel.unprivileged_userns_clone
+echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-rootless-podman.conf
 
-# Add user to Docker group
-gpasswd -a ${NEW_USER} docker
+# Set subuid and subgid
+usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee -a /home/${NEW_USER}/.zshrc.local << EOF
+
+# Podman
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf << EOF
+# Enable docker.io as unqualified search registry
+unqualified-search-registries = ["docker.io"]
+EOF
 
 ################################################
 ##### Development (languages, LSP, neovim)
 ################################################
 
-# Install NodeJS
+# NodeJS
 pacman -S --noconfirm nodejs npm
 
-# Install Typescript and LSP
+# Typescript and LSP
 pacman -S --noconfirm typescript typescript-language-server
 
-# Install Bash LSP
+# Bash LSP
 pacman -S --noconfirm bash-language-server
 
-# Install Go and LSP
+# Go and LSP
 pacman -S --noconfirm go go-tools gopls
 
-tee -a /etc/environment << 'EOF'
+tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Go
-GOPATH="$HOME/.go"
-PATH="$GOPATH/bin:$PATH"
+export GOPATH="$HOME/.go"
+export PATH="$GOPATH/bin:$PATH"
 EOF
 
-# Install Python and LSP
+# Python and LSP
 pacman -S --noconfirm python python-lsp-server
 
-# Install clang/llvm
-pacman -S --noconfirm clang lld lldb llvm cmake scons
+# .NET
+pacman -S --noconfirm \
+    dotnet-runtime \
+    dotnet-sdk \
+    mono-msbuild \
+    mono-msbuild-sdkresolver \
+    mono \
+    aspnet-runtime
 
-# Install Neovim
+tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+
+# .NET
+export PATH="$HOME/.dotnet/tools:$PATH"
+EOF
+
+# C++
+pacman -S --noconfirm \
+    clang \
+    lld \
+    lldb \
+    llvm \
+    cmake \
+    scons \
+    gcc
+
+# Neovim
 pacman -S --noconfirm neovim
 
 tee -a /home/${NEW_USER}/.zshrc.local << EOF
@@ -560,6 +657,7 @@ ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/el
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron22-flags.conf
 
 ################################################
 ##### thermald
@@ -622,8 +720,12 @@ EOF
 # Open Firefox in headless mode and then close it to create profile folder
 sudo -u ${NEW_USER} timeout 5 firefox --headless
 
-for FIREFOX_PROFILE_PATH in /home/${NEW_USER}/.mozilla/firefox/*.default*
-do
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+
+# Import Firefox configs
+curl -Ssl https://raw.githubusercontent.com/gjpin/arch-linux/main/firefox.js \
+  -o ${FIREFOX_PROFILE_PATH}/user.js
 
 # Create extensisons folder
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
@@ -633,155 +735,6 @@ curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-lat
 curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-
-# Import user configurations
-tee ${FIREFOX_PROFILE_PATH}/user.js << EOF
-// Enable FFMPEG VA-API
-user_pref("media.ffmpeg.vaapi.enabled", true);
-
-// Disable title bar
-user_pref("browser.tabs.inTitlebar", 1);
-
-// Disable View feature
-user_pref("browser.tabs.firefox-view", false);
-
-// Disable List All Tabs button
-user_pref("browser.tabs.tabmanager.enabled", false);
-
-// Disable password manager
-user_pref("signon.rememberSignons", false);
-
-// Disable default browser check
-user_pref("browser.shell.checkDefaultBrowser", false);
-
-// Enable scrolling with middle mouse button
-user_pref("general.autoScroll", true);
-
-// Enable Firefox Tracking Protection
-user_pref("browser.contentblocking.category", "strict");
-user_pref("privacy.trackingprotection.enabled", true);
-user_pref("privacy.trackingprotection.pbmode.enabled", true);
-user_pref("privacy.trackingprotection.fingerprinting.enabled", true);
-user_pref("privacy.trackingprotection.cryptomining.enabled", true);
-user_pref("privacy.trackingprotection.socialtracking.enabled", true);
-user_pref("network.cookie.cookieBehavior", 5);
-
-// Disable Mozilla telemetry/experiments
-user_pref("toolkit.telemetry.enabled",				false);
-user_pref("toolkit.telemetry.unified",				false);
-user_pref("toolkit.telemetry.archive.enabled",			false);
-user_pref("experiments.supported",				false);
-user_pref("experiments.enabled",				false);
-user_pref("experiments.manifest.uri",				"");
-
-// Disallow Necko to do A/B testing
-user_pref("network.allow-experiments",				false);
-
-// Disable collection/sending of the health report
-user_pref("datareporting.healthreport.uploadEnabled",		false);
-user_pref("datareporting.healthreport.service.enabled",		false);
-user_pref("datareporting.policy.dataSubmissionEnabled",		false);
-user_pref("browser.discovery.enabled",				false);
-
-// Disable Pocket
-user_pref("browser.pocket.enabled",				false);
-user_pref("extensions.pocket.enabled",				false);
-user_pref("browser.newtabpage.activity-stream.feeds.section.topstories",	false);
-
-// Disable Location-Aware Browsing (geolocation)
-user_pref("geo.enabled",					false);
-
-// Disable "beacon" asynchronous HTTP transfers (used for analytics)
-user_pref("beacon.enabled",					false);
-
-// Disable speech recognition
-user_pref("media.webspeech.recognition.enable",			false);
-
-// Disable speech synthesis
-user_pref("media.webspeech.synth.enabled",			false);
-
-// Disable pinging URIs specified in HTML <a> ping= attributes
-user_pref("browser.send_pings",					false);
-
-// Don't try to guess domain names when entering an invalid domain name in URL bar
-user_pref("browser.fixup.alternate.enabled",			false);
-
-// Opt-out of add-on metadata updates
-user_pref("extensions.getAddons.cache.enabled",			false);
-
-// Opt-out of themes (Persona) updates
-user_pref("lightweightThemes.update.enabled",			false);
-
-// Disable Flash Player NPAPI plugin
-user_pref("plugin.state.flash",					0);
-
-// Disable Java NPAPI plugin
-user_pref("plugin.state.java",					0);
-
-// Disable Gnome Shell Integration NPAPI plugin
-user_pref("plugin.state.libgnome-shell-browser-plugin",		0);
-
-// Updates addons automatically
-user_pref("extensions.update.enabled",				true);
-
-// Enable add-on and certificate blocklists (OneCRL) from Mozilla
-user_pref("extensions.blocklist.enabled",			true);
-user_pref("services.blocklist.update_enabled",			true);
-
-// Disable Extension recommendations
-user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr",	false);
-
-// Disable sending Firefox crash reports to Mozilla servers
-user_pref("breakpad.reportURL",					"");
-
-// Disable sending reports of tab crashes to Mozilla
-user_pref("browser.tabs.crashReporting.sendReport",		false);
-user_pref("browser.crashReports.unsubmittedCheck.enabled",	false);
-
-// Enable Firefox's anti-fingerprinting mode
-user_pref("privacy.resistFingerprinting",			true);
-
-// Disable Shield/Heartbeat/Normandy
-user_pref("app.normandy.enabled", false);
-user_pref("app.normandy.api_url", "");
-user_pref("extensions.shield-recipe-client.enabled",		false);
-user_pref("app.shield.optoutstudies.enabled",			false);
-
-// Disable Firefox Hello metrics collection
-user_pref("loop.logDomains",					false);
-
-// Enable blocking reported web forgeries
-user_pref("browser.safebrowsing.phishing.enabled",		true);
-
-// Enable blocking reported attack sites
-user_pref("browser.safebrowsing.malware.enabled",		true);
-
-// Disable downloading homepage snippets/messages from Mozilla
-user_pref("browser.aboutHomeSnippets.updateUrl",		"");
-
-// Enable Content Security Policy (CSP)
-user_pref("security.csp.experimentalEnabled",			true);
-
-// Enable Subresource Integrity
-user_pref("security.sri.enable",				true);
-
-// Don't send referer headers when following links across different domains
-user_pref("network.http.referer.XOriginPolicy",		2);
-
-// Disable new tab tile ads & preload
-user_pref("browser.newtabpage.enhanced",			false);
-user_pref("browser.newtab.preload",				false);
-user_pref("browser.newtabpage.directory.ping",			"");
-user_pref("browser.newtabpage.directory.source",		"data:text/plain,{}");
-
-// Enable HTTPS-Only Mode
-user_pref("dom.security.https_only_mode",			true);
-
-// Enable HSTS preload list
-user_pref("network.stricttransportsecurity.preloadlist",	true);
-EOF
-
-done
 
 ################################################
 ##### Paru
@@ -805,7 +758,6 @@ rm -rf paru-bin
 # Install applications
 pacman -S --noconfirm \
     bitwarden \
-    libreoffice-fresh \
     keepassxc \
     obsidian
 
@@ -815,17 +767,12 @@ tee /home/${NEW_USER}/.config/chromium-flags.conf << EOF
 --ozone-platform-hint=auto
 EOF
 
-# Install applications from AUR
-sudo -u ${NEW_USER} paru -S --noconfirm \
-    downgrade \
-    insomnia-bin
-
 ################################################
 ##### VSCode
 ################################################
 
-# Install VS Code
-pacman -S --noconfirm code
+# Install VS Code and dependencies
+sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 
 # (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
 pacman -S --noconfirm xorg-server-xvfb
@@ -833,11 +780,13 @@ pacman -S --noconfirm xorg-server-xvfb
 # Install VSCode extensions
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-dotnettools.csharp
 sudo -u ${NEW_USER} xvfb-run code --install-extension llvm-vs-code-extensions.vscode-clangd
+sudo -u ${NEW_USER} xvfb-run code --install-extension vadimcn.vscode-lldb
 
 # Import VSCode settings
-mkdir -p "/home/${NEW_USER}/.config/Code - OSS/User"
-tee "/home/${NEW_USER}/.config/Code - OSS/User/settings.json" << EOF
+mkdir -p "/home/${NEW_USER}/.config/Code/User"
+tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 {
     "telemetry.telemetryLevel": "off",
     "window.menuBarVisibility": "toggle",
@@ -884,6 +833,9 @@ pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk noto-fonts-extr
 pacman -S --noconfirm power-profiles-daemon
 systemctl enable power-profiles-daemon.service
 
+# Enable bluetooth
+systemctl enable bluetooth.service
+
 # Install and configure desktop environment
 if [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_plasma.sh -O
@@ -915,27 +867,6 @@ do
         echo "NotShowIn=KDE;GNOME;" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
     fi
 done
-
-################################################
-##### AppArmor
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/AppArmor
-
-# Install AppArmor
-pacman -S --noconfirm apparmor
-
-# Enable AppArmor service
-systemctl enable apparmor.service
-
-# Enable AppArmor as default security model
-sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# Enable caching AppArmor profiles
-sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
-sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 
 ################################################
 ##### Gaming

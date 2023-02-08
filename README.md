@@ -9,7 +9,7 @@
 - Encrypted root with TPM2 unlock
 - Secure boot with custom keys
 - GRUB with Snapper snapshots + password protected editing
-- zram
+- zram (8GB)
 - SSD Periodic TRIM
 - Intel/AMD microcode
 - Standard Kernel + LTS kernel
@@ -17,12 +17,10 @@
 - Hardware video acceleration
 - Pipewire
 - Flatpak
-- Docker
-- AppArmor
+- Podman
 - ZSH
-- KDE Plasma or Gnome
-   - SwayWM: working, but unfinished
-- Steam / Heroic via Flatpak with mesa-git (optional)
+- KDE Plasma / Gnome / SwayWM (working, but unfinished)
+- Steam / Heroic via Flatpak with mesa-git
 - Check install.sh and setup*.sh for all features
 
 ## Partitions layout
@@ -121,6 +119,26 @@ gamescope -f -e -- mangohud %command%
 
 # gamescope upscale from 1080p to 1440p with FSR + mangohud
 gamescope -h 1080 -H 1440 -U -f -e -- mangohud %command%
+```
+
+### AppArmor
+```bash
+# References:
+# https://wiki.archlinux.org/title/AppArmor
+
+# Install AppArmor
+pacman -S --noconfirm apparmor
+
+# Enable AppArmor service
+systemctl enable apparmor.service
+
+# Enable AppArmor as default security model
+sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Enable caching AppArmor profiles
+sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
+sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 ```
 
 ## Additional AppArmor profiles
