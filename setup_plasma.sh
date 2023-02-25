@@ -60,7 +60,6 @@ pacman -S --noconfirm phonon-qt5-vlc
 # Use the KDE Wallet to store ssh key passphrases
 pacman -S --noconfirm ksshaskpass
 
-mkdir -p /home/${NEW_USER}/.config/autostart
 tee /home/${NEW_USER}/.config/autostart/ssh-add.desktop << EOF
 [Desktop Entry]
 Exec=ssh-add -q
@@ -68,7 +67,6 @@ Name=ssh-add
 Type=Application
 EOF
 
-mkdir -p /home/${NEW_USER}/.config/environment.d
 tee /home/${NEW_USER}/.config/environment.d/ssh_askpass.conf << EOF
 SSH_ASKPASS='/usr/bin/ksshaskpass'
 SSH_ASKPASS_REQUIRE=prefer
@@ -79,7 +77,9 @@ EOF
 ################################################
 
 # Set environment variable required by Firefox's file picker
-sed -i '/# Firefox/a GTK_USE_PORTAL=1' /etc/environment
+tee /home/${NEW_USER}/.config/environment.d/firefox-kde.conf << EOF
+GTK_USE_PORTAL=1
+EOF
 
 # Set Firefox profile path
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
@@ -281,8 +281,6 @@ pacman -S --noconfirm breeze-gtk kde-gtk-config
 flatpak install -y flathub org.gtk.Gtk3theme.Breeze
 
 # Make Flatpak GTK3 apps use Breeze cursor
-mkdir -p /home/${NEW_USER}/.icons
-
 cp -R /usr/share/icons/* /home/${NEW_USER}/.icons
 
 flatpak override --filesystem=/home/${NEW_USER}/.icons:ro

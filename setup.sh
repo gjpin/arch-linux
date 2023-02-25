@@ -139,16 +139,6 @@ EOF
 systemctl enable dev-zram0.service
 
 ################################################
-##### SSD
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Solid_state_drive
-
-# Enable periodic TRIM
-systemctl enable fstrim.timer
-
-################################################
 ##### Users
 ################################################
 
@@ -176,7 +166,19 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 EOF
 
 # Create common directories and configure them
-mkdir -p /home/${NEW_USER}/{.ssh,src,.local/share/applications,.local/bin,.local/share/themes}
+mkdir -p \
+  /home/${NEW_USER}/.local/share/applications \
+  /home/${NEW_USER}/.local/share/themes \
+  /home/${NEW_USER}/.local/share/fonts \
+  /home/${NEW_USER}/.bashrc.d \
+  /home/${NEW_USER}/.local/bin \
+  /home/${NEW_USER}/.config/autostart \
+  /home/${NEW_USER}/.ssh \
+  /home/${NEW_USER}/.config/environment.d \
+  /home/${NEW_USER}/src \
+  /home/${NEW_USER}/.config/autostart \
+  /home/${NEW_USER}/.config/environment.d \
+  /home/${NEW_USER}/.icons
 
 chown 700 /home/${NEW_USER}/.ssh
 
@@ -470,12 +472,14 @@ flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg
 ################################################
 
 # Install runtimes
-flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/22.08
-flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.GL32.default/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.GL.default/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
 flatpak install -y flathub-beta org.freedesktop.Platform.GL.mesa-git/x86_64/22.08
 flatpak install -y flathub-beta org.freedesktop.Platform.GL32.mesa-git/x86_64/22.08
+flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
 
 ################################################
 ##### Flatpak applications
@@ -502,9 +506,6 @@ sed -i "s|Exec=/app/bin/insomnia|Exec=flatpak run rest.insomnia.Insomnia --enabl
 
 # LibreOffice
 flatpak install -y flathub org.libreoffice.LibreOffice
-
-# Godot
-flatpak install -y flathub org.godotengine.Godot
 
 # Blender
 flatpak install -y flathub org.blender.Blender
@@ -618,9 +619,7 @@ alias vi=nvim
 alias vim=nvim
 EOF
 
-tee -a /etc/environment << EOF
-
-# Neovim
+tee /home/${NEW_USER}/.config/environment.d/neovim.conf << EOF
 EDITOR=nvim
 VISUAL=nvim
 EOF
@@ -640,9 +639,7 @@ pacman -S --noconfirm xorg-xwayland
 # Run QT applications natively under Wayland
 pacman -S --noconfirm qt5-wayland qt6-wayland
 
-tee -a /etc/environment << EOF
-
-# Qt
+tee /home/${NEW_USER}/.config/environment.d/qt.conf << EOF
 QT_QPA_PLATFORM="wayland;xcb"
 EOF
 
@@ -711,9 +708,7 @@ sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
 sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
 
 # Run Firefox natively under Wayland
-tee -a /etc/environment << EOF
-
-# Firefox
+tee /home/${NEW_USER}/.config/environment.d/firefox-wayland.conf << EOF
 MOZ_ENABLE_WAYLAND=1
 EOF
 
@@ -779,10 +774,6 @@ pacman -S --noconfirm xorg-server-xvfb
 
 # Install VSCode extensions
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-dotnettools.csharp
-sudo -u ${NEW_USER} xvfb-run code --install-extension llvm-vs-code-extensions.vscode-clangd
-sudo -u ${NEW_USER} xvfb-run code --install-extension vadimcn.vscode-lldb
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"

@@ -87,7 +87,7 @@ btrfs subvolume create /mnt/@tmp
 # Mount BTRFS subvolumes
 umount /mnt
 
-export SV_OPTS="rw,noatime,compress-force=zstd:1,space_cache=v2"
+export SV_OPTS="rw,noatime,compress-force=zstd:1,space_cache=v2,discard"
 
 mount -o ${SV_OPTS},subvol=@ /dev/mapper/cryptdev /mnt
 

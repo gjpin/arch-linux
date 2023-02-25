@@ -1,3 +1,6 @@
+// Set homepage
+user_pref("browser.startup.homepage", "chrome://browser/content/blanktab.html");
+
 // Enable FFMPEG VA-API
 user_pref("media.ffmpeg.vaapi.enabled", true);
 
@@ -18,6 +21,9 @@ user_pref("browser.shell.checkDefaultBrowser", false);
 
 // Enable scrolling with middle mouse button
 user_pref("general.autoScroll", true);
+
+// Dev tools zoom
+user_pref("devtools.toolbox.zoomValue", 1.1);
 
 // Enable Firefox Tracking Protection
 user_pref("browser.contentblocking.category", "strict");
@@ -99,9 +105,6 @@ user_pref("breakpad.reportURL", "");
 // Disable sending reports of tab crashes to Mozilla
 user_pref("browser.tabs.crashReporting.sendReport", false);
 user_pref("browser.crashReports.unsubmittedCheck.enabled", false);
-
-// Enable Firefox's anti-fingerprinting mode
-user_pref("privacy.resistFingerprinting", true);
 
 // Disable Shield/Heartbeat/Normandy
 user_pref("app.normandy.enabled", false);
