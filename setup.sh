@@ -326,7 +326,7 @@ pacman -S --noconfirm sbctl
 sbctl create-keys
 
 # Enroll keys to EFI
-sbctl enroll-keys --yes-this-might-brick-my-machine
+sbctl enroll-keys --microsoft
 
 # Sign files with secure boot keys
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI

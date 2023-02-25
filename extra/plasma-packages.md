@@ -10,10 +10,10 @@
 # filtered from above
 bluedevil
 breeze
-breeze-grub # nah
+breeze-grub # skip
 breeze-gtk
-breeze-plymouth # nah
-discover # nah
+breeze-plymouth # skip
+discover # skip
 drkonqi
 flatpak-kcm
 kactivitymanagerd
@@ -38,8 +38,8 @@ layer-shell-qt
 libkscreen
 libksysguard
 milou
-oxygen # nah
-oxygen-sounds # nah
+oxygen # skip
+oxygen-sounds # skip
 plasma-browser-integration
 plasma-desktop
 plasma-disks
@@ -50,10 +50,10 @@ plasma-pa
 plasma-systemmonitor
 plasma-thunderbolt
 plasma-vault
-plasma-welcome # nah
+plasma-welcome # skip
 plasma-workspace
 plasma-workspace-wallpapers
-plymouth-kcm # nah
+plymouth-kcm # skip
 polkit-kde-agent-1 # polkit-kde-agent
 powerdevil
 sddm-kcm
@@ -69,21 +69,21 @@ kde-inotify-survey # available on AUR
 kdeconnect-kde # kdeconnect
 kdegraphics-thumbnailers
 kdenetwork-filesharing
-kdepim-addons # nah
+kdepim-addons # skip
 kio-admin # available on AUR
 kio-extras
 kio-fuse
-kio-gdrive # nah
+kio-gdrive # skip
 libappindicator-gtk3
 phonon-vlc # phonon-qt5-vlc
-print-manager # nah
+print-manager # skip
 
 # 3rd-party packages
 # https://community.kde.org/Distributions/Packaging_Recommendations#3rd-party_packages
 iio-sensor-proxy
 noto-sans # noto-fonts
 noto-color-emoji # noto-fonts-emoji
-maliit-keyboard # nah
+maliit-keyboard # skip
 power-profiles-daemon
 xdg-desktop-portal-gtk
 xsettingsd
