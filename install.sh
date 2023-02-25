@@ -63,7 +63,7 @@ partprobe /dev/nvme0n1
 ################################################
 
 # Encrypt and open LUKS partition
-echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random --label=luks luksFormat /dev/nvme0n1p2
+echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random --label=cryptdev luksFormat /dev/nvme0n1p2
 echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/nvme0n1p2 cryptdev
 
 # Create BTRFS
@@ -106,6 +106,9 @@ pacstrap /mnt base base-devel linux linux-lts linux-firmware btrfs-progs ${CPU_M
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # Configure system
+cp ./extra/firefox.js /mnt/firefox.js
+cp ./plasma.sh /mnt/plasma.sh
+cp ./gaming.sh /mnt/gaming.sh
 cp ./setup.sh /mnt/setup.sh
 arch-chroot /mnt /bin/bash /setup.sh
 umount -R /mnt

@@ -642,7 +642,7 @@ sudo -u ${NEW_USER} timeout 5 firefox --headless
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
 # Import Firefox configs
-cp ./extra/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
+cp ./firefox.js ${FIREFOX_PROFILE_PATH}/user.js
 
 # Create extensisons folder
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
