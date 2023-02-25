@@ -453,10 +453,6 @@ flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
 # Install Spotify
 flatpak install -y flathub com.spotify.Client
 
-# Install Bottles
-flatpak install -y flathub com.usebottles.bottles
-flatpak override --filesystem=xdg-data/applications com.usebottles.bottles
-
 # Install Discord
 flatpak install -y flathub com.discordapp.Discord
 
@@ -672,6 +668,7 @@ pacman -S --noconfirm \
 pacman -S --noconfirm chromium
 tee /home/${NEW_USER}/.config/chromium-flags.conf << EOF
 --ozone-platform-hint=auto
+--enable-features=VaapiVideoDecoder
 EOF
 
 ################################################

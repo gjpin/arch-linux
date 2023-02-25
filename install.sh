@@ -94,7 +94,7 @@ mount --mkdir /dev/nvme0n1p1 /mnt/boot
 ################################################
 
 # Import mirrorlist
-cp ./extra/mirrorlist -o /etc/pacman.d/mirrorlist
+cp ./extra/mirrorlist /etc/pacman.d/mirrorlist
 
 # Synchronize package databases
 pacman -Syy

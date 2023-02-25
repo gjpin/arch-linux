@@ -84,9 +84,11 @@ pacman -S --noconfirm \
 
 # Extra Plasma packages
 pacman -S --noconfirm \
-    plasma-wayland-session `# wayland session` \
-    sshfs `# remote filesystem browser for KDE Connect` \
-    vlc `# media player`
+    plasma-wayland-session \
+    sshfs
+    
+# Install VLC
+pacman -S --noconfirm vlc
 
 # Install and enable SDDM
 pacman -S --noconfirm sddm sddm-kcm
