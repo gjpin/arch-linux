@@ -5,24 +5,6 @@
 - Single GPU (Intel or Radeon)
 - TPM2
 
-## Features
-- Encrypted root with TPM2 unlock
-- Secure boot with custom keys
-- GRUB with Snapper snapshots + password protected editing
-- zram (8GB)
-- SSD Periodic TRIM
-- Intel/AMD microcode
-- Standard Kernel + LTS kernel
-- Vulkan drivers
-- Hardware video acceleration
-- Pipewire
-- Flatpak
-- Podman
-- ZSH
-- KDE Plasma / Gnome / SwayWM (working, but unfinished)
-- Steam / Heroic via Flatpak with mesa-git
-- Check install.sh and setup*.sh for all features
-
 ## Partitions layout
 | Name                                                 | Type  | FS Type | Mountpoint |      Size     |
 | ---------------------------------------------------- | :---: | :-----: | :--------: | :-----------: |
@@ -39,17 +21,11 @@
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Download install script: `curl https://raw.githubusercontent.com/gjpin/arch-linux/main/install.sh -O`
-5. Make script executable: `chmod +x install.sh`
-6. Run script: `./install.sh`
-7. Reboot and re-enable secure boot
-8. Boot into new installation
-9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
-10. Create /boot backup: `sudo rsync -a --delete /boot/ /.bootbackup`
-11. Import WireGuard config to /etc/wireguard
-12. Enable WireGuard connection: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
-13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
-14. Create snapper snapshot: `sudo snapper -c root create -d "**System install**"`
+4. Clone repo: `git clone -b kde https://github.com/gjpin/arch-linux.git`
+5. Run script: `arch-linux/install.sh`
+6. Reboot and re-enable secure boot
+7. Boot into new installation
+8. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
 
 ## Misc guides
 ### How to chroot
@@ -67,31 +43,15 @@ sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2
 sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2
 ```
 
-### How to show GRUB menu
+### How to show systemd-boot menu
 ```bash
-Press ESC during boot 
+Press 'space' during boot
 ```
 
 ### How to repair EFI
 ```bash
 1. chroot
 2. fsck -a /dev/nvme0n1p1
-```
-
-### How to rollback to another snapshot
-```bash
-1. Boot to a working snapshot
-2. (sudo su)
-3. mount /dev/mapper/cryptdev /mnt
-4. mount --mkdir /dev/nvme0n1p1 /mnt/boot
-5. mv /mnt/@ /mnt/@.broken
-   or
-   btrfs subvolume delete /mnt/@
-6. grep -r '<date>' /mnt/@snapshots/*/info.xml
-7. btrfs subvolume snapshot /mnt/@snapshots/${NUMBER}/snapshot /mnt/@
-8. cp -R /mnt/@snapshots/${NUMBER}/snapshot/.bootbackup/* /mnt/boot
-9. umount /mnt
-10. reboot -f
 ```
 
 ## How to revert to a previous Flatpak commit
@@ -133,8 +93,8 @@ pacman -S --noconfirm apparmor
 systemctl enable apparmor.service
 
 # Enable AppArmor as default security model
-sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
+sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch.conf
+sed -i "s|tpm2-device=auto|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch-lts.conf
 
 # Enable caching AppArmor profiles
 sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf

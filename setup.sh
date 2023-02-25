@@ -170,32 +170,38 @@ mkdir -p \
   /home/${NEW_USER}/.local/share/applications \
   /home/${NEW_USER}/.local/share/themes \
   /home/${NEW_USER}/.local/share/fonts \
-  /home/${NEW_USER}/.bashrc.d \
   /home/${NEW_USER}/.local/bin \
   /home/${NEW_USER}/.config/autostart \
-  /home/${NEW_USER}/.ssh \
   /home/${NEW_USER}/.config/environment.d \
-  /home/${NEW_USER}/src \
   /home/${NEW_USER}/.config/autostart \
-  /home/${NEW_USER}/.config/environment.d \
-  /home/${NEW_USER}/.icons
+  /home/${NEW_USER}/.ssh \
+  /home/${NEW_USER}/.icons \
+  /home/${NEW_USER}/src
 
 chown 700 /home/${NEW_USER}/.ssh
 
-tee /home/${NEW_USER}/.zshenv << 'EOF'
+tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+
 # Add $HOME/.local/bin/ to the PATH
-export PATH="$HOME/.local/bin/:$PATH"
+export PATH="${HOME}/.local/bin/:${PATH}"
 EOF
 
 # Updater helper
 tee -a /home/${NEW_USER}/.zshrc.local << EOF
 # Updater helper
 update-all() {
+    # Update keyring
+    sudo pacman -Sy archlinux-keyring
+
     # Update system
     sudo pacman -Syu
 
     # Update AUR packages
     paru -Syu
+
+    # Update firmware
+    sudo fwupdmgr refresh
+    sudo fwupdmgr update
     
     # Update Flatpak apps
     flatpak update -y
@@ -245,94 +251,50 @@ sed -i "s|#COMPRESSION=\"zstd\"|COMPRESSION=\"zstd\"|" /etc/mkinitcpio.conf
 mkinitcpio -P
 
 ################################################
-##### GRUB
+##### systemd-boot
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/GRUB
-# https://wiki.archlinux.org/title/Kernel_parameters#GRUB
-# https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Password_protection_of_GRUB_menu
-# https://www.gnu.org/software/grub/manual/grub/grub.html
-# https://archlinux.org/news/grub-bootloader-upgrade-and-configuration-incompatibilities/
-# https://wiki.archlinux.org/title/silent_boot
+# https://wiki.archlinux.org/title/systemd-boot
 
-# Install GRUB packages
-pacman -S --noconfirm grub efibootmgr
+# Install systemd-boot to the ESP
+bootctl install
 
-# Configure GRUB
-sed -i "s|^GRUB_DEFAULT=.*|GRUB_DEFAULT=\"2\"|g" /etc/default/grub
-sed -i "s|^GRUB_TIMEOUT=.*|GRUB_TIMEOUT=1|g" /etc/default/grub
-sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"\"|g" /etc/default/grub
-sed -i "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptdev nmi_watchdog=0 rw quiet splash\"|g" /etc/default/grub
-sed -i "s|^GRUB_PRELOAD_MODULES=.*|GRUB_PRELOAD_MODULES=\"part_gpt part_msdos luks2\"|g" /etc/default/grub
-sed -i "s|^GRUB_TIMEOUT_STYLE=.*|GRUB_TIMEOUT_STYLE=hidden|g" /etc/default/grub
-sed -i "s|^#GRUB_ENABLE_CRYPTODISK=.*|GRUB_ENABLE_CRYPTODISK=y|g" /etc/default/grub
-sed -i "s|^#GRUB_DISABLE_SUBMENU=.*|GRUB_DISABLE_SUBMENU=y|g" /etc/default/grub
-
-# Install GRUB
-grub-install --target=x86_64-efi --efi-directory=/boot --boot-directory=/boot --bootloader-id=GRUB
-
-# Password protect GRUB editing, but make menu unrestricted
-GRUB_PASSWORD_HASH=$(echo -e "${LUKS_PASSWORD}\n${LUKS_PASSWORD}" | LC_ALL=C /usr/bin/grub-mkpasswd-pbkdf2 | awk '/hash of / {print $NF}')
-
-chmod o-r /etc/grub.d/40_custom
-
-tee -a /etc/grub.d/40_custom << EOF
-
-# Password protect GRUB menu
-set superusers="${NEW_USER}"
-password_pbkdf2 ${NEW_USER} ${GRUB_PASSWORD_HASH}
-EOF
-
-sed -i "s|CLASS=\"--class gnu-linux --class gnu --class os.*\"|CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\"|g" /etc/grub.d/10_linux
-
-# Do not display 'Loading ...' messages
-sed -i '/Loading initial ramdisk/d' /etc/grub.d/10_linux
-sed -i '/Loading Linux/d' /etc/grub.d/10_linux
-
-# Reduce boot verbosity (silent boot)
-sed -i "s|quiet|& loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0|" /etc/default/grub
-
-# Generate GRUB's configuration file
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# GRUB upgrade hooks
-mkdir -p /etc/pacman.d/hooks
-
-tee /etc/pacman.d/hooks/90-grub-unrestricted.hook << EOF
+# systemd-boot upgrade hook
+tee /etc/pacman.d/hooks/95-systemd-boot.hook << 'EOF'
 [Trigger]
 Type = Package
 Operation = Upgrade
-Target = grub
+Target = systemd
 
 [Action]
-Description = Adding --unrestricted to GRUB...
+Description = Gracefully upgrading systemd-boot...
 When = PostTransaction
-Exec = /usr/bin/sed -i "s|CLASS=\"--class gnu-linux --class gnu --class os.*\"|CLASS=\"--class gnu-linux --class gnu --class os --unrestricted\"|g" /etc/grub.d/10_linux
+Exec = /usr/bin/systemctl restart systemd-boot-update.service
 EOF
 
-tee /etc/pacman.d/hooks/91-grub-hide-messages.hook << EOF
-[Trigger]
-Type = Package
-Operation = Upgrade
-Target = grub
-
-[Action]
-Description = Hiding GRUB boot messages...
-When = PostTransaction
-Exec = /usr/bin/sh -c "sed -i '/Loading initial ramdisk/d' /etc/grub.d/10_linux; sed -i '/Loading Linux/d' /etc/grub.d/10_linux"
+# systemd-boot configuration
+tee /boot/loader/loader.conf << 'EOF'
+default  arch.conf
+timeout  0
+console-mode max
+editor   no
 EOF
 
-tee /etc/pacman.d/hooks/92-grub-upgrade.hook << EOF
-[Trigger]
-Type = Package
-Operation = Upgrade
-Target = grub
+tee /boot/loader/entries/arch.conf << EOF
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /${CPU_MICROCODE}.img
+initrd  /initramfs-linux.img
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptdev root=/dev/mapper/cryptdev rootflags=subvol=@ nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+EOF
 
-[Action]
-Description = Upgrading GRUB...
-When = PostTransaction
-Exec = /usr/bin/sh -c "grub-install --target=x86_64-efi --efi-directory=/boot --boot-directory=/boot --bootloader-id=GRUB; grub-mkconfig -o /boot/grub/grub.cfg"
+tee /boot/loader/entries/arch-lts.conf << EOF
+title   Arch Linux LTS
+linux   /vmlinuz-linux
+initrd  /${CPU_MICROCODE}.img
+initrd  /initramfs-linux.img
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=cryptdev root=/dev/mapper/cryptdev rootflags=subvol=@ nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
@@ -346,8 +308,8 @@ EOF
 pacman -S --noconfirm tpm2-tools tpm2-tss
 
 # Configure initramfs to unlock the encrypted volume
-sed -i "s|=cryptdev|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
+sed -i "s|=cryptdev|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch.conf
+sed -i "s|=cryptdev|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
 
 ################################################
 ##### Secure boot
@@ -367,9 +329,8 @@ sbctl create-keys
 sbctl enroll-keys --yes-this-might-brick-my-machine
 
 # Sign files with secure boot keys
-sbctl sign -s /boot/EFI/GRUB/grubx64.efi
-sbctl sign -s /boot/grub/x86_64-efi/core.efi
-sbctl sign -s /boot/grub/x86_64-efi/grub.efi
+sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi
 sbctl sign -s /boot/vmlinuz-linux
 sbctl sign -s /boot/vmlinuz-linux-lts
 
@@ -388,6 +349,7 @@ pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Override VA-API driver via environment variable
 tee -a /etc/environment << EOF
+
 # VA-API
 ${LIBVA_ENV_VAR}
 EOF
@@ -406,6 +368,9 @@ pacman -S --noconfirm libva-utils
 
 # Install Vulkan tools
 pacman -S --noconfirm vulkan-tools
+
+# Install ffmpeg
+pacman -S --noconfirm ffmpeg
 
 ################################################
 ##### GStreamer
@@ -494,22 +459,15 @@ flatpak override --filesystem=xdg-data/applications com.usebottles.bottles
 
 # Install Discord
 flatpak install -y flathub com.discordapp.Discord
-flatpak override --socket=wayland com.discordapp.Discord
-cp /var/lib/flatpak/app/com.discordapp.Discord/current/active/files/share/applications/com.discordapp.Discord.desktop /home/${NEW_USER}/.local/share/applications
-sed -i "s|Exec=discord|Exec=flatpak run com.discordapp.Discord --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/com.discordapp.Discord.desktop
 
 # Insomnia
 flatpak install -y flathub rest.insomnia.Insomnia
-flatpak override --socket=wayland rest.insomnia.Insomnia
-cp /var/lib/flatpak/app/rest.insomnia.Insomnia/current/active/files/share/applications/rest.insomnia.Insomnia.desktop /home/${NEW_USER}/.local/share/applications
-sed -i "s|Exec=/app/bin/insomnia|Exec=flatpak run rest.insomnia.Insomnia --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland|g" /home/${NEW_USER}/.local/share/applications/rest.insomnia.Insomnia.desktop
 
 # LibreOffice
 flatpak install -y flathub org.libreoffice.LibreOffice
 
 # Blender
 flatpak install -y flathub org.blender.Blender
-flatpak override --socket=wayland org.blender.Blender
 
 ################################################
 ##### Syncthing
@@ -525,89 +483,55 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Podman
+##### Docker
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/Podman
-# https://wiki.archlinux.org/title/Buildah
-# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+# https://wiki.archlinux.org/title/docker
 
-# Install Podman, Buildah and dependencies
-pacman -S --noconfirm podman fuse-overlayfs slirp4netns netavark buildah
+# Install Docker and dependencies
+pacman -S --noconfirm docker docker-compose
 
-# Enable kernel.unprivileged_userns_clone
-echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-rootless-podman.conf
+# Enable Docker service
+systemctl enable docker.service
 
-# Set subuid and subgid
-usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
+# Add user to Docker group
+gpasswd -a ${NEW_USER} docker
 
-# Enable unprivileged ping
-echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+################################################
+##### Paru
+################################################
 
-# Create docker/podman alias
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
+# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
+echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
 
-# Podman
-alias docker=podman
-EOF
-
-# Re-enable unqualified search registries
-tee -a /etc/containers/registries.conf << EOF
-# Enable docker.io as unqualified search registry
-unqualified-search-registries = ["docker.io"]
-EOF
+# Install paru
+git clone https://aur.archlinux.org/paru-bin.git
+chown -R ${NEW_USER}:${NEW_USER} paru-bin
+cd paru-bin
+sudo -u ${NEW_USER} makepkg -si --noconfirm
+cd ..
+rm -rf paru-bin
 
 ################################################
 ##### Development (languages, LSP, neovim)
 ################################################
 
-# NodeJS
-pacman -S --noconfirm nodejs npm
+# Language servers
+pacman -S --noconfirm \
+    typescript-language-server \
+    bash-language-server \
+    python-lsp-server
 
-# Typescript and LSP
-pacman -S --noconfirm typescript typescript-language-server
-
-# Bash LSP
-pacman -S --noconfirm bash-language-server
-
-# Go and LSP
+# Go
 pacman -S --noconfirm go go-tools gopls
 
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Go
-export GOPATH="$HOME/.go"
-export PATH="$GOPATH/bin:$PATH"
+export GOPATH="${HOME}/.go"
+export PATH="${GOPATH}/bin:${PATH}"
 EOF
-
-# Python and LSP
-pacman -S --noconfirm python python-lsp-server
-
-# .NET
-pacman -S --noconfirm \
-    dotnet-runtime \
-    dotnet-sdk \
-    mono-msbuild \
-    mono-msbuild-sdkresolver \
-    mono \
-    aspnet-runtime
-
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# .NET
-export PATH="$HOME/.dotnet/tools:$PATH"
-EOF
-
-# C++
-pacman -S --noconfirm \
-    clang \
-    lld \
-    lldb \
-    llvm \
-    cmake \
-    scons \
-    gcc
 
 # Neovim
 pacman -S --noconfirm neovim
@@ -619,9 +543,21 @@ alias vi=nvim
 alias vim=nvim
 EOF
 
-tee /home/${NEW_USER}/.config/environment.d/neovim.conf << EOF
+tee -a /etc/environment << EOF
+
+# Editor
 EDITOR=nvim
 VISUAL=nvim
+EOF
+
+# Volta (Node version manager)
+sudo -u ${NEW_USER} paru -S --noconfirm volta-bin
+
+tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+
+# Volta / Node
+export VOLTA_HOME="${HOME}/.volta"
+export PATH="${VOLTA_HOME}/bin:${PATH}"
 EOF
 
 ################################################
@@ -629,19 +565,8 @@ EOF
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/wayland#Qt
 # https://wiki.archlinux.org/title/Wayland#Electron
 # https://wiki.archlinux.org/title/wayland#XWayland
-
-# Install XWayland
-pacman -S --noconfirm xorg-xwayland
-
-# Run QT applications natively under Wayland
-pacman -S --noconfirm qt5-wayland qt6-wayland
-
-tee /home/${NEW_USER}/.config/environment.d/qt.conf << EOF
-QT_QPA_PLATFORM="wayland;xcb"
-EOF
 
 # Run Electron applications natively under Wayland
 tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
@@ -708,7 +633,9 @@ sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
 sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
 
 # Run Firefox natively under Wayland
-tee /home/${NEW_USER}/.config/environment.d/firefox-wayland.conf << EOF
+tee -a /etc/environment << EOF
+
+# Firefox
 MOZ_ENABLE_WAYLAND=1
 EOF
 
@@ -719,8 +646,7 @@ sudo -u ${NEW_USER} timeout 5 firefox --headless
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
 # Import Firefox configs
-curl -Ssl https://raw.githubusercontent.com/gjpin/arch-linux/main/firefox.js \
-  -o ${FIREFOX_PROFILE_PATH}/user.js
+cp ./extra/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
 
 # Create extensisons folder
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
@@ -730,21 +656,7 @@ curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-lat
 curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-
-################################################
-##### Paru
-################################################
-
-# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
-echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
-
-# Install paru
-git clone https://aur.archlinux.org/paru-bin.git
-chown -R ${NEW_USER}:${NEW_USER} paru-bin
-cd paru-bin
-sudo -u ${NEW_USER} makepkg -si --noconfirm
-cd ..
-rm -rf paru-bin
+curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
 
 ################################################
 ##### Applications
@@ -769,12 +681,6 @@ EOF
 # Install VS Code and dependencies
 sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 
-# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
-pacman -S --noconfirm xorg-server-xvfb
-
-# Install VSCode extensions
-sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
 tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
@@ -782,14 +688,12 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
     "telemetry.telemetryLevel": "off",
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
-    "editor.fontFamily": "'Noto Sans Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
-    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Noto Sans Mono'",
     "workbench.enableExperiments": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.iconTheme": null,
     "workbench.tree.indent": 12,
     "window.titleBarStyle": "native",
-    "editor.fontWeight": "500",
     "files.associations": {
       "*.j2": "terraform",
       "*.hcl": "terraform",
@@ -798,8 +702,6 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
       "*.service": "ini"
     },
     "extensions.ignoreRecommendations": true,
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.autofetch": true,
@@ -810,54 +712,11 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
-##### Desktop Environment
+##### KDE Plasma
 ################################################
 
-# References:
-# https://wiki.archlinux.org/title/Metric-compatible_fonts
-
-# Install fonts
-pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk noto-fonts-extra \
-    ttf-liberation otf-cascadia-code ttf-sourcecodepro-nerd
-
-# Install and enable power profiles daemon
-pacman -S --noconfirm power-profiles-daemon
-systemctl enable power-profiles-daemon.service
-
-# Enable bluetooth
-systemctl enable bluetooth.service
-
-# Install and configure desktop environment
-if [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_plasma.sh -O
-    chmod +x setup_plasma.sh
-    ./setup_plasma.sh
-    rm setup_plasma.sh
-elif [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_gnome.sh -O
-    chmod +x setup_gnome.sh
-    ./setup_gnome.sh
-    rm setup_gnome.sh
-elif [ ${DESKTOP_ENVIRONMENT} = "sway" ]; then
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_sway.sh -O
-    chmod +x setup_sway.sh
-    ./setup_sway.sh
-    rm setup_sway.sh
-fi
-
-# Hide applications from menus
-APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron19' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'libreoffice-xsltfilter' 'libreoffice-startcenter' 'mpv')
-for APPLICATION in "${APPLICATIONS[@]}"
-do
-    # Create a local copy of the desktop files and append properties
-    cp /usr/share/applications/${APPLICATION}.desktop /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop 2>/dev/null || : 
-
-    if test -f "/home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop"; then
-        echo "NoDisplay=true" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
-        echo "Hidden=true" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
-        echo "NotShowIn=KDE;GNOME;" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
-    fi
-done
+# Install and configure KDE Plasma
+./plasma.sh
 
 ################################################
 ##### Gaming
@@ -865,10 +724,7 @@ done
 
 # Install and configure gaming with Flatpak
 if [ ${GAMING} = "yes" ]; then
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup_gaming.sh -O
-    chmod +x setup_gaming.sh
-    ./setup_gaming.sh
-    rm setup_gaming.sh
+    ./gaming.sh
 fi
 
 ################################################
@@ -880,103 +736,3 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 
 # Revert sudoers change
 sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
-
-# Remove Virtual framebuffer X server
-pacman -Rs --noconfirm xorg-server-xvfb
-
-################################################
-##### BTRFS snapshots
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/snapper
-# https://www.dwarmstrong.org/btrfs-snapshots-rollbacks/
-# https://wiki.archlinux.org/title/System_backup#Snapshots_and_/boot_partition
-# https://stackoverflow.com/questions/20300971/rsync-copy-directory-contents-but-not-directory-itself
-
-# Install Snapper, Pacman hooks for snapshots and GRUB snapshots boot options 
-pacman -S --noconfirm snapper snap-pac grub-btrfs
-
-# Unmount .snapshots
-umount /.snapshots
-rm -rf /.snapshots
-
-# Create Snapper config
-snapper --no-dbus -c root create-config /
-
-# Delete Snapper's .snapshots subvolume
-btrfs subvolume delete /.snapshots
-
-# Re-create and re-mount /.snapshots mount
-mkdir /.snapshots
-mount -a
-
-# Set permissions for .snapshots
-chmod 700 /.snapshots
-
-# Configure Snapper
-sed -i "s|^ALLOW_USERS=.*|ALLOW_USERS=\"${NEW_USER}\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_MIN_AGE=.*|TIMELINE_MIN_AGE=\"1800\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_LIMIT_HOURLY=.*|TIMELINE_LIMIT_HOURLY=\"5\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_LIMIT_DAILY=.*|TIMELINE_LIMIT_DAILY=\"7\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_LIMIT_WEEKLY=.*|TIMELINE_LIMIT_WEEKLY=\"0\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_LIMIT_MONTHLY=.*|TIMELINE_LIMIT_MONTHLY=\"0\"|g" /etc/snapper/configs/root
-sed -i "s|^TIMELINE_LIMIT_YEARLY=.*|TIMELINE_LIMIT_YEARLY=\"0\"|g" /etc/snapper/configs/root
-
-# Enable Snapper services
-systemctl enable snapper-timeline.timer
-systemctl enable snapper-cleanup.timer
-
-# Configure GRUB-BTRFS
-sed -i "s|^#GRUB_BTRFS_GRUB_DIRNAME=.*|GRUB_BTRFS_GRUB_DIRNAME=\"/boot/grub\"|g" /etc/default/grub-btrfs/config
-
-# Enable GRUB-BTRFS service
-systemctl enable grub-btrfs.path
-
-# Configure initramfs to boot into snapshots using overlayfs (read-only mode)
-sed -i "s|fsck)|fsck grub-btrfs-overlayfs)|g" /etc/mkinitcpio.conf
-mkinitcpio -P
-
-# Create rollback helper
-ZSHRC_LOCAL_PATHS=("/home/${NEW_USER}" "/root")
-for ZSHRC_LOCAL_PATH in "${ZSHRC_LOCAL_PATHS[@]}"
-do
-tee -a ${ZSHRC_LOCAL_PATH}/.zshrc.local << 'EOF'
-
-# Rollback helper
-function rollback-helper {
-    echo "How to rollback to another snapshot:
-    
-    1. Boot to a working snapshot
-    2. (sudo su)
-    3. mount /dev/mapper/cryptdev /mnt
-    4. mount --mkdir /dev/nvme0n1p1 /mnt/boot
-    5. mv /mnt/@ /mnt/@.broken
-       or
-       btrfs subvolume delete /mnt/@
-    6. grep -r '<date>' /mnt/@snapshots/*/info.xml
-    7. btrfs subvolume snapshot /mnt/@snapshots/${NUMBER}/snapshot /mnt/@
-    8. cp -R /mnt/@snapshots/${NUMBER}/snapshot/.bootbackup/* /mnt/boot
-    9. umount /mnt
-    10. reboot -f"
-}
-EOF
-done
-
-# Automatically backup /boot partition to BTRFS partition on kernel updates
-mkdir -p /.bootbackup
-
-tee /etc/pacman.d/hooks/99-boot-backup.hook << EOF
-[Trigger]
-Operation = Upgrade
-Operation = Install
-Operation = Remove
-Type = Path
-Target = usr/lib/modules/*/vmlinuz
-
-[Action]
-Depends = rsync
-Description = Backing up /boot...
-When = PostTransaction
-Exec = /usr/bin/rsync -a --delete /boot/ /.bootbackup
-EOF

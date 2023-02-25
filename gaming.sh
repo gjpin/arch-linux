@@ -1,25 +1,14 @@
 #!/bin/bash
 
-# References:
-# https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/wikis/Mesa-git
-# https://github.com/flathub/com.valvesoftware.Steam.Utility.MangoHud
-
-################################################
-##### Mesa-git
-################################################
-
-# Set default Flatpak GL drivers to mesa-git
-flatpak override --env=FLATPAK_GL_DRIVERS=mesa-git
-
-tee -a /etc/environment << EOF
-
-# Flatpak
-FLATPAK_GL_DRIVERS=mesa-git
-EOF
-
 ################################################
 ##### MangoHud
 ################################################
+
+# References:
+# https://github.com/flathub/com.valvesoftware.Steam.Utility.MangoHud
+
+# Install MangoHud
+flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/22.08
 
 # Configure MangoHud
 mkdir -p /home/${NEW_USER}/.config/MangoHud
@@ -33,10 +22,10 @@ EOF
 flatpak override --filesystem=xdg-config/MangoHud:ro
 
 ################################################
-##### Steam
+##### Platforms
 ################################################
 
-# Install Steam
+# Steam
 flatpak install -y flathub com.valvesoftware.Steam
 flatpak install -y flathub com.valvesoftware.Steam.Utility.gamescope
 flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
@@ -49,9 +38,24 @@ tee /etc/modules-load.d/uinput.conf << EOF
 uinput
 EOF
 
+# Heroic Games Launcher
+flatpak install -y flathub com.heroicgameslauncher.hgl
+
+# Lutris
+flatpak install -y flathub net.lutris.Lutris
+
 ################################################
-##### Heroic Games Launcher
+##### Emulators
 ################################################
 
-# Install Heroic Games Launcher
-flatpak install -y flathub com.heroicgameslauncher.hgl
+flatpak install -y flathub org.duckstation.DuckStation # psx
+flatpak install -y flathub net.pcsx2.PCSX2 # ps2
+flatpak install -y flathub org.ppsspp.PPSSPP # psp
+flatpak install -y flathub org.DolphinEmu.dolphin-emu # gamecube / wii
+flatpak install -y flathub org.yuzu_emu.yuzu # switch
+flatpak install -y flathub org.citra_emu.citra # 3ds
+flatpak install -y flathub org.flycast.Flycast # dreamcast
+flatpak install -y flathub app.xemu.xemu # xbox
+flatpak install -y flathub com.snes9x.Snes9x # snes
+flatpak install -y flathub net.kuribo64.melonDS # ds
+flatpak install -y flathub net.rpcs3.RPCS3 # ps3

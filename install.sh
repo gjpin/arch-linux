@@ -19,9 +19,6 @@ export NEW_HOSTNAME
 read -p "Timezone (timedatectl list-timezones): " TIMEZONE
 export TIMEZONE
 
-read -p "Desktop environment (plasma / gnome / sway): " DESKTOP_ENVIRONMENT
-export DESKTOP_ENVIRONMENT
-
 read -p "Gaming (yes / no): " GAMING
 export GAMING
 
@@ -57,8 +54,8 @@ sgdisk --zap-all --clear /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 # Partition disk and re-read partition table
-sgdisk -n 0:0:+512MiB -t 0:ef00 -c 0:boot /dev/nvme0n1
-sgdisk -n 0:0:0 -t 0:8309 -c 0:luks /dev/nvme0n1
+sgdisk -n 1:0:+1G -t 1:ef00 -c 1:boot /dev/nvme0n1
+sgdisk -n 2:0:0 -t 2:8309 -c 2:luks /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 ################################################
@@ -66,11 +63,11 @@ partprobe /dev/nvme0n1
 ################################################
 
 # Encrypt and open LUKS partition
-echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/nvme0n1p2
+echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random --label=luks luksFormat /dev/nvme0n1p2
 echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/nvme0n1p2 cryptdev
 
 # Create BTRFS
-mkfs.btrfs -L archlinux /dev/mapper/cryptdev
+mkfs.btrfs -L cryptdev /dev/mapper/cryptdev
 
 # Mount root device
 mount /dev/mapper/cryptdev /mnt
@@ -78,27 +75,11 @@ mount /dev/mapper/cryptdev /mnt
 # Create BTRFS subvolumes
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@snapshots
-btrfs subvolume create /mnt/@cache
-btrfs subvolume create /mnt/@libvirt
-btrfs subvolume create /mnt/@log
-btrfs subvolume create /mnt/@tmp
+unmount /mnt
 
 # Mount BTRFS subvolumes
-umount /mnt
-
-export SV_OPTS="rw,noatime,compress-force=zstd:1,space_cache=v2,discard"
-
-mount -o ${SV_OPTS},subvol=@ /dev/mapper/cryptdev /mnt
-
-mkdir -p /mnt/{home,.snapshots,var/cache,var/lib/libvirt,var/log,var/tmp}
-
-mount -o ${SV_OPTS},subvol=@home /dev/mapper/cryptdev /mnt/home
-mount -o ${SV_OPTS},subvol=@snapshots /dev/mapper/cryptdev /mnt/.snapshots
-mount -o ${SV_OPTS},subvol=@cache /dev/mapper/cryptdev /mnt/var/cache
-mount -o ${SV_OPTS},subvol=@libvirt /dev/mapper/cryptdev /mnt/var/lib/libvirt
-mount -o ${SV_OPTS},subvol=@log /dev/mapper/cryptdev /mnt/var/log
-mount -o ${SV_OPTS},subvol=@tmp /dev/mapper/cryptdev /mnt/var/tmp
+mount -o subvol=@,compress=zstd,noatime,discard,space_cache=v2,ssd /dev/mapper/cryptdev /mnt
+mount -o subvol=@home,compress=zstd,noatime,discard,space_cache=v2,ssd /dev/mapper/cryptdev /mnt/home
 
 ################################################
 ##### EFI / Boot
@@ -113,7 +94,7 @@ mount --mkdir /dev/nvme0n1p1 /mnt/boot
 ################################################
 
 # Import mirrorlist
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/mirrorlist -o /etc/pacman.d/mirrorlist
+cp ./extra/mirrorlist -o /etc/pacman.d/mirrorlist
 
 # Synchronize package databases
 pacman -Syy
@@ -125,8 +106,6 @@ pacstrap /mnt base base-devel linux linux-lts linux-firmware btrfs-progs ${CPU_M
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # Configure system
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/setup.sh -o setup.sh
-cp setup.sh /mnt/setup.sh
-chmod +x /mnt/setup.sh
+cp ./setup.sh /mnt/setup.sh
 arch-chroot /mnt /bin/bash /setup.sh
 umount -R /mnt
