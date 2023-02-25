@@ -21,12 +21,13 @@
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Update repos and install git: `pacman -Sy && pacman -S git`
-5. Clone repo: `git clone -b kde https://github.com/gjpin/arch-linux.git`
-6. Run script: `arch-linux/install.sh`
-7. Reboot and re-enable secure boot
-8. Boot into new installation
-9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
+4. Init keyring: `pacman-key --init`
+5. Update repos and install git: `pacman -Sy git`
+6. Clone repo: `git clone -b kde https://github.com/gjpin/arch-linux.git`
+7. Run script: `arch-linux/install.sh`
+8. Reboot and re-enable secure boot
+9. Boot into new installation
+10. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
 
 ## Misc guides
 ### How to chroot

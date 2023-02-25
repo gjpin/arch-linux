@@ -4,13 +4,13 @@
 ##### Set variables
 ################################################
 
-read -p "LUKS password: " LUKS_PASSWORD
+read -sp "LUKS password: " LUKS_PASSWORD
 export LUKS_PASSWORD
 
 read -p "Username: " NEW_USER
 export NEW_USER
 
-read -p "User password: " NEW_USER_PASSWORD
+read -sp "User password: " NEW_USER_PASSWORD
 export NEW_USER_PASSWORD
 
 read -p "Hostname: " NEW_HOSTNAME
