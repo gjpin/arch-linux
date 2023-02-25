@@ -183,7 +183,7 @@ chown 700 /home/${NEW_USER}/.ssh
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Add $HOME/.local/bin/ to the PATH
-export PATH="${HOME}/.local/bin/:${PATH}"
+PATH="${HOME}/.local/bin/:${PATH}"
 EOF
 
 # Updater helper
@@ -529,8 +529,8 @@ pacman -S --noconfirm go go-tools gopls
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Go
-export GOPATH="${HOME}/.go"
-export PATH="${GOPATH}/bin:${PATH}"
+GOPATH="${HOME}/.go"
+PATH="${GOPATH}/bin:${PATH}"
 EOF
 
 # Neovim
@@ -556,8 +556,8 @@ sudo -u ${NEW_USER} paru -S --noconfirm volta-bin
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Volta / Node
-export VOLTA_HOME="${HOME}/.volta"
-export PATH="${VOLTA_HOME}/bin:${PATH}"
+VOLTA_HOME="${HOME}/.volta"
+PATH="${VOLTA_HOME}/bin:${PATH}"
 EOF
 
 ################################################
