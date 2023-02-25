@@ -54,8 +54,8 @@ sgdisk --zap-all --clear /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 # Partition disk and re-read partition table
-sgdisk -n 1:0:+1G -t 1:ef00 -c 1:boot /dev/nvme0n1
-sgdisk -n 2:0:0 -t 2:8309 -c 2:luks /dev/nvme0n1
+sgdisk -n 1:0:+512MiB -t 1:ef00 -c 1:EFI /dev/nvme0n1
+sgdisk -n 2:0:0 -t 2:8309 -c 2:LUKS /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 ################################################
@@ -63,30 +63,30 @@ partprobe /dev/nvme0n1
 ################################################
 
 # Encrypt and open LUKS partition
-echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random --label=cryptdev luksFormat /dev/nvme0n1p2
-echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/nvme0n1p2 cryptdev
+echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/disk/by-partlabel/LUKS
+echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
 
 # Create BTRFS
-mkfs.btrfs -L cryptdev /dev/mapper/cryptdev
+mkfs.btrfs -L system /dev/mapper/system
 
 # Mount root device
-mount /dev/mapper/cryptdev /mnt
+mount -t btrfs LABEL=system /mnt
 
 # Create BTRFS subvolumes
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-unmount /mnt
+btrfs subvolume create /mnt/root
+btrfs subvolume create /mnt/home
+umount -R /mnt
 
 # Mount BTRFS subvolumes
-mount -o subvol=@,compress=zstd,noatime,discard,space_cache=v2,ssd /dev/mapper/cryptdev /mnt
-mount -o subvol=@home,compress=zstd,noatime,discard,space_cache=v2,ssd /dev/mapper/cryptdev /mnt/home
+mount -t btrfs -o subvol=root,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+mount -t btrfs -o subvol=home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 
 ################################################
 ##### EFI / Boot
 ################################################
 
 # Format and mount EFI/boot partition
-mkfs.fat -F32 -n boot /dev/nvme0n1p1
+mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
 mount --mkdir /dev/nvme0n1p1 /mnt/boot
 
 ################################################

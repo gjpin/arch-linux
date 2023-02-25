@@ -12,7 +12,7 @@
 | nvme0n1                                              | disk  |         |            |               |
 | ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    512MiB     |
 | ├─nvme0n1p2                                          | part  |  LUKS2  |            |               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──cryptdev            | crypt |  BTRFS  |     /      |  Rest of disk |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system              | crypt |  BTRFS  |     /      |  Rest of disk |
 
 ## Installation guide
 1. Disable secure boot and delete existing keys (go into setup mode)
@@ -32,9 +32,9 @@
 ## Misc guides
 ### How to chroot
 ```bash
-mkdir -p /mnt/boot
-cryptsetup open /dev/nvme0n1p2 cryptdev
-mount /dev/mapper/cryptdev /mnt -o subvol=@
+cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
+mount -t btrfs -o subvol=root,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+mount -t btrfs -o subvol=home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 mount /dev/nvme0n1p1 /mnt/boot
 arch-chroot /mnt
 ```
