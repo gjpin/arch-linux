@@ -105,6 +105,13 @@ tee -a /etc/environment << EOF
 QT_QPA_PLATFORM="wayland;xcb"
 EOF
 
+# Use KDE file picker
+tee -a /etc/environment << EOF
+
+# KDE file picker
+GTK_USE_PORTAL=1
+EOF
+
 # Use the KDE Wallet to store ssh key passphrases
 # https://wiki.archlinux.org/title/KDE_Wallet#Using_the_KDE_Wallet_to_store_ssh_key_passphrases
 tee /home/${NEW_USER}/.config/autostart/ssh-add.desktop << EOF
