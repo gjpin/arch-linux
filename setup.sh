@@ -236,7 +236,7 @@ systemctl enable NetworkManager.service
 pacman -S --noconfirm bind
 
 # Install nftables
-pacman -S --noconfirm iptables-nft
+pacman -S --noconfirm iptables-nft --ask 4
 
 ################################################
 ##### initramfs
@@ -373,6 +373,27 @@ pacman -S --noconfirm vulkan-tools
 pacman -S --noconfirm ffmpeg
 
 ################################################
+##### systemd
+################################################
+
+# References:
+# https://www.freedesktop.org/software/systemd/man/systemd-system.conf.html
+
+# Configure default timeout to stop system units
+mkdir -p /etc/systemd/system.conf.d
+tee /etc/systemd/system.conf.d/default-timeout.conf << EOF
+[Manager]
+DefaultTimeoutStopSec=5s
+EOF
+
+# Configure default timeout to stop user units
+mkdir -p /etc/systemd/user.conf.d
+tee /etc/systemd/user.conf.d/default-timeout.conf << EOF
+[Manager]
+DefaultTimeoutStopSec=5s
+EOF
+
+################################################
 ##### GStreamer
 ################################################
 
@@ -404,7 +425,7 @@ pacman -S --noconfirm \
     pipewire-jack \
     pipewire-pulse \
     libpulse \
-    wireplumber
+    wireplumber --ask 4
 
 # Enable PipeWire's user service
 sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
