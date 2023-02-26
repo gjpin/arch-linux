@@ -500,20 +500,37 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker and dependencies
-pacman -S --noconfirm docker docker-compose
+# Install Podman, Buildah and dependencies
+pacman -S --noconfirm podman fuse-overlayfs slirp4netns netavark buildah
 
-# Enable Docker service
-systemctl enable docker.service
+# Enable kernel.unprivileged_userns_clone
+echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-rootless-podman.conf
 
-# Add user to Docker group
-gpasswd -a ${NEW_USER} docker
+# Set subuid and subgid
+usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee -a /home/${NEW_USER}/.zshrc.local << EOF
+# Podman
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf << EOF
+# Enable docker.io as unqualified search registry
+unqualified-search-registries = ["docker.io"]
+EOF
 
 ################################################
 ##### Paru
