@@ -185,6 +185,10 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Name_2 "D
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Number "2"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Rows "1"
 
+# Configure konsole
+sudo -u ${NEW_USER} kwriteconfig5 --file konsolerc --group "KonsoleWindow" --key "RememberWindowSize" --type bool false
+sudo -u ${NEW_USER} kwriteconfig5 --file konsolerc --group "MainWindow" --key "MenuBar" "Disabled"
+
 # Desktop shortcuts
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 2" "none,none,Activate Task Manager Entry 2"
