@@ -509,7 +509,7 @@ sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 # https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
 # Install Podman, Buildah and dependencies
-pacman -S --noconfirm podman fuse-overlayfs slirp4netns netavark buildah
+pacman -S --noconfirm podman podman-compose fuse-overlayfs slirp4netns netavark buildah
 
 # Enable kernel.unprivileged_userns_clone
 echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-rootless-podman.conf
