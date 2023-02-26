@@ -73,13 +73,13 @@ mkfs.btrfs -L system /dev/mapper/system
 mount -t btrfs LABEL=system /mnt
 
 # Create BTRFS subvolumes
-btrfs subvolume create /mnt/root
-btrfs subvolume create /mnt/home
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
 umount -R /mnt
 
 # Mount BTRFS subvolumes
-mount -t btrfs -o subvol=root,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
-mount -t btrfs -o subvol=home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
+mount -t btrfs -o subvol=@,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+mount -t btrfs -o subvol=@home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 
 ################################################
 ##### EFI / Boot

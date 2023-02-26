@@ -33,8 +33,8 @@
 ### How to chroot
 ```bash
 cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
-mount -t btrfs -o subvol=root,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
-mount -t btrfs -o subvol=home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
+mount -t btrfs -o subvol=@,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+mount -t btrfs -o subvol=@home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 mount /dev/nvme0n1p1 /mnt/boot
 arch-chroot /mnt
 ```
