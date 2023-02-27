@@ -32,11 +32,7 @@ flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 
 # Steam controllers udev rules
 curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
-udevadm control --reload
-udevadm trigger
-tee /etc/modules-load.d/uinput.conf << EOF
-uinput
-EOF
+udevadm control --reload-rules
 
 # Heroic Games Launcher
 flatpak install -y flathub com.heroicgameslauncher.hgl
