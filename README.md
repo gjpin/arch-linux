@@ -1,4 +1,6 @@
 # Arch Linux install scripts
+For Gnome / Sway + GRUB with BTRFS snapshots see branch 'grub' 
+
 ## Requirements
 - UEFI
 - NVMe SSD
