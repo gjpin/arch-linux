@@ -191,7 +191,7 @@ tee -a /home/${NEW_USER}/.zshrc.local << EOF
 # Updater helper
 update-all() {
     # Update keyring
-    sudo pacman -Sy archlinux-keyring
+    sudo pacman -Sy --noconfirm archlinux-keyring
 
     # Update system
     sudo pacman -Syu
