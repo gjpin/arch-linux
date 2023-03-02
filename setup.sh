@@ -450,6 +450,9 @@ flatpak update
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
+# Allow access to Downloads directory
+flatpak override --filesystem=xdg-download
+
 # Global override to deny all applications the permission to access certain directories
 flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
 
