@@ -242,6 +242,7 @@ tee /home/${NEW_USER}/.local/bin/update-firefox-theme << 'EOF'
 
 # Update Firefox theme
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+rm -rf ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
 git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
 EOF
 
