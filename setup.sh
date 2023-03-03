@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 ################################################
 ##### Time
@@ -446,15 +446,15 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update
 
+# Global override to deny all applications the permission to access certain directories
+flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
+
 # Allow read-only access to GTK configs
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 
 # Allow access to Downloads directory
 flatpak override --filesystem=xdg-download
-
-# Global override to deny all applications the permission to access certain directories
-flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
 
 ################################################
 ##### Flatpak runtimes
@@ -693,7 +693,6 @@ curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-lat
 curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
 
 ################################################
 ##### Applications
@@ -718,6 +717,9 @@ EOF
 
 # Install VS Code and dependencies
 sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
+
+# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
+pacman -S --noconfirm xorg-server-xvfb
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
@@ -750,11 +752,34 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
-##### KDE Plasma
+##### Desktop Environment
 ################################################
 
-# Install and configure KDE Plasma
-./plasma.sh
+# Install fonts
+pacman -S --noconfirm \
+    noto-fonts \
+    noto-fonts-emoji \
+    noto-fonts-cjk \
+    noto-fonts-extra \
+    ttf-liberation \
+    otf-cascadia-code \
+    ttf-sourcecodepro-nerd \
+    ttf-ubuntu-nerd \
+    ttf-ubuntu-mono-nerd
+
+# Install and enable power profiles daemon
+pacman -S --noconfirm power-profiles-daemon
+systemctl enable power-profiles-daemon.service
+
+# Enable bluetooth
+systemctl enable bluetooth.service
+
+# Install and configure desktop environment
+if [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
+    ./plasma.sh
+elif [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
+   ./gnome.sh
+fi
 
 ################################################
 ##### Gaming
@@ -774,3 +799,6 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 
 # Revert sudoers change
 sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
+
+# Remove Virtual framebuffer X server
+pacman -Rs --noconfirm xorg-server-xvfb

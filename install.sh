@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 ################################################
 ##### Set variables
@@ -18,6 +18,9 @@ export NEW_HOSTNAME
 
 read -p "Timezone (timedatectl list-timezones): " TIMEZONE
 export TIMEZONE
+
+read -p "Desktop environment (plasma / gnome): " DESKTOP_ENVIRONMENT
+export DESKTOP_ENVIRONMENT
 
 read -p "Gaming (yes / no): " GAMING
 export GAMING
@@ -78,8 +81,8 @@ btrfs subvolume create /mnt/@home
 umount -R /mnt
 
 # Mount BTRFS subvolumes
-mount -t btrfs -o subvol=@,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
-mount -t btrfs -o subvol=@home,compress=zstd,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
+mount -t btrfs -o subvol=@,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+mount -t btrfs -o subvol=@home,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 
 ################################################
 ##### EFI / Boot
@@ -106,9 +109,12 @@ pacstrap /mnt base base-devel linux linux-lts linux-firmware btrfs-progs ${CPU_M
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # Configure system
-cp ./extra/firefox.js /mnt/firefox.js
-cp ./plasma.sh /mnt/plasma.sh
-cp ./gaming.sh /mnt/gaming.sh
-cp ./setup.sh /mnt/setup.sh
-arch-chroot /mnt /bin/bash /setup.sh
+mkdir -p /mnt/install-arch
+cp ./extra/firefox.js /mnt/install-arch/firefox.js
+cp ./plasma.sh /mnt/install-arch/plasma.sh
+cp ./gnome.sh /mnt/install-arch/gnome.sh
+cp ./gaming.sh /mnt/install-arch/gaming.sh
+cp ./setup.sh /mnt/install-arch/setup.sh
+arch-chroot /mnt /bin/bash /install-arch/setup.sh
+rm -rf /mnt/install-arch
 umount -R /mnt

@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Plasma packages
 pacman -S --noconfirm \
     bluedevil \
@@ -61,9 +63,6 @@ pacman -S --noconfirm \
 # 3rd-party packages
 pacman -S --noconfirm \
     iio-sensor-proxy \
-    noto-fonts \
-    noto-fonts-emoji \
-    power-profiles-daemon \
     xdg-desktop-portal-gtk \
     xsettingsd
 
@@ -126,24 +125,13 @@ SSH_ASKPASS='/usr/bin/ksshaskpass'
 SSH_ASKPASS_REQUIRE=prefer
 EOF
 
-# Enable power profiles daemon
-systemctl enable power-profiles-daemon.service
-
-# Enable bluetooth
-systemctl enable bluetooth.service
-
-# Extra fonts
-pacman -S --noconfirm \
-    noto-fonts-cjk \
-    noto-fonts-extra \
-    ttf-liberation \
-    otf-cascadia-code \
-    ttf-sourcecodepro-nerd
-
 # Disable baloo (file indexer)
 sudo -u ${NEW_USER} balooctl suspend
 sudo -u ${NEW_USER} balooctl disable
 sudo -u ${NEW_USER} balooctl purge
+
+# Install Firefox Plasma integration extension
+curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
 
 ################################################
 ##### KDE Plasma configurations
