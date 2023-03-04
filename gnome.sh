@@ -155,9 +155,12 @@ EOF
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/6.4
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-22.08
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-21.08
+flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15
+
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/6.4
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-22.08
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-21.08
+flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15
 
 ################################################
 ##### Theming
