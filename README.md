@@ -23,7 +23,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Init keyring: `pacman-key --init && pacman -Sy archlinux-keyring`
+4. Init keyring: `pacman-key --init && pacman-key --populate`
 5. Update repos and install git: `pacman -Sy git`
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
