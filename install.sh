@@ -82,6 +82,8 @@ umount -R /mnt
 
 # Mount BTRFS subvolumes
 mount -t btrfs -o subvol=@,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
+
+mkdir -p /mnt/home
 mount -t btrfs -o subvol=@home,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
 
 ################################################
