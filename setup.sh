@@ -683,7 +683,7 @@ sudo -u ${NEW_USER} timeout 5 firefox --headless
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
 # Import Firefox configs
-cp /mnt/install-arch/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
+cp /install-arch/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
 
 # Create extensisons folder
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
@@ -776,9 +776,9 @@ systemctl enable bluetooth.service
 
 # Install and configure desktop environment
 if [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
-    /mnt/install-arch/plasma.sh
+    /install-arch/plasma.sh
 elif [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
-    /mnt/install-arch/gnome.sh
+    /install-arch/gnome.sh
 fi
 
 ################################################
@@ -787,7 +787,7 @@ fi
 
 # Install and configure gaming with Flatpak
 if [ ${GAMING} = "yes" ]; then
-    /mnt/install-arch/gaming.sh
+    /install-arch/gaming.sh
 fi
 
 ################################################
