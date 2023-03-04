@@ -139,39 +139,17 @@ rm -f *.shell-extension.zip
 # https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
 
 # Improve integration of QT applications
-pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6
-sed -i '/# Qt/a QT_QPA_PLATFORMTHEME=gnome' /etc/environment
+pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6 adwaita-qt5 adwaita-qt6
 
-# Fix cursor for Qt Wayland applications under Gnome
-sed -i '/# Qt/a XCURSOR_THEME=Adwaita' /etc/environment
-sed -i '/# Qt/a XCURSOR_SIZE=24' /etc/environment
-
-# Install kvantum
-pacman -S --noconfirm kvantum
-
-# Create kvantum's configurations directory
-mkdir -p /home/${NEW_USER}/Kvantum
-
-# Set Kvantum for all Qt applications
 tee -a /etc/environment << EOF
 
-# Kvantum
-QT_STYLE_OVERRIDE=kvantum
+# Qt
+QT_QPA_PLATFORM=wayland
+QT_QPA_PLATFORMTHEME=gnome
+QT_STYLE_OVERRIDE=adwaita
+XCURSOR_THEME=Adwaita
+XCURSOR_SIZE=24
 EOF
-
-# Download and install KvLibadwaita
-git clone https://github.com/GabePoel/KvLibadwaita.git
-cp -R KvLibadwaita/src/KvLibadwaita /home/${NEW_USER}/Kvantum
-rm -rf KvLibadwaita
-
-# Set KvLibadwaita as kvantum theme
-echo 'theme=KvLibadwaita' > /home/${NEW_USER}/Kvantum/kvantum.kvconfig
-
-# Hide kvantum manager icon
-cp /usr/share/applications/kvantummanager.desktop /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
-echo "NoDisplay=true" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
-echo "Hidden=true" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
-echo "NotShowIn=GNOME" >> /home/${NEW_USER}/.local/share/applications/kvantummanager.desktop
 
 ################################################
 ##### Theming
