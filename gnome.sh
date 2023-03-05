@@ -94,7 +94,7 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 pacman -S --noconfirm libappindicator-gtk3
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v46.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v49.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 rm -f shell-extension.zip
@@ -103,30 +103,30 @@ rm -f shell-extension.zip
 # https://extensions.gnome.org/extension/1319/gsconnect/
 pacman -S --noconfirm openssl
 curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v54.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnectandyholmes.github.io
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnectandyholmes.github.io
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 rm -f shell-extension.zip
 
 # Dark Variant
 # https://extensions.gnome.org/extension/4488/dark-variant/
 pacman -S --noconfirm xorg-xprop
 curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v8.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-varianthardpixel.eu
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-varianthardpixel.eu
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
 rm -f shell-extension.zip
 
 # Rounded Window Corners
 # https://extensions.gnome.org/extension/5237/rounded-window-corners/
 curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v10.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-cornersyilozt
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-cornersyilozt
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
 curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v4.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcherjoshimukul29.gmail.com
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcherjoshimukul29.gmail.com
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
 
 ################################################
