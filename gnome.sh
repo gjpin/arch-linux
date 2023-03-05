@@ -25,7 +25,6 @@ pacman -S --noconfirm \
     gnome-calculator \
     gnome-calendar \
     gnome-color-manager \
-    gnome-console \
     gnome-control-center \
     gnome-disk-utility \
     gnome-font-viewer \
@@ -48,6 +47,7 @@ pacman -S --noconfirm \
 # Additional Gnome/GTK packages
 pacman -S --noconfirm \
     gitg \
+    gnome-terminal \
     xdg-desktop-portal-gtk \
     xdg-desktop-portal-gnome
 
@@ -303,7 +303,7 @@ titlebar-font='Noto Sans Bold 10'
 disable-user-extensions=false
 
 [org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'gsconnect@andyholmes.github.io', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
@@ -322,8 +322,8 @@ custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybin
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
-command='kgx'
-name='Gnome Console'
+command='gnome-terminal'
+name='Gnome Terminal'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>E'
