@@ -775,6 +775,20 @@ elif [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
     /install-arch/gnome.sh
 fi
 
+# Hide applications from menus
+APPLICATIONS=('assistant' 'avahi-discover' 'designer' 'electron' 'electron21' 'htop' 'linguist' 'lstopo' 'nvim' 'org.kde.kuserfeedback-console' 'qdbusviewer' 'qt5ct' 'qv4l2' 'qvidcap' 'bssh' 'bvnc' 'mpv')
+for APPLICATION in "${APPLICATIONS[@]}"
+do
+    # Create a local copy of the desktop files and append properties
+    cp /usr/share/applications/${APPLICATION}.desktop /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop 2>/dev/null || : 
+
+    if test -f "/home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop"; then
+        echo "NoDisplay=true" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
+        echo "Hidden=true" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
+        echo "NotShowIn=KDE;GNOME;" >> /home/${NEW_USER}/.local/share/applications/${APPLICATION}.desktop
+    fi
+done
+
 ################################################
 ##### Gaming
 ################################################
