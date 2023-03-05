@@ -222,14 +222,8 @@ pacman -S --noconfirm firewalld
 systemctl enable firewalld.service
 firewall-offline-cmd --set-default-zone=block
 
-# Install and configure iwd and NetworkManager
-pacman -S --noconfirm iwd networkmanager
-
-tee /etc/NetworkManager/conf.d/wifi_backend.conf << EOF
-[device]
-wifi.backend=iwd
-EOF
-
+# Install and enable NetworkManager
+pacman -S --noconfirm networkmanager
 systemctl enable NetworkManager.service
 
 # Install bind tools

@@ -94,40 +94,40 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 pacman -S --noconfirm libappindicator-gtk3
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v46.shell-extension.zip -O
-chown {NEW_USER}:{NEW_USER} *.shell-extension.zip
-sudo -u ${NEW_USER} gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v46.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/appindicatorsupportrgcjonas.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/appindicatorsupportrgcjonas.gmail.com
+rm -f shell-extension.zip
 
 # GSConnect
 # https://extensions.gnome.org/extension/1319/gsconnect/
 pacman -S --noconfirm openssl
-curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v54.shell-extension.zip -O
-chown {NEW_USER}:{NEW_USER} *.shell-extension.zip
-sudo -u ${NEW_USER} gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v54.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/gsconnectandyholmes.github.io
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/gsconnectandyholmes.github.io
+rm -f shell-extension.zip
 
 # Dark Variant
 # https://extensions.gnome.org/extension/4488/dark-variant/
 pacman -S --noconfirm xorg-xprop
-curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v8.shell-extension.zip -O
-chown {NEW_USER}:{NEW_USER} *.shell-extension.zip
-sudo -u ${NEW_USER} gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v8.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/dark-varianthardpixel.eu
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/dark-varianthardpixel.eu
+rm -f shell-extension.zip
 
 # Rounded Window Corners
 # https://extensions.gnome.org/extension/5237/rounded-window-corners/
-curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v10.shell-extension.zip -O
-chown {NEW_USER}:{NEW_USER} *.shell-extension.zip
-sudo -u ${NEW_USER} gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v10.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/rounded-window-cornersyilozt
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/rounded-window-cornersyilozt
+rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v4.shell-extension.zip -O
-chown {NEW_USER}:{NEW_USER} *.shell-extension.zip
-sudo -u ${NEW_USER} gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v4.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/legacyschemeautoswitcherjoshimukul29.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/legacyschemeautoswitcherjoshimukul29.gmail.com
+rm -f shell-extension.zip
 
 ################################################
 ##### Better Qt / GTK integration
@@ -172,9 +172,9 @@ sudo flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 # Download and install latest adw-gtk3 release
 URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
-curl -sSL ${URL} -O
-tar -xf adw-*.tar.xz -C /home/${NEW_USER}/.local/share/themes/
-rm -f adw-*.tar.xz
+curl -sSL ${URL} -o adw-gtk3.tar.xz
+tar -xf adw-gtk3.tar.xz -C /home/${NEW_USER}/.local/share/themes/
+rm -f adw-gtk3.tar.xz
 
 # GTK theme updater
 tee /home/${NEW_USER}/.local/bin/update-gtk-theme << 'EOF'
@@ -303,7 +303,7 @@ titlebar-font='Noto Sans Bold 10'
 disable-user-extensions=false
 
 [org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
 enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'gsconnect@andyholmes.github.io', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
@@ -338,29 +338,32 @@ name='Gnome System Monitor'
 [org/gnome/desktop/app-folders]
 folder-children=['Office', 'Dev', 'Media', 'System', 'Gaming', 'Emulators']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/Office/]
+[org/gnome/desktop/app-folders/folders/Office]
 name='Office'
-apps=['libreoffice-calc.desktop', 'libreoffice-impress.desktop', 'libreoffice-writer.desktop', 'com.github.flxzt.rnote.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.clocks.desktop', 'md.obsidian.Obsidian.desktop']
+apps=['com.github.flxzt.rnote.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.clocks.desktop', 'md.obsidian.Obsidian.desktop', 'org.libreoffice.LibreOffice.base.desktop', 'org.libreoffice.LibreOffice.calc.desktop', 'org.libreoffice.LibreOffice.draw.desktop', 'org.libreoffice.LibreOffice.impress.desktop', 'org.libreoffice.LibreOffice.math.desktop', 'org.libreoffice.LibreOffice.writer.desktop', 'org.libreoffice.LibreOffice.desktop']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/Dev/]
+[org/gnome/desktop/app-folders/folders/Dev]
 name='Dev'
 apps=['code.desktop', 'rest.insomnia.Insomnia.desktop', 'com.github.marhkb.Pods.desktop', 'org.gaphor.Gaphor.desktop', 'org.gnome.gitg.desktop', 'org.gnome.Boxes.desktop']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/Media/]
+[org/gnome/desktop/app-folders/folders/Media]
 name='Media'
 apps=['io.github.celluloid_player.Celluloid.desktop', 'io.github.seadve.Kooha.desktop', 'com.spotify.Client.desktop', 'org.blender.Blender.desktop', 'org.gimp.GIMP.desktop', 'org.gnome.eog.desktop']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/System/]
+[org/gnome/desktop/app-folders/folders/System]
 name='System'
 apps=['org.gnome.baobab.desktop', 'firewall-config.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.Settings.desktop', 'gnome-system-monitor.desktop', 'org.gnome.Characters.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Logs.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'kvantummanager.desktop']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/Gaming/]
+[org/gnome/desktop/app-folders/folders/Gaming]
 name='Gaming'
 apps=['com.valvesoftware.Steam.desktop', 'com.heroicgameslauncher.hgl.desktop', 'net.lutris.Lutris.desktop']
 
-[org/gnome/desktop/app-folders/folder:/org/gnome/desktop/app-folders/folders/Emulators/]
+[org/gnome/desktop/app-folders/folders/Emulators]
 name='Emulators'
 apps=['org.duckstation.DuckStation.desktop', 'net.pcsx2.PCSX2.desktop', 'org.ppsspp.PPSSPP.desktop', 'org.DolphinEmu.dolphin-emu.desktop', 'org.yuzu_emu.yuzu.desktop', 'org.citra_emu.citra.desktop', 'org.flycast.Flycast.desktop', 'app.xemu.xemu.desktop', 'com.snes9x.Snes9x.desktop', 'net.kuribo64.melonDS.desktop', 'net.rpcs3.RPCS3.desktop']
+
+[org/gnome/shell]
+app-picker-layout=[{'Dev': <{'position': <0>}>, 'Emulators': <{'position': <1>}>, 'Gaming': <{'position': <2>}>, 'Media': <{'position': <3>}>, 'Office': <{'position': <4>}>}]
 
 [org/gnome/desktop/background]
 picture-uri='file:///usr/share/backgrounds/gnome/blobs-l.svg'
