@@ -182,6 +182,10 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 # Close windows shortcut
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Shift+Q,none,Close Window"
 
+# Replace plasmashell
+sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group "plasmashell.desktop" --key "_k_friendly_name" "Replace plasmashell"
+sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group "plasmashell.desktop" --key "_launch" "Ctrl+Alt+Del,none,plasmashell --replace"
+
 # Enable 2 desktops
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Name_2 "Desktop 2"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrc --group Desktops --key Number "2"
