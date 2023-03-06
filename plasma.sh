@@ -131,7 +131,21 @@ sudo -u ${NEW_USER} balooctl disable
 sudo -u ${NEW_USER} balooctl purge
 
 # Install Firefox Plasma integration extension
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
+
+# Import Plasma color schemes
+mkdir -p /home/${NEW_USER}/.local/share/color-schemes
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Blender.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/DiscordDark.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Gimp.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Godot.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/HeroicGamesLauncher.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Insomnia.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/ObsidianDark.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/SlackAubergineLightcolors.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Spotify.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/VSCodeDefaultDark.colors
 
 ################################################
 ##### KDE Plasma configurations
@@ -210,3 +224,78 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Meta+*,none,Window to Desktop 8"
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Meta+(,none,Window to Desktop 9"
 sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Meta+),none,Window to Desktop 10"
+
+# Window decorations
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key Description "Application settings for vscode"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key decocolor "VSCodeDefaultDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclass "code code-url-handler"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclasscomplete --type bool true
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key Description "Application settings for blender"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key decocolor "Blender"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key wmclass "\sblender"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key wmclasscomplete --type bool true
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 2 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key Description "Application settings for gimp"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key decocolor "Gimp"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key wmclass "gimp"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 3 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key Description "Application settings for godot"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key decocolor "Godot"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key wmclass "godot_editor godot"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key wmclasscomplete --type bool true
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 4 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key Description "Application settings for discord"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key decocolor "DiscordDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key wmclass "discord"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 5 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key Description "Application settings for insomnia"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key decocolor "Insomnia"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key wmclass "insomnia"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 6 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key Description "Application settings for heroic"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key decocolor "HeroicGamesLauncher"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key wmclass "heroic"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 7 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key Description "Application settings for spotify"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key decocolor "Spotify"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key wmclass "spotify"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 8 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key Description "Application settings for obsidian"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolor "ObsidianDark"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclass "obsidian"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key Description "Application settings for slack"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolor "SlackAubergineLight.colors"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclass "slack"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count 10
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10"
