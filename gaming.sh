@@ -39,19 +39,3 @@ flatpak install -y flathub com.heroicgameslauncher.hgl
 
 # Lutris
 flatpak install -y flathub net.lutris.Lutris
-
-################################################
-##### Emulators
-################################################
-
-flatpak install -y flathub org.duckstation.DuckStation # psx
-flatpak install -y flathub net.pcsx2.PCSX2 # ps2
-flatpak install -y flathub org.ppsspp.PPSSPP # psp
-flatpak install -y flathub org.DolphinEmu.dolphin-emu # gamecube / wii
-flatpak install -y flathub org.yuzu_emu.yuzu # switch
-flatpak install -y flathub org.citra_emu.citra # 3ds
-flatpak install -y flathub org.flycast.Flycast # dreamcast
-flatpak install -y flathub app.xemu.xemu # xbox
-flatpak install -y flathub com.snes9x.Snes9x # snes
-flatpak install -y flathub net.kuribo64.melonDS # ds
-flatpak install -y flathub net.rpcs3.RPCS3 # ps3
