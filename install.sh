@@ -78,6 +78,7 @@ mount -t btrfs LABEL=system /mnt
 # Create BTRFS subvolumes
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@swap
 umount -R /mnt
 
 # Mount BTRFS subvolumes
@@ -85,6 +86,9 @@ mount -t btrfs -o subvol=@,compress=zstd:3,noatime,discard,space_cache=v2,ssd LA
 
 mkdir -p /mnt/home
 mount -t btrfs -o subvol=@home,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
+
+mkdir -p /mnt/swap
+mount -t btrfs -o subvol=@swap LABEL=system /mnt/swap
 
 ################################################
 ##### EFI / Boot

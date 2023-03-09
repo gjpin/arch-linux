@@ -97,46 +97,28 @@ pacman -S --noconfirm \
 ################################################
 
 # References:
+# https://wiki.archlinux.org/title/Btrfs#Swap_file
 # https://wiki.archlinux.org/title/swap#Swappiness
 # https://wiki.archlinux.org/title/Improving_performance#zram_or_zswap
 # https://wiki.gentoo.org/wiki/Zram
 # https://www.dwarmstrong.org/zram-swap/
 # https://www.reddit.com/r/Fedora/comments/mzun99/new_zram_tuning_benchmarks/
 
-# Set page cluster
-echo 'vm.page-cluster=0' > /etc/sysctl.d/99-page-cluster.conf
+# Create swap file
+btrfs filesystem mkswapfile --size 8g /swap/swapfile
 
-# Set swappiness
-echo 'vm.swappiness=100' > /etc/sysctl.d/99-swappiness.conf
+# Activate swap file
+swapon /swap/swapfile
 
-# Set dirty background ratio
-echo 'vm.dirty_background_ratio=1' > /etc/sysctl.d/99-dirty-background-ratio.conf
+# Add swapfile to fstab configuration
+tee -a /etc/fstab << EOF
 
-# Set dirty ratio
-echo 'vm.dirty_ratio=50' > /etc/sysctl.d/99-dirty-ratio.conf
-
-# Set VFS cache pressure
-echo 'vm.vfs_cache_pressure=500' > /etc/sysctl.d/99-vfs-cache-pressure.conf
-
-# Configure and enable zram
-tee /etc/systemd/system/dev-zram0.service << EOF
-[Unit]
-Description=Start zram
-After=local-fs.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/modprobe zram
-ExecStart=/usr/bin/sh -c "echo zstd > /sys/block/zram0/comp_algorithm"
-ExecStart=/usr/bin/sh -c "echo 8G > /sys/block/zram0/disksize"
-ExecStart=/usr/bin/mkswap --label zram0 /dev/zram0
-ExecStart=/usr/bin/swapon --priority 100 /dev/zram0
-
-[Install]
-WantedBy=multi-user.target
+# swap file
+/swap/swapfile none swap defaults 0 0
 EOF
 
-systemctl enable dev-zram0.service
+# Set swappiness
+echo 'vm.swappiness=10' > /etc/sysctl.d/99-swappiness.conf
 
 ################################################
 ##### Users
