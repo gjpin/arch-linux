@@ -127,25 +127,33 @@ echo 'vm.swappiness=1' > /etc/sysctl.d/99-swappiness.conf
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
 
-# Transparent Hugepages
-# default: always
-echo always | tee /sys/kernel/mm/transparent_hugepage/enabled
+# Compaction Proactiveness - default: 20
+echo 'vm.compaction_proactiveness=0' > /etc/sysctl.d/99-compaction_proactiveness.conf
 
-# Shared Memory in Transparent Hugepages
-# default :never
-echo advise | tee /sys/kernel/mm/transparent_hugepage/shmem_enabled
+# Page Lock Unfairness - default: 5
+echo 'vm.page_lock_unfairness=1' > /etc/sysctl.d/99-page_lock_unfairness.conf
 
-# Compaction Proactiveness
-# default: 20
-echo 0 | tee /proc/sys/vm/compaction_proactiveness
+# Hugepage Defragmentation - default: 1
+# Transparent Hugepages - default: always
+# Shared Memory in Transparent Hugepages - default: never
+tee /etc/systemd/system/kernel-tweaks.service << 'EOF'
+[Unit]
+Description=Set kernel tweaks
+After=multi-user.target
+StartLimitBurst=0
 
-# Hugepage Defragmentation
-# default: 1
-echo 0 | tee /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+[Service]
+Type=oneshot
+Restart=on-failure
+ExecStart=/usr/bin/bash -c 'echo always > /sys/kernel/mm/transparent_hugepage/enabled'
+ExecStart=/usr/bin/bash -c 'echo advise > /sys/kernel/mm/transparent_hugepage/shmem_enabled'
+ExecStart=/usr/bin/bash -c 'echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag'
 
-# Page Lock Unfairness
-# default: 5
-echo 1 | tee /proc/sys/vm/page_lock_unfairness
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable kernel-tweaks.service
 
 ################################################
 ##### Users
