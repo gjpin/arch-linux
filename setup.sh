@@ -118,7 +118,34 @@ tee -a /etc/fstab << EOF
 EOF
 
 # Set swappiness
-echo 'vm.swappiness=10' > /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness=1' > /etc/sysctl.d/99-swappiness.conf
+
+################################################
+##### Tweaks
+################################################
+
+# References:
+# https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
+
+# Transparent Hugepages
+# default: always
+echo always | tee /sys/kernel/mm/transparent_hugepage/enabled
+
+# Shared Memory in Transparent Hugepages
+# default :never
+echo advise | tee /sys/kernel/mm/transparent_hugepage/shmem_enabled
+
+# Compaction Proactiveness
+# default: 20
+echo 0 | tee /proc/sys/vm/compaction_proactiveness
+
+# Hugepage Defragmentation
+# default: 1
+echo 0 | tee /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+
+# Page Lock Unfairness
+# default: 5
+echo 1 | tee /proc/sys/vm/page_lock_unfairness
 
 ################################################
 ##### Users
