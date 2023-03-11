@@ -237,7 +237,7 @@ EOF
 
 chmod +x /home/${NEW_USER}/.local/bin/update-firefox-theme
 
-sed -i "/flatpak update -y/a \n    # Update Firefox theme\n    update-firefox-theme" /home/${NEW_USER}/.zshrc.local
+sed -i "/flatpak update -y/a\    # Update Firefox theme\n    update-firefox-theme" /home/${NEW_USER}/.zshrc.local
 
 ################################################
 ##### Gnome configurations

@@ -10,6 +10,11 @@ user_pref("browser.startup.homepage", "chrome://browser/content/blanktab.html");
 // Enable FFMPEG VA-API
 user_pref("media.ffmpeg.vaapi.enabled", true);
 
+// Hardware video decoding
+user_pref("media.hardware-video-decoding.force-enabled", true);
+user_pref("gfx.webrender.all", true);
+user_pref("media.av1.enabled", false);
+
 // Disable title bar
 user_pref("browser.tabs.inTitlebar", 1);
 
@@ -27,9 +32,6 @@ user_pref("browser.shell.checkDefaultBrowser", false);
 
 // Enable scrolling with middle mouse button
 user_pref("general.autoScroll", true);
-
-// Dev tools zoom
-user_pref("devtools.toolbox.zoomValue", 1.1);
 
 // Enable Firefox Tracking Protection
 user_pref("browser.contentblocking.category", "strict");
