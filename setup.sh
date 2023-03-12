@@ -305,7 +305,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 tee /boot/loader/entries/arch-lts.conf << EOF
@@ -313,7 +313,7 @@ title   Arch Linux LTS
 linux   /vmlinuz-linux-lts
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
@@ -653,9 +653,6 @@ fi
 
 # References:
 # https://wiki.archlinux.org/title/Power_management
-
-# Disable watchdog
-echo 'kernel.nmi_watchdog=0' > /etc/sysctl.d/99-disable-watchdog.conf
 
 # If device is a laptop, apply more power saving configurations
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
