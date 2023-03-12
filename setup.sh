@@ -118,7 +118,10 @@ tee -a /etc/fstab << EOF
 EOF
 
 # Set swappiness
-echo 'vm.swappiness=1' > /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness=30' > /etc/sysctl.d/99-swappiness.conf
+
+# Set vfs cache pressure
+echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 
 ################################################
 ##### Tweaks
@@ -126,6 +129,10 @@ echo 'vm.swappiness=1' > /etc/sysctl.d/99-swappiness.conf
 
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
+# https://wiki.cachyos.org/en/home/General_System_Tweaks
+
+# Split Lock Mitigate - default: 1
+echo 'kernel.split_lock_mitigate=0' > /etc/sysctl.d/99-splitlock.conf
 
 # Compaction Proactiveness - default: 20
 echo 'vm.compaction_proactiveness=0' > /etc/sysctl.d/99-compaction_proactiveness.conf
@@ -257,6 +264,7 @@ pacman -S --noconfirm iptables-nft --ask 4
 sed -i "s|MODULES=()|MODULES=(btrfs${MKINITCPIO_MODULES})|" /etc/mkinitcpio.conf
 sed -i "s|^HOOKS.*|HOOKS=(systemd autodetect keyboard sd-vconsole modconf block sd-encrypt filesystems fsck)|" /etc/mkinitcpio.conf
 sed -i "s|#COMPRESSION=\"zstd\"|COMPRESSION=\"zstd\"|" /etc/mkinitcpio.conf
+sed -i "s|#COMPRESSION_OPTIONS=()|COMPRESSION_OPTIONS=(-2)|" /etc/mkinitcpio.conf
 
 # Re-create initramfs image
 mkinitcpio -P
@@ -297,7 +305,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 tee /boot/loader/entries/arch-lts.conf << EOF
@@ -305,7 +313,7 @@ title   Arch Linux LTS
 linux   /vmlinuz-linux-lts
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nmi_watchdog=0 quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
