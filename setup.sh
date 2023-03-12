@@ -162,6 +162,13 @@ EOF
 
 systemctl enable kernel-tweaks.service
 
+# Disable watchdog timer drivers
+tee /etc/modprobe.d/disable-watchdog-drivers.conf << 'EOF'
+blacklist sp5100_tco
+blacklist iTCO_wdt
+blacklist iTCO_vendor_support
+EOF
+
 ################################################
 ##### Users
 ################################################
