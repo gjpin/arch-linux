@@ -288,6 +288,7 @@ mkinitcpio -P
 bootctl install
 
 # systemd-boot upgrade hook
+mkdir -p /etc/pacman.d/hooks
 tee /etc/pacman.d/hooks/95-systemd-boot.hook << 'EOF'
 [Trigger]
 Type = Package
