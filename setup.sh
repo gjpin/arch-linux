@@ -586,7 +586,8 @@ rm -rf paru-bin
 pacman -S --noconfirm \
     typescript-language-server \
     bash-language-server \
-    python-lsp-server
+    python-lsp-server \
+    yaml-language-server
 
 # Go
 pacman -S --noconfirm go go-tools gopls
