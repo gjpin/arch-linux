@@ -84,7 +84,8 @@ pacman -S --noconfirm \
 # Extra Plasma packages
 pacman -S --noconfirm \
     plasma-wayland-session \
-    sshfs
+    sshfs \
+    kfind
     
 # Install VLC
 pacman -S --noconfirm vlc
