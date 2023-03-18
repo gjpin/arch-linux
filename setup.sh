@@ -475,7 +475,7 @@ flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/fl
 flatpak update
 
 # Global override to deny all applications the permission to access certain directories
-flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
+flatpak override --nofilesystem='home'
 
 # Allow read-only access to GTK configs
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
