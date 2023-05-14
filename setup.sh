@@ -524,6 +524,9 @@ flatpak install -y flathub org.keepassxc.KeePassXC
 # Obsidian
 flatpak install -y flathub md.obsidian.Obsidian
 
+# Chromium
+flatpak install -y flathub org.chromium.Chromium
+
 ################################################
 ##### Syncthing
 ################################################
@@ -670,25 +673,21 @@ fi
 # https://github.com/pyllyukko/user.js/blob/master/user.js
 
 # Install Firefox
-pacman -S --noconfirm firefox
+flatpak install -y flathub org.mozilla.firefox
 
 # Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
+sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.desktop
+sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
+sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
 # Run Firefox natively under Wayland
-tee -a /etc/environment << EOF
-
-# Firefox
-MOZ_ENABLE_WAYLAND=1
-EOF
+flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
 # Open Firefox in headless mode and then close it to create profile folder
-sudo -u ${NEW_USER} timeout 5 firefox --headless
+sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
 
 # Import Firefox configs
 cp /install-arch/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
@@ -701,18 +700,6 @@ curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-lat
 curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-
-################################################
-##### Applications
-################################################
-
-# Install Chromium with native Wayland support
-pacman -S --noconfirm chromium
-
-tee /home/${NEW_USER}/.config/chromium-flags.conf << EOF
---ozone-platform-hint=auto
---enable-features=VaapiVideoDecoder
-EOF
 
 ################################################
 ##### VSCode

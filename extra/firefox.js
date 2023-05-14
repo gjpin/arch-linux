@@ -2,7 +2,7 @@
 // https://wiki.archlinux.org/title/firefox#KDE_integration
 user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-user_pref("media.hardwaremediakeys.enabled", false);
+// user_pref("media.hardwaremediakeys.enabled", false);
 
 // Set homepage
 user_pref("browser.startup.homepage", "chrome://browser/content/blanktab.html");

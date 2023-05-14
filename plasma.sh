@@ -131,10 +131,6 @@ sudo -u ${NEW_USER} balooctl suspend
 sudo -u ${NEW_USER} balooctl disable
 sudo -u ${NEW_USER} balooctl purge
 
-# Install Firefox Plasma integration extension
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
-curl https://addons.mozilla.org/firefox/downloads/file/3859385/plasma_integration-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/plasma-browser-integration@kde.org.xpi
-
 # Import Plasma color schemes
 mkdir -p /home/${NEW_USER}/.local/share/color-schemes
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Blender.colors
