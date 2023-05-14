@@ -57,42 +57,23 @@ sgdisk --zap-all --clear /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 # Partition disk and re-read partition table
-sgdisk -n 1:0:+512MiB -t 1:ef00 -c 1:EFI /dev/nvme0n1
+sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
 sgdisk -n 2:0:0 -t 2:8309 -c 2:LUKS /dev/nvme0n1
 partprobe /dev/nvme0n1
 
 ################################################
-##### LUKS / BTRFS
+##### LUKS / System and boot partitions
 ################################################
 
 # Encrypt and open LUKS partition
 echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/disk/by-partlabel/LUKS
 echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
 
-# Create BTRFS
-mkfs.btrfs -L system /dev/mapper/system
+# Format partition to EXT4
+mkfs.ext4 -L system /dev/mapper/system
 
 # Mount root device
-mount -t btrfs LABEL=system /mnt
-
-# Create BTRFS subvolumes
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@swap
-umount -R /mnt
-
-# Mount BTRFS subvolumes
-mount -t btrfs -o subvol=@,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt
-
-mkdir -p /mnt/home
-mount -t btrfs -o subvol=@home,compress=zstd:3,noatime,discard,space_cache=v2,ssd LABEL=system /mnt/home
-
-mkdir -p /mnt/swap
-mount -t btrfs -o subvol=@swap LABEL=system /mnt/swap
-
-################################################
-##### EFI / Boot
-################################################
+mount -t ext4 LABEL=system /mnt
 
 # Format and mount EFI/boot partition
 mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
@@ -109,7 +90,7 @@ cp ./extra/mirrorlist /etc/pacman.d/mirrorlist
 pacman -Syy
 
 # Install system
-pacstrap /mnt base base-devel linux linux-lts linux-firmware btrfs-progs ${CPU_MICROCODE}
+pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs ${CPU_MICROCODE}
 
 # Generate filesystem tab
 genfstab -U /mnt >> /mnt/etc/fstab

@@ -97,7 +97,7 @@ pacman -S --noconfirm \
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/Btrfs#Swap_file
+# https://wiki.archlinux.org/title/swap#Swap_file
 # https://wiki.archlinux.org/title/swap#Swappiness
 # https://wiki.archlinux.org/title/Improving_performance#zram_or_zswap
 # https://wiki.gentoo.org/wiki/Zram
@@ -105,16 +105,22 @@ pacman -S --noconfirm \
 # https://www.reddit.com/r/Fedora/comments/mzun99/new_zram_tuning_benchmarks/
 
 # Create swap file
-btrfs filesystem mkswapfile --size 8g /swap/swapfile
+dd if=/dev/zero of=/swapfile bs=1M count=8k status=progress
+
+# Set swapfile permissions
+chmod 0600 /swapfile
+
+# Format swapfile to swap
+mkswap -U clear /swapfile
 
 # Activate swap file
-swapon /swap/swapfile
+swapon /swapfile
 
 # Add swapfile to fstab configuration
 tee -a /etc/fstab << EOF
 
-# swap file
-/swap/swapfile                              none        swap    defaults                                                                                                0 0
+# swapfile
+/swapfile none swap defaults 0 0                                                                                             0 0
 EOF
 
 # Set swappiness
@@ -270,7 +276,7 @@ pacman -S --noconfirm iptables-nft --ask 4
 ################################################
 
 # Configure mkinitcpio
-sed -i "s|MODULES=()|MODULES=(btrfs${MKINITCPIO_MODULES})|" /etc/mkinitcpio.conf
+sed -i "s|MODULES=()|MODULES=(ext4${MKINITCPIO_MODULES})|" /etc/mkinitcpio.conf
 sed -i "s|^HOOKS.*|HOOKS=(systemd autodetect keyboard sd-vconsole modconf block sd-encrypt filesystems fsck)|" /etc/mkinitcpio.conf
 sed -i "s|#COMPRESSION=\"zstd\"|COMPRESSION=\"zstd\"|" /etc/mkinitcpio.conf
 sed -i "s|#COMPRESSION_OPTIONS=()|COMPRESSION_OPTIONS=(-2)|" /etc/mkinitcpio.conf
@@ -315,7 +321,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 tee /boot/loader/entries/arch-lts.conf << EOF
@@ -323,7 +329,7 @@ title   Arch Linux LTS
 linux   /vmlinuz-linux-lts
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system rootflags=subvol=@ zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
