@@ -220,7 +220,8 @@ EOF
 
 # Updater helper
 tee -a /home/${NEW_USER}/.zshrc.local << EOF
-# Updater helper
+
+# Update helper
 update-all() {
     # Update keyring
     sudo pacman -Sy --noconfirm archlinux-keyring
@@ -471,11 +472,10 @@ sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
 
 # Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
 flatpak update
 
 # Global override to deny all applications the permission to access certain directories
-flatpak override --nofilesystem='home'
+flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
 
 # Allow read-only access to GTK configs
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
@@ -494,8 +494,6 @@ flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x8
 flatpak install -y flathub org.freedesktop.Platform.GL32.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GL.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
-flatpak install -y flathub-beta org.freedesktop.Platform.GL.mesa-git/x86_64/22.08
-flatpak install -y flathub-beta org.freedesktop.Platform.GL32.mesa-git/x86_64/22.08
 flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
 
 ################################################
@@ -517,6 +515,15 @@ flatpak install -y flathub org.libreoffice.LibreOffice
 # Blender
 flatpak install -y flathub org.blender.Blender
 
+# Bitwarden
+flatpak install -y flathub com.bitwarden.desktop
+
+# KeepassXC
+flatpak install -y flathub org.keepassxc.KeePassXC
+
+# Obsidian
+flatpak install -y flathub md.obsidian.Obsidian
+
 ################################################
 ##### Syncthing
 ################################################
@@ -531,37 +538,17 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Podman
+##### Docker
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/Podman
-# https://wiki.archlinux.org/title/Buildah
-# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+# https://wiki.archlinux.org/title/docker
 
-# Install Podman, Buildah and dependencies
-pacman -S --noconfirm podman fuse-overlayfs slirp4netns netavark aardvark-dns buildah
+# Install Docker and related applications
+pacman -S --noconfirm docker docker-compose
 
-# Enable kernel.unprivileged_userns_clone
-echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-rootless-podman.conf
-
-# Set subuid and subgid
-usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
-
-# Enable unprivileged ping
-echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
-
-# Create docker/podman alias
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
-# Podman
-alias docker=podman
-EOF
-
-# Re-enable unqualified search registries
-tee -a /etc/containers/registries.conf << EOF
-# Enable docker.io as unqualified search registry
-unqualified-search-registries = ["docker.io"]
-EOF
+# Enable Docker service
+systemctl enable docker.service
 
 ################################################
 ##### Paru
@@ -582,13 +569,6 @@ rm -rf paru-bin
 ##### Development (languages, LSP, neovim)
 ################################################
 
-# Language servers
-pacman -S --noconfirm \
-    typescript-language-server \
-    bash-language-server \
-    python-lsp-server \
-    yaml-language-server
-
 # Go
 pacman -S --noconfirm go go-tools gopls
 
@@ -598,6 +578,9 @@ tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 GOPATH="${HOME}/.go"
 PATH="${GOPATH}/bin:${PATH}"
 EOF
+
+# Node.js
+pacman -S --noconfirm nodejs
 
 # Neovim
 pacman -S --noconfirm neovim
@@ -616,15 +599,12 @@ EDITOR=nvim
 VISUAL=nvim
 EOF
 
-# Volta (Node version manager)
-sudo -u ${NEW_USER} paru -S --noconfirm volta-bin
-
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# Volta / Node
-VOLTA_HOME="${HOME}/.volta"
-PATH="${VOLTA_HOME}/bin:${PATH}"
-EOF
+# Language servers
+pacman -S --noconfirm \
+    typescript-language-server \
+    bash-language-server \
+    python-lsp-server \
+    yaml-language-server
 
 ################################################
 ##### Wayland configurations
@@ -646,6 +626,8 @@ ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/el
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron22-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron23-flags.conf
+ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron24-flags.conf
 
 ################################################
 ##### thermald
@@ -724,14 +706,9 @@ curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_con
 ##### Applications
 ################################################
 
-# Install applications
-pacman -S --noconfirm \
-    bitwarden \
-    keepassxc \
-    obsidian
-
 # Install Chromium with native Wayland support
 pacman -S --noconfirm chromium
+
 tee /home/${NEW_USER}/.config/chromium-flags.conf << EOF
 --ozone-platform-hint=auto
 --enable-features=VaapiVideoDecoder
@@ -741,11 +718,8 @@ EOF
 ##### VSCode
 ################################################
 
-# Install VS Code and dependencies
+# Install VSCode
 sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
-
-# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
-pacman -S --noconfirm xorg-server-xvfb
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
@@ -791,7 +765,8 @@ pacman -S --noconfirm \
     otf-cascadia-code \
     ttf-sourcecodepro-nerd \
     ttf-ubuntu-nerd \
-    ttf-ubuntu-mono-nerd
+    ttf-ubuntu-mono-nerd \
+    inter-font
 
 # Install and enable power profiles daemon
 pacman -S --noconfirm power-profiles-daemon
@@ -839,6 +814,3 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 
 # Revert sudoers change
 sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
-
-# Remove Virtual framebuffer X server
-pacman -Rs --noconfirm xorg-server-xvfb

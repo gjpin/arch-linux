@@ -304,37 +304,3 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclassmat
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count 10
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10"
-
-# breeze-gtk pacman hook to update theme
-tee /usr/local/bin/update-breeze-gtk << EOF
-#!/usr/bin/bash
-
-rm -f /usr/share/themes/Breeze-Dark/assets/{titlebutton-close,titlebutton-close@2,titlebutton-close-backdrop,titlebutton-close-backdrop@2}.png
-ln -s /usr/share/themes/Breeze-Dark/assets/breeze-close-symbolic.svg /usr/share/themes/Breeze-Dark/assets/titlebutton-close.png
-ln -s /usr/share/themes/Breeze-Dark/assets/breeze-close-symbolic.svg /usr/share/themes/Breeze-Dark/assets/titlebutton-close@2.png
-ln -s /usr/share/themes/Breeze-Dark/assets/breeze-close-symbolic.svg /usr/share/themes/Breeze-Dark/assets/titlebutton-close-backdrop.png
-ln -s /usr/share/themes/Breeze-Dark/assets/breeze-close-symbolic.svg /usr/share/themes/Breeze-Dark/assets/titlebutton-close-backdrop@2.png
-
-rm -f /usr/share/themes/Breeze/assets/{titlebutton-close,titlebutton-close@2,titlebutton-close-backdrop,titlebutton-close-backdrop@2}.png
-cp /usr/share/themes/Breeze/assets/breeze-close-symbolic.svg /usr/share/themes/Breeze/assets/breeze-close-simple.svg
-sed -i "s|#fff|#08293a|g" /usr/share/themes/Breeze/assets/breeze-close-simple.svg
-ln -s /usr/share/themes/Breeze/assets/breeze-close-simple.svg /usr/share/themes/Breeze/assets/titlebutton-close.png
-ln -s /usr/share/themes/Breeze/assets/breeze-close-simple.svg /usr/share/themes/Breeze/assets/titlebutton-close@2.png
-ln -s /usr/share/themes/Breeze/assets/breeze-close-simple.svg /usr/share/themes/Breeze/assets/titlebutton-close-backdrop.png
-ln -s /usr/share/themes/Breeze/assets/breeze-close-simple.svg /usr/share/themes/Breeze/assets/titlebutton-close-backdrop@2.png
-EOF
-
-chmod +x /usr/local/bin/update-breeze-gtk
-
-tee /etc/pacman.d/hooks/95-breeze-gtk.hook << 'EOF'
-[Trigger]
-Type = Package
-Operation = Install
-Operation = Upgrade
-Target = breeze-gtk
-
-[Action]
-Description = Updating breeze-gtk theme...
-When = PostTransaction
-Exec = /usr/local/bin/update-breeze-gtk
-EOF
