@@ -13,7 +13,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 | nvme0n1                                              | disk  |         |            |               |
 | ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    512MiB     |
 | ├─nvme0n1p2                                          | part  |  LUKS2  |            |               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system              | crypt |  EXT$   |     /      |  Rest of disk |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system              | crypt |  EXT4   |     /      |  Rest of disk |
 
 ## Installation guide
 1. Disable secure boot and delete existing keys (go into setup mode)
@@ -34,7 +34,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 ### How to chroot
 ```bash
 cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
-mount -t ext4 /mnt
+mount -t ext4 LABEL=system /mnt
 mount /dev/nvme0n1p1 /mnt/boot
 arch-chroot /mnt
 ```
