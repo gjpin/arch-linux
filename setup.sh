@@ -752,7 +752,7 @@ ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/co
 pacman -S --noconfirm opensnitch
 
 # Enable OpenSnitch
-systemctl enable opensnitch
+systemctl enable opensnitchd.service
 
 ################################################
 ##### Desktop Environment
