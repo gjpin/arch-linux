@@ -745,6 +745,16 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
+##### OpenSnitch
+################################################
+
+# Install OpenSnitch
+pacman -S --noconfirm opensnitch
+
+# Enable OpenSnitch
+systemctl enable opensnitch
+
+################################################
 ##### Desktop Environment
 ################################################
 
