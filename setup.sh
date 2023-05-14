@@ -491,7 +491,7 @@ flatpak override --filesystem=xdg-config/gtk-4.0:ro
 flatpak override --filesystem=xdg-download
 
 ################################################
-##### Flatpak runtimes
+##### Flatpak runtimes and GTK themes
 ################################################
 
 # Install runtimes
@@ -501,6 +501,9 @@ flatpak install -y flathub org.freedesktop.Platform.GL32.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GL.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
 flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
+
+# Install GTK themes
+flatpak install -y flathub org.gtk.Gtk3theme.Breeze
 
 ################################################
 ##### Flatpak applications
