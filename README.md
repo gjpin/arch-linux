@@ -11,7 +11,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 | Name                                                 | Type  | FS Type | Mountpoint |      Size     |
 | ---------------------------------------------------- | :---: | :-----: | :--------: | :-----------: |
 | nvme0n1                                              | disk  |         |            |               |
-| ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    512MiB     |
+| ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    1GiB     |
 | ├─nvme0n1p2                                          | part  |  LUKS2  |            |               |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system              | crypt |  EXT4   |     /      |  Rest of disk |
 
@@ -22,7 +22,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Init keyring: `pacman-key --init --populate`
+4. Init keyring: `pacman-key --init && pacman-key --populate`
 5. Update repos and install git: `pacman -Sy git`
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
@@ -136,4 +136,12 @@ sudo pacman -U apparmor.d-*.pkg.tar.zst \
   --overwrite etc/apparmor.d/abstractions/trash
 cd ..
 rm -rf apparmor.d-git
+```
+
+## keyring issues
+```bash
+killall gpg-agent
+rm -rf /etc/pacman.d/gnupgp
+pacman-key --init
+pacman-key --populate
 ```
