@@ -22,13 +22,30 @@ For GRUB with BTRFS snapshots see branch 'grub'
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Init keyring: `pacman-key --init && pacman-key --populate`
+4. Init keyring: `pacman-key --init --populate`
 5. Update repos and install git: `pacman -Sy git`
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
 8. Reboot and re-enable secure boot
 9. Boot into new installation
 10. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
+11. Configure Firefox:
+```
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
+
+# Import Firefox configs
+wget https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/firefox.js -O ${FIREFOX_PROFILE_PATH}/user.js
+
+# Create extensisons folder
+mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
+
+# Import extensions
+curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
+```
 
 ## Misc guides
 ### How to chroot

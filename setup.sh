@@ -692,24 +692,6 @@ sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handle
 # Run Firefox natively under Wayland
 flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
-# Open Firefox in headless mode and then close it to create profile folder
-sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
-
-# Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
-
-# Import Firefox configs
-cp /install-arch/firefox.js ${FIREFOX_PROFILE_PATH}/user.js
-
-# Create extensisons folder
-mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
-
-# Import extensions
-curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-
 ################################################
 ##### VSCode
 ################################################
@@ -780,10 +762,10 @@ ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/co
 pacman -S --noconfirm opensnitch
 
 # Enable OpenSnitch
-systemctl enable opensnitchd.service
+# systemctl enable opensnitchd.service
 
 # Autostart OpenSnitch UI
-ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
+# ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
 
 # Import configs
 mkdir -p /etc/opensnitchd
