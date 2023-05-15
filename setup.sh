@@ -118,7 +118,6 @@ swapon /swapfile
 
 # Add swapfile to fstab configuration
 tee -a /etc/fstab << EOF
-
 # swapfile
 /swapfile none swap defaults 0 0
 EOF

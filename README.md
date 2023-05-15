@@ -145,3 +145,43 @@ rm -rf /etc/pacman.d/gnupgp
 pacman-key --init
 pacman-key --populate
 ```
+
+## Auto-mount extra drive
+```bash
+# Delete old partition layout and re-read partition table
+wipefs -af /dev/nvme1n1
+sgdisk --zap-all --clear /dev/nvme1n1
+partprobe /dev/nvme1n1
+
+# Partition disk and re-read partition table
+sgdisk -n 1:0:0 -t 1:8309 -c 1:LUKSDATA /dev/nvme1n1
+partprobe /dev/nvme1n1
+
+# Encrypt and open LUKS partition
+cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/disk/by-partlabel/LUKSDATA
+cryptsetup luksOpen /dev/disk/by-partlabel/LUKSDATA data
+
+# Format partition to EXT4
+mkfs.ext4 -L data /dev/mapper/data
+
+# Mount root device
+mount -t ext4 LABEL=data /data
+
+# Auto-mount
+tee -a /etc/fstab << EOF
+
+# data disk
+/dev/mapper/data /data ext4 defaults 0 0
+EOF
+
+tee -a /etc/crypttab << EOF
+
+data UUID=$(blkid -s UUID -o value /dev/nvme1n1p1) none
+EOF
+
+# Change ownership to user
+chown -R $USER:$USER /data
+
+# Auto unlock
+systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
+```
