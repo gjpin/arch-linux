@@ -120,7 +120,7 @@ swapon /swapfile
 tee -a /etc/fstab << EOF
 
 # swapfile
-/swapfile none swap defaults 0 0                                                                                             0 0
+/swapfile none swap defaults 0 0
 EOF
 
 # Set swappiness
