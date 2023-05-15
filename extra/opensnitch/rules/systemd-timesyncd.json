@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:43:12.533459968+01:00",
+  "updated": "2023-05-15T12:43:12.533470505+01:00",
+  "name": "systemd-timesyncd",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/usr/lib/systemd/systemd-timesyncd",
+    "list": []
+  }
+}

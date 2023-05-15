@@ -785,6 +785,19 @@ systemctl enable opensnitchd.service
 # Autostart OpenSnitch UI
 ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
 
+# Import configs
+mkdir -p /etc/opensnitchd
+curl -O --output-dir /etc/opensnitchd https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/default-config.json
+
+# Import rules
+mkdir -p /etc/opensnitchd/rules
+
+RULES=('bitwarden' 'chromium' 'curl' 'discord' 'dockerd' 'firefox' 'flatpak' 'fwupdmgr' 'git-remote-http' 'insomnia' 'networkmanager' 'obsidian' 'pacman' 'paru' 'plasmashell' 'ssh' 'syncthing' 'systemd-timesyncd' 'visual-studio-code' 'wireguard')
+for RULE in "${RULES[@]}"
+do
+    curl -O --output-dir /etc/opensnitchd/rules https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/rules/${RULE}.json
+done
+
 ################################################
 ##### Desktop Environment
 ################################################

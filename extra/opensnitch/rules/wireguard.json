@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T13:02:35.131684861+01:00",
+  "updated": "2023-05-15T13:02:35.131731606+01:00",
+  "name": "wireguard",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "dest.port",
+    "sensitive": false,
+    "data": "51900",
+    "list": []
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T13:12:08.035492294+01:00",
+  "updated": "2023-05-15T13:12:08.035509324+01:00",
+  "name": "ssh",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/usr/bin/ssh",
+    "list": []
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:41:56.647203111+01:00",
+  "updated": "2023-05-15T12:41:56.647239805+01:00",
+  "name": "visual-studio-code",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/opt/visual-studio-code/code",
+    "list": []
+  }
+}

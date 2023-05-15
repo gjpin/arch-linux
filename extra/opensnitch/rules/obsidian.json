@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:46:30.654223123+01:00",
+  "updated": "2023-05-15T12:46:30.654258267+01:00",
+  "name": "obsidian",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/app/obsidian",
+    "list": []
+  }
+}

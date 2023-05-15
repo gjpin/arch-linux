@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:42:38.201199701+01:00",
+  "updated": "2023-05-15T12:42:38.201240924+01:00",
+  "name": "pacman",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/usr/bin/pacman",
+    "list": []
+  }
+}

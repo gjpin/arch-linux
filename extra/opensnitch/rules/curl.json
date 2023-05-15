@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:42:03.463277946+01:00",
+  "updated": "2023-05-15T12:42:03.463326359+01:00",
+  "name": "curl",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/usr/bin/curl",
+    "list": []
+  }
+}

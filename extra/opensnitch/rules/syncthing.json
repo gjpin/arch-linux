@@ -1,0 +1,16 @@
+{
+  "created": "2023-05-15T12:43:18.570719824+01:00",
+  "updated": "2023-05-15T12:43:18.570757442+01:00",
+  "name": "syncthing",
+  "enabled": true,
+  "precedence": false,
+  "action": "allow",
+  "duration": "always",
+  "operator": {
+    "type": "simple",
+    "operand": "process.path",
+    "sensitive": false,
+    "data": "/usr/bin/syncthing",
+    "list": []
+  }
+}
