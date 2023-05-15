@@ -721,11 +721,9 @@ sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
 tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 {
-    "telemetry.telemetryLevel": "off",
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
     "editor.fontFamily": "'Noto Sans Mono'",
-    "workbench.enableExperiments": false,
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.iconTheme": null,
     "workbench.tree.indent": 12,
@@ -737,10 +735,37 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
       "*.ign": "json",
       "*.service": "ini"
     },
-    "extensions.ignoreRecommendations": true,
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "git.autofetch": true,
+    "git.useIntegratedAskPass": false,
+    "workbench.enableExperiments": false,
+	"clangd.checkUpdates": false,
+	"code-runner.enableAppInsights": false,
+	"docker-explorer.enableTelemetry": false,
+	"extensions.ignoreRecommendations": true,
+	"gitlens.showWelcomeOnInstall": false,
+	"gitlens.showWhatsNewAfterUpgrades": false,
+	"java.help.firstView": "none",
+	"java.help.showReleaseNotes": false,
+	"julia.enableTelemetry": false,
+	"kite.showWelcomeNotificationOnStartup": false,
+	"liveServer.settings.donotShowInfoMsg": true,
+	"Lua.telemetry.enable": false,
+	"material-icon-theme.showWelcomeMessage": false,
+	"pros.showWelcomeOnStartup": false,
+	"pros.useGoogleAnalytics": false,
+	"redhat.telemetry.enabled": false,
+	"rpcServer.showStartupMessage": false,
+	"shellcheck.disableVersionCheck": true,
+	"sonarlint.disableTelemetry": true,
+	"telemetry.enableCrashReporter": false,
+	"telemetry.enableTelemetry": false,
+	"telemetry.telemetryLevel": "off",
+	"terraform.telemetry.enabled": false,
+	"update.showReleaseNotes": false,
+	"vsicons.dontShowNewVersionMessage": true,
+	"workbench.welcomePage.walkthroughs.openOnInstall": false
 }
 EOF
 
@@ -756,6 +781,9 @@ pacman -S --noconfirm opensnitch
 
 # Enable OpenSnitch
 systemctl enable opensnitchd.service
+
+# Autostart OpenSnitch UI
+ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
 
 ################################################
 ##### Desktop Environment

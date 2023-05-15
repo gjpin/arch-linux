@@ -123,6 +123,8 @@ EOF
 
 tee /home/${NEW_USER}/.config/environment.d/ssh_askpass.conf << EOF
 SSH_ASKPASS='/usr/bin/ksshaskpass'
+GIT_ASKPASS=ksshaskpass
+SSH_ASKPASS=ksshaskpass
 SSH_ASKPASS_REQUIRE=prefer
 EOF
 
