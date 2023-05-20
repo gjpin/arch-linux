@@ -535,6 +535,9 @@ flatpak install -y flathub md.obsidian.Obsidian
 # Chromium
 flatpak install -y flathub org.chromium.Chromium
 
+# OpenLens
+flatpak install -y flathub dev.k8slens.OpenLens
+
 ################################################
 ##### Syncthing
 ################################################
@@ -549,17 +552,61 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### containerd / nerdctl
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://github.com/containerd/containerd
+# https://github.com/containerd/nerdctl
 
-# Install Docker and related applications
-pacman -S --noconfirm docker docker-compose
+# Install nerdctl and containerd
+pacman -S --noconfirm containerd cni-plugins nerdctl
 
-# Enable Docker service
-systemctl enable docker.service
+tee -a /home/${NEW_USER}/.zshrc.local << EOF
+
+# nerdctl
+alias docker=nerdctl
+EOF
+
+################################################
+##### Virtualization
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Libvirt
+# https://wiki.archlinux.org/title/QEMU
+
+# Install QEMU and dependencies
+pacman -S --noconfirm libvirt qemu-desktop dnsmasq
+
+# Add user to libvirt group
+gpasswd -a ${NEW_USER} libvirt
+
+# Enable libvirtd service
+systemctl enable libvirtd.service
+
+################################################
+##### Kubernetes
+################################################
+
+# References:
+# https://minikube.sigs.k8s.io/docs/drivers/kvm2/
+# https://wiki.archlinux.org/title/Minikube
+
+# Install and configure minikube
+pacman -S --noconfirm minikube
+
+sudo -u ${NEW_USER} minikube config set driver kvm2
+sudo -u ${NEW_USER} minikube config set container-runtime containerd
+
+tee -a /home/${NEW_USER}/.zshenv << 'EOF'
+
+# minikube
+MINIKUBE_IN_STYLE=0
+EOF
+
+# Install k8s applications
+pacman -S --noconfirm kubectl helm k9s
 
 ################################################
 ##### Paru
