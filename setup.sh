@@ -220,7 +220,7 @@ chown 700 /home/${NEW_USER}/.ssh
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Add $HOME/.local/bin/ to the PATH
-PATH="${HOME}/.local/bin/:${PATH}"
+export PATH="${HOME}/.local/bin/:${PATH}"
 EOF
 
 # Updater helper
@@ -562,11 +562,8 @@ sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 # Install nerdctl and containerd
 pacman -S --noconfirm containerd cni-plugins nerdctl
 
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
-
-# nerdctl
-alias docker=nerdctl
-EOF
+# Enable containerd service
+systemctl enable containerd.service
 
 ################################################
 ##### Virtualization
@@ -602,7 +599,7 @@ sudo -u ${NEW_USER} minikube config set container-runtime containerd
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # minikube
-MINIKUBE_IN_STYLE=0
+export MINIKUBE_IN_STYLE=0
 EOF
 
 # Install k8s applications
@@ -633,8 +630,8 @@ pacman -S --noconfirm go go-tools gopls
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Go
-GOPATH="${HOME}/.go"
-PATH="${GOPATH}/bin:${PATH}"
+export GOPATH="${HOME}/.go"
+export PATH="${GOPATH}/bin:${PATH}"
 EOF
 
 # Node.js
