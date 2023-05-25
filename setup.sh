@@ -531,6 +531,7 @@ flatpak install -y flathub org.keepassxc.KeePassXC
 
 # Obsidian
 flatpak install -y flathub md.obsidian.Obsidian
+flatpak override --filesystem=xdg-documents md.obsidian.Obsidian
 
 # Chromium
 flatpak install -y flathub org.chromium.Chromium
@@ -552,18 +553,20 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### containerd / nerdctl
+##### Docker
 ################################################
 
 # References:
-# https://github.com/containerd/containerd
-# https://github.com/containerd/nerdctl
+# https://wiki.archlinux.org/title/docker
 
-# Install nerdctl and containerd
-pacman -S --noconfirm containerd cni-plugins nerdctl
+# Install Docker and related applications
+pacman -S --noconfirm docker docker-compose
 
-# Enable containerd service
-systemctl enable containerd.service
+# Add user to docker group
+gpasswd -a ${NEW_USER} docker
+
+# Enable Docker service
+systemctl enable docker.service
 
 ################################################
 ##### Virtualization
@@ -604,6 +607,13 @@ EOF
 
 # Install k8s applications
 pacman -S --noconfirm kubectl helm k9s
+
+################################################
+##### Cloud
+################################################
+
+# Install HashiCorp tools
+pacman -S --noconfirm terraform packer
 
 ################################################
 ##### Paru
@@ -741,6 +751,16 @@ flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
 
 # Install VSCode
 sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
+
+# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
+pacman -S --noconfirm xorg-server-xvfb
+
+# Install VSCode extensions
+sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
+sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
+sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
+sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
@@ -886,3 +906,6 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 
 # Revert sudoers change
 sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
+
+# Remove Virtual framebuffer X server
+pacman -Rs --noconfirm xorg-server-xvfb
