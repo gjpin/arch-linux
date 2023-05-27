@@ -90,7 +90,8 @@ pacman -S --noconfirm \
     e2fsprogs \
     util-linux \
     wireguard-tools \
-    rsync
+    rsync \
+    jq
 
 ################################################
 ##### Swap
