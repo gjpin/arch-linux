@@ -123,7 +123,7 @@ tee -a /etc/fstab << EOF
 EOF
 
 # Set swappiness
-echo 'vm.swappiness=30' > /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness=10' > /etc/sysctl.d/99-swappiness.conf
 
 # Set vfs cache pressure
 echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
