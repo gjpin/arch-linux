@@ -90,11 +90,11 @@ flatpak mask org.godotengine.Godot
 # MangoHud
 mangohud %command%
 
-# gamescope native resolution
-gamescope -f -e -- %command%
+# gamescope in 1440p
+gamescope -W 2560 -H 1440 -f -e -- %command%
 
-# gamescope native resolution + MangoHud
-gamescope -f -e -- mangohud %command%
+# gamescope in 1440p + MangoHud
+gamescope -W 2560 -H 1440 -f -e -- mangohud %command%
 
 # gamescope upscale from 1080p to 1440p with FSR + mangohud
 gamescope -h 1080 -H 1440 -U -f -e -- mangohud %command%
