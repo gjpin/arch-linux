@@ -91,7 +91,11 @@ pacman -S --noconfirm \
     util-linux \
     wireguard-tools \
     rsync \
-    jq
+    jq \
+    fuse-common \
+    fuse2 \
+    fuse3 \
+    fuse2fs
 
 ################################################
 ##### Swap
