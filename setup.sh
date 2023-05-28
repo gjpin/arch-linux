@@ -265,6 +265,10 @@ pacman -S --noconfirm firewalld
 systemctl enable firewalld.service
 firewall-offline-cmd --set-default-zone=block
 
+# Disable firewall-applet
+sed -i '/^Exec/d' /etc/xdg/autostart/firewall-applet.desktop
+chattr +i /etc/xdg/autostart/firewall-applet.desktop
+
 # Install and enable NetworkManager
 pacman -S --noconfirm networkmanager
 systemctl enable NetworkManager.service
