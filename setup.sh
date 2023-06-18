@@ -91,7 +91,10 @@ pacman -S --noconfirm \
     util-linux \
     wireguard-tools \
     rsync \
-    jq \
+    jq
+
+# Add AppImage support
+pacman -S --noconfirm \
     fuse-common \
     fuse2 \
     fuse3 \
@@ -689,19 +692,20 @@ pacman -S --noconfirm \
 # https://wiki.archlinux.org/title/wayland#XWayland
 
 # Run Electron applications natively under Wayland
-tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
---enable-features=WaylandWindowDecorations
---ozone-platform-hint=auto
-EOF
+# tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
+# --enable-features=WaylandWindowDecorations
+# --ozone-platform-hint=auto
+# EOF
 
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron17-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron18-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron22-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron23-flags.conf
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron24-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron17-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron18-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron22-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron23-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron24-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron25-flags.conf
 
 ################################################
 ##### thermald
@@ -824,14 +828,14 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 EOF
 
 # Run VSCode under Wayland
-ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
+# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
 ##### OpenSnitch
 ################################################
 
 # Install OpenSnitch
-pacman -S --noconfirm opensnitch
+# pacman -S --noconfirm opensnitch
 
 # Enable OpenSnitch
 # systemctl enable opensnitchd.service
@@ -840,17 +844,17 @@ pacman -S --noconfirm opensnitch
 # ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
 
 # Import configs
-mkdir -p /etc/opensnitchd
-curl -O --output-dir /etc/opensnitchd https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/default-config.json
+# mkdir -p /etc/opensnitchd
+# curl -O --output-dir /etc/opensnitchd https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/default-config.json
 
 # Import rules
-mkdir -p /etc/opensnitchd/rules
+# mkdir -p /etc/opensnitchd/rules
 
-RULES=('bitwarden' 'chromium' 'curl' 'discord' 'dockerd' 'firefox' 'flatpak' 'fwupdmgr' 'git-remote-http' 'insomnia' 'networkmanager' 'obsidian' 'pacman' 'paru' 'plasmashell' 'ssh' 'syncthing' 'systemd-timesyncd' 'visual-studio-code' 'wireguard')
-for RULE in "${RULES[@]}"
-do
-    curl -O --output-dir /etc/opensnitchd/rules https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/rules/${RULE}.json
-done
+# RULES=('bitwarden' 'chromium' 'curl' 'discord' 'dockerd' 'firefox' 'flatpak' 'fwupdmgr' 'git-remote-http' 'insomnia' 'networkmanager' 'obsidian' 'pacman' 'paru' 'plasmashell' 'ssh' 'syncthing' 'systemd-timesyncd' 'visual-studio-code' 'wireguard')
+# for RULE in "${RULES[@]}"
+# do
+#     curl -O --output-dir /etc/opensnitchd/rules https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/rules/${RULE}.json
+# done
 
 ################################################
 ##### Desktop Environment

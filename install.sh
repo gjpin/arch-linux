@@ -84,7 +84,11 @@ mount --mkdir /dev/nvme0n1p1 /mnt/boot
 ################################################
 
 # Import mirrorlist
-cp ./extra/mirrorlist /etc/pacman.d/mirrorlist
+tee /etc/pacman.d/mirrorlist << 'EOF'
+Server = https://europe.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+EOF
 
 # Synchronize package databases
 pacman -Syy
@@ -97,7 +101,6 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 # Configure system
 mkdir -p /mnt/install-arch
-cp ./extra/firefox.js /mnt/install-arch/firefox.js
 cp ./plasma.sh /mnt/install-arch/plasma.sh
 cp ./gnome.sh /mnt/install-arch/gnome.sh
 cp ./gaming.sh /mnt/install-arch/gaming.sh

@@ -1,6 +1,6 @@
 # get KDE packages
 # https://download.kde.org/stable/plasma/
-# packages=$(curl -s https://download.kde.org/stable/plasma/5.27.1/ | grep -o -P '(?<=<a href=")(.*)(?=-5.27.1.tar.xz.sig"><img)')
+# packages=$(curl -s https://download.kde.org/stable/plasma/5.27.5/ | grep -o -P '(?<=<a href=")(.*)(?=-5.27.5.tar.xz.sig"><img)')
 
 # packages to remove from Plasma Desktop:
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
