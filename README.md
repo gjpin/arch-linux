@@ -29,7 +29,10 @@ For GRUB with BTRFS snapshots see branch 'grub'
 8. Reboot and re-enable secure boot
 9. Boot into new installation
 10. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
-11. Configure Firefox:
+11. Copy wireguard config to /etc/wireguard/wg0.conf
+12. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
+13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
+14. Configure Firefox:
 ```
 # Set Firefox profile path
 FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
