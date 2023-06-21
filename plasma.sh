@@ -85,7 +85,8 @@ pacman -S --noconfirm \
 pacman -S --noconfirm \
     plasma-wayland-session \
     sshfs \
-    kfind
+    kfind \
+    quota-tools
     
 # Install VLC
 pacman -S --noconfirm vlc
