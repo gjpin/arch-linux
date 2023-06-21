@@ -781,7 +781,7 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 {
     "window.menuBarVisibility": "toggle",
     "workbench.startupEditor": "none",
-    "editor.fontFamily": "'Noto Sans Mono'",
+    "editor.fontFamily": "'Hack','Noto Sans Mono'",
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.iconTheme": null,
     "workbench.tree.indent": 12,
