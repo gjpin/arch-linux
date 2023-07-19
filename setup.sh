@@ -183,6 +183,24 @@ blacklist iTCO_wdt
 blacklist iTCO_vendor_support
 EOF
 
+# Disable broadcast messages
+tee /etc/systemd/system/disable-broadcast-messages.service << 'EOF'
+[Unit]
+Description=Disable broadcast messages
+After=multi-user.target
+StartLimitBurst=0
+
+[Service]
+Type=oneshot
+Restart=on-failure
+ExecStart=/usr/bin/busctl set-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager EnableWallMessages b false
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable disable-broadcast-messages.service
+
 ################################################
 ##### Users
 ################################################
