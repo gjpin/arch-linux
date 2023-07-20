@@ -30,6 +30,7 @@ pacman -S --noconfirm \
     gnome-font-viewer \
     gnome-keyring \
     gnome-logs \
+    gnome-photos \
     gnome-session \
     gnome-settings-daemon \
     gnome-shell \
@@ -42,14 +43,14 @@ pacman -S --noconfirm \
     gvfs-nfs \
     nautilus \
     sushi \
+    xdg-desktop-portal-gnome \
     xdg-user-dirs-gtk
 
 # Additional Gnome/GTK packages
 pacman -S --noconfirm \
     gitg \
     gnome-terminal \
-    xdg-desktop-portal-gtk \
-    xdg-desktop-portal-gnome
+    xdg-desktop-portal-gtk
 
 # Install and enable GDM
 pacman -S --noconfirm gdm
@@ -152,12 +153,12 @@ XCURSOR_SIZE=24
 EOF
 
 # Install Flatpak runtimes
-flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/6.4
+flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/6.5
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-22.08
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-21.08
 flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15
 
-flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/6.4
+flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/6.5
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-22.08
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-21.08
 flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15
