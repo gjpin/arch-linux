@@ -27,7 +27,7 @@ flatpak override --filesystem=xdg-config/MangoHud:ro
 
 # Steam
 flatpak install -y flathub com.valvesoftware.Steam
-flatpak install -y flathub com.valvesoftware.Steam.Utility.gamescope
+flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope
 flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 
 # Steam controllers udev rules

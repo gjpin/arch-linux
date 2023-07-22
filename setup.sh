@@ -201,6 +201,10 @@ EOF
 
 systemctl enable disable-broadcast-messages.service
 
+# Increase vm.max_map_count
+# Same as Fedora and SteamOS: https://fedoraproject.org/wiki/Changes/IncreaseVmMaxMapCount
+echo 'vm.max_map_count=1048576' > /etc/sysctl.d/99-max-map-count.conf
+
 ################################################
 ##### Users
 ################################################
