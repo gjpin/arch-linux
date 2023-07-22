@@ -679,7 +679,7 @@ export PATH="${GOPATH}/bin:${PATH}"
 EOF
 
 # Node.js
-pacman -S --noconfirm nodejs
+pacman -S --noconfirm nodejs npm
 
 # Neovim
 pacman -S --noconfirm neovim
@@ -796,6 +796,8 @@ sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
 sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
+sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
 
 # Import VSCode settings
 mkdir -p "/home/${NEW_USER}/.config/Code/User"
@@ -839,13 +841,18 @@ tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
 	"rpcServer.showStartupMessage": false,
 	"shellcheck.disableVersionCheck": true,
 	"sonarlint.disableTelemetry": true,
-	"telemetry.enableCrashReporter": false,
-	"telemetry.enableTelemetry": false,
 	"telemetry.telemetryLevel": "off",
 	"terraform.telemetry.enabled": false,
 	"update.showReleaseNotes": false,
 	"vsicons.dontShowNewVersionMessage": true,
-	"workbench.welcomePage.walkthroughs.openOnInstall": false
+	"workbench.welcomePage.walkthroughs.openOnInstall": false,
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.formatOnSave": true
 }
 EOF
 
