@@ -61,6 +61,15 @@ sed -i "s|^#VerbosePkgLists|VerbosePkgLists|g" /etc/pacman.conf
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = 5|g" /etc/pacman.conf
 sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 
+# Enable multilib repository
+tee -a /etc/pacman.conf << EOF
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+EOF
+
+# Upgrade system
+pacman -Syu
+
 ################################################
 ##### ZSH and common applications
 ################################################
@@ -413,7 +422,7 @@ sbctl sign -s /boot/vmlinuz-linux-lts
 # https://wiki.archlinux.org/title/Vulkan
 
 # Install GPU drivers related packages
-pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
+pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Override VA-API driver via environment variable
 tee -a /etc/environment << EOF
@@ -523,10 +532,6 @@ flatpak override --filesystem=xdg-config/gtk-4.0:ro
 # Allow access to Downloads directory
 flatpak override --filesystem=xdg-download
 
-################################################
-##### Flatpak runtimes and GTK themes
-################################################
-
 # Install runtimes
 flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/22.08
@@ -537,41 +542,8 @@ flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
 
 # Install GTK themes
 flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-
-################################################
-##### Flatpak applications
-################################################
-
-# Install Spotify
-flatpak install -y flathub com.spotify.Client
-
-# Install Discord
-flatpak install -y flathub com.discordapp.Discord
-
-# Insomnia
-flatpak install -y flathub rest.insomnia.Insomnia
-
-# LibreOffice
-flatpak install -y flathub org.libreoffice.LibreOffice
-
-# Blender
-flatpak install -y flathub org.blender.Blender
-
-# Bitwarden
-flatpak install -y flathub com.bitwarden.desktop
-
-# KeepassXC
-flatpak install -y flathub org.keepassxc.KeePassXC
-
-# Obsidian
-flatpak install -y flathub md.obsidian.Obsidian
-flatpak override --filesystem=xdg-documents md.obsidian.Obsidian
-
-# Chromium
-flatpak install -y flathub org.chromium.Chromium
-
-# OpenLens
-flatpak install -y flathub dev.k8slens.OpenLens
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 ################################################
 ##### Syncthing
@@ -587,20 +559,48 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker and related applications
-pacman -S --noconfirm docker docker-compose
+# Install Podman and dependencies
+pacman -S --noconfirm podman slirp4netns netavark aardvark-dns
 
-# Add user to docker group
-gpasswd -a ${NEW_USER} docker
+# Install Podman Compose
+pacman -S --noconfirm podman-compose podman-dnsname
 
-# Enable Docker service
-systemctl enable docker.service
+# Instlal Buildah and dependencies
+pacman -S --noconfirm buildah fuse-overlayfs
+
+# Enable kernel.unprivileged_userns_clone
+echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-unprivileged-userns-clone.conf
+
+# Set subuid and subgid
+usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee -a /home/${NEW_USER}/.zshrc.local << EOF
+
+# Podman
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf.d/00-unqualified-search-registries.conf << EOF
+unqualified-search-registries = ["docker.io"]
+EOF
+
+tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
+[[registry]]
+location = "docker.io"
+EOF
 
 ################################################
 ##### Virtualization
@@ -665,6 +665,24 @@ cd ..
 rm -rf paru-bin
 
 ################################################
+##### User applications
+################################################
+
+# Install user applications
+pacman -S --noconfirm \
+    chromium \
+    libreoffice-fresh \
+    blender \
+    bitwarden \
+    keepassxc \
+    obsidian
+
+sudo -u ${NEW_USER} paru -S --noconfirm \
+    spotify \
+    insomnia-bin \
+    podman-desktop-bin
+
+################################################
 ##### Development (languages, LSP, neovim)
 ################################################
 
@@ -719,16 +737,6 @@ pacman -S --noconfirm \
 # --ozone-platform-hint=auto
 # EOF
 
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron17-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron18-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron19-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron20-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron21-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron22-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron23-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron24-flags.conf
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/electron25-flags.conf
-
 ################################################
 ##### thermald
 ################################################
@@ -770,15 +778,19 @@ fi
 # https://github.com/pyllyukko/user.js/blob/master/user.js
 
 # Install Firefox
-flatpak install -y flathub org.mozilla.firefox
+pacman -S --noconfirm firefox
 
 # Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
+sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
+sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
+sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
 
 # Run Firefox natively under Wayland
-flatpak override --socket=wayland --env=MOZ_ENABLE_WAYLAND=1 org.mozilla.firefox
+tee -a /home/${NEW_USER}/.zshenv << EOF
+
+# Firefox
+export MOZ_ENABLE_WAYLAND=1
+EOF
 
 ################################################
 ##### VSCode

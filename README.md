@@ -1,21 +1,25 @@
 # Arch Linux install scripts
-For GRUB with BTRFS snapshots see branch 'grub' 
+
+For GRUB with BTRFS snapshots see branch 'grub'
 
 ## Requirements
+
 - UEFI
 - NVMe SSD
 - Single GPU (Intel or Radeon)
 - TPM2
 
 ## Partitions layout
-| Name                                                 | Type  | FS Type | Mountpoint |      Size     |
-| ---------------------------------------------------- | :---: | :-----: | :--------: | :-----------: |
-| nvme0n1                                              | disk  |         |            |               |
-| ├─nvme0n1p1                                          | part  |  FAT32  |    /boot   |    1GiB     |
-| ├─nvme0n1p2                                          | part  |  LUKS2  |            |               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system              | crypt |  EXT4   |     /      |  Rest of disk |
+
+| Name                                    | Type  | FS Type | Mountpoint |     Size     |
+| --------------------------------------- | :---: | :-----: | :--------: | :----------: |
+| nvme0n1                                 | disk  |         |            |              |
+| ├─nvme0n1p1                             | part  |  FAT32  |   /boot    |     1GiB     |
+| ├─nvme0n1p2                             | part  |  LUKS2  |            |              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──system | crypt |  EXT4   |     /      | Rest of disk |
 
 ## Installation guide
+
 1. Disable secure boot and delete existing keys (go into setup mode)
 2. Boot into Arch Linux ISO
 3. Connect to the internet. If using wifi, you can use `iwctl` to connect to a network:
@@ -33,9 +37,10 @@ For GRUB with BTRFS snapshots see branch 'grub'
 12. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 14. Configure Firefox:
+
 ```
 # Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
+FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.mozilla/firefox/*.default-release)
 
 # Import Firefox configs
 wget https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/firefox.js -O ${FIREFOX_PROFILE_PATH}/user.js
@@ -51,7 +56,9 @@ curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_con
 ```
 
 ## Misc guides
+
 ### How to chroot
+
 ```bash
 cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
 mount -t ext4 LABEL=system /mnt
@@ -60,23 +67,27 @@ arch-chroot /mnt
 ```
 
 ### How to re-enroll keys in TPM2
+
 ```bash
 sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2
 sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2
 ```
 
 ### How to show systemd-boot menu
+
 ```bash
 Press 'space' during boot
 ```
 
 ### How to repair EFI
+
 ```bash
 1. chroot
 2. fsck -a /dev/nvme0n1p1
 ```
 
 ## How to revert to a previous Flatpak commit
+
 ```bash
 # List available commits
 flatpak remote-info --log flathub org.godotengine.Godot
@@ -89,6 +100,7 @@ flatpak mask org.godotengine.Godot
 ```
 
 ### How to use Gamescope + MangoHud in Steam
+
 ```bash
 # MangoHud
 mangohud %command%
@@ -104,6 +116,7 @@ gamescope -h 1080 -H 1440 -U -f -e -- mangohud %command%
 ```
 
 ### AppArmor
+
 ```bash
 # References:
 # https://wiki.archlinux.org/title/AppArmor
@@ -124,6 +137,7 @@ sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parse
 ```
 
 ## Additional AppArmor profiles
+
 ```bash
 # References:
 # https://github.com/roddhjav/apparmor.d
@@ -142,6 +156,7 @@ rm -rf apparmor.d-git
 ```
 
 ## keyring issues
+
 ```bash
 killall gpg-agent
 rm -rf /etc/pacman.d/gnupgp
@@ -150,6 +165,7 @@ pacman-key --populate
 ```
 
 ## Auto-mount extra drive
+
 ```bash
 # Delete old partition layout and re-read partition table
 sudo wipefs -af /dev/nvme1n1

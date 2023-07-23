@@ -167,10 +167,6 @@ flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15
 ##### Theming
 ################################################
 
-# Install adw-gtk3 flatpak
-sudo flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
-sudo flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
-
 # Download and install latest adw-gtk3 release
 URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
 curl -sSL ${URL} -o adw-gtk3.tar.xz

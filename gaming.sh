@@ -1,14 +1,14 @@
 #!/usr/bin/bash
 
 ################################################
-##### MangoHud
+##### Gaming
 ################################################
 
 # References:
-# https://github.com/flathub/com.valvesoftware.Steam.Utility.MangoHud
+# https://wiki.archlinux.org/title/MangoHud
 
 # Install MangoHud
-flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/22.08
+pacman -S --noconfirm mangohud
 
 # Configure MangoHud
 mkdir -p /home/${NEW_USER}/.config/MangoHud
@@ -18,27 +18,19 @@ engine_version
 vulkan_driver
 EOF
 
-# Allow Flatpaks to access MangoHud configs
-flatpak override --filesystem=xdg-config/MangoHud:ro
-
-################################################
-##### Platforms
-################################################
-
-# Steam
-flatpak install -y flathub com.valvesoftware.Steam
-flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope
-flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+# Install Steam
+pacman -S --noconfirm steam
+pacman -Rs --noconfirm lib32-amdvlk
 
 # Steam controllers udev rules
 curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
 udevadm control --reload-rules
 
-# Heroic Games Launcher
-flatpak install -y flathub com.heroicgameslauncher.hgl
+# Install Gamescope
+pacman -S --noconfirm gamescope
 
-# Lutris
-flatpak install -y flathub net.lutris.Lutris
+# Install Heroic Games Launcher
+sudo -u ${NEW_USER} paru -S --noconfirm heroic-games-launcher-bin
 
 # ProtonUp-Qt
 flatpak install -y flathub net.davidotek.pupgui2
