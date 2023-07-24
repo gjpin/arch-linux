@@ -68,7 +68,7 @@ Include = /etc/pacman.d/mirrorlist
 EOF
 
 # Upgrade system
-pacman -Syu
+pacman -Syy
 
 ################################################
 ##### ZSH and common applications

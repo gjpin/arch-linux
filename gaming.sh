@@ -8,14 +8,23 @@
 # https://wiki.archlinux.org/title/MangoHud
 
 # Install MangoHud
-pacman -S --noconfirm mangohud
+pacman -S --noconfirm mangohud lib32-mangohud
 
 # Configure MangoHud
 mkdir -p /home/${NEW_USER}/.config/MangoHud
 
 tee /home/${NEW_USER}/.config/MangoHud/MangoHud.conf << EOF
-engine_version
-vulkan_driver
+control=mangohud
+legacy_layout=0
+horizontal
+gpu_stats
+cpu_stats
+ram
+fps
+frametime=0
+hud_no_margin
+table_columns=14
+frame_timing=1
 EOF
 
 # Install Steam
