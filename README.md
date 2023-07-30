@@ -205,3 +205,16 @@ sudo chown -R $USER:$USER /data
 # Auto unlock
 sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
 ```
+
+### Wake-on-LAN quirks
+
+```bash
+# References:
+# https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
+
+# If WoL has been enabled and the computer does not shutdown
+
+# Add kernel boot parameters to enable quirks
+sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch.conf
+sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch-lts.conf
+```
