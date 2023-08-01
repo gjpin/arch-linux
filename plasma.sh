@@ -148,6 +148,9 @@ curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.gi
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/Spotify.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/kde/colors/VSCodeDefaultDark.colors
 
+# Install Breeze GTK theme
+flatpak install -y flathub org.gtk.Gtk3theme.Breeze
+
 ################################################
 ##### KDE Plasma configurations
 ################################################

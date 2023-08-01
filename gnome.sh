@@ -95,7 +95,7 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 pacman -S --noconfirm libappindicator-gtk3
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v49.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v53.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 rm -f shell-extension.zip
@@ -103,7 +103,7 @@ rm -f shell-extension.zip
 # GSConnect
 # https://extensions.gnome.org/extension/1319/gsconnect/
 pacman -S --noconfirm openssl
-curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v54.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 rm -f shell-extension.zip
@@ -111,102 +111,65 @@ rm -f shell-extension.zip
 # Dark Variant
 # https://extensions.gnome.org/extension/4488/dark-variant/
 pacman -S --noconfirm xorg-xprop
-curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v8.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v9.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
 rm -f shell-extension.zip
 
 # Rounded Window Corners
 # https://extensions.gnome.org/extension/5237/rounded-window-corners/
-curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v10.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v11.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v4.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v5.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
 
-################################################
-##### Better Qt / GTK integration
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications
-# https://github.com/GabePoel/KvLibadwaita
-# https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
-
-# Improve integration of QT applications
-pacman -S --noconfirm qgnomeplatform-qt5 qgnomeplatform-qt6 adwaita-qt5 adwaita-qt6
-
-tee -a /etc/environment << EOF
-
-# Qt
-QT_QPA_PLATFORM=wayland
-QT_QPA_PLATFORMTHEME=gnome
-QT_STYLE_OVERRIDE=adwaita
-XCURSOR_THEME=Adwaita
-XCURSOR_SIZE=24
-EOF
-
-# Install Flatpak runtimes
-flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/6.5
-flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-22.08
-flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15-21.08
-flatpak install -y flathub org.kde.WaylandDecoration.QGnomePlatform-decoration/x86_64/5.15
-
-flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/6.5
-flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-22.08
-flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15-21.08
-flatpak install -y flathub org.kde.PlatformTheme.QGnomePlatform/x86_64/5.15
+# Grand Theft Focus
+# # https://extensions.gnome.org/extension/5410/grand-theft-focus
+curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v3.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
+rm -f shell-extension.zip
 
 ################################################
 ##### Theming
 ################################################
 
-# Download and install latest adw-gtk3 release
-URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
-curl -sSL ${URL} -o adw-gtk3.tar.xz
-tar -xf adw-gtk3.tar.xz -C /home/${NEW_USER}/.local/share/themes/
-rm -f adw-gtk3.tar.xz
-
-# GTK theme updater
-tee /home/${NEW_USER}/.local/bin/update-gtk-theme << 'EOF'
-#!/usr/bin/bash
-
-URL=$(curl -s https://api.github.com/repos/lassekongo83/adw-gtk3/releases/latest | awk -F\" '/browser_download_url.*.tar.xz/{print $(NF-1)}')
-curl -sSL ${URL} -O
-rm -rf ${HOME}/.local/share/themes/adw-gtk3*
-tar -xf adw-*.tar.xz -C ${HOME}/.local/share/themes/
-rm -f adw-*.tar.xz
-EOF
-
-chmod +x /home/${NEW_USER}/.local/bin/update-gtk-theme
-
-sed -i "/flatpak update -y/a \n    # Update GTK theme\n    update-gtk-theme" /home/${NEW_USER}/.zshrc.local
-
-# Install VSCode's Adwaita theme
-sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-sed -i '/{/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
-
-################################################
-##### Firefox theming
-################################################
-
 # References:
+# https://github.com/lassekongo83/adw-gtk3
+# https://github.com/piousdeer/vscode-adwaita
 # https://github.com/rafaelmardojai/firefox-gnome-theme
+# https://github.com/birneee/obsidian-adwaita-theme
+# https://github.com/GabePoel/KvLibadwaita
+# https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
 
-# Set Firefox profile path
+# GTK3: adw-gtk3
+sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
+flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
+
+# VSCode: Adwaita theme
+sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
+sed -i '/    "window.menuBarVisibility": "toggle",/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
+
+# Firefox: Gnome theme
+sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
+
 FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
-# Install Firefox Gnome theme
 mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+
+ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+
 echo "@import \"firefox-gnome-theme/userChrome.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
 echo "@import \"firefox-gnome-theme/userContent.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
+
 tee -a ${FIREFOX_PROFILE_PATH}/user.js << EOF
 
 // Enable customChrome.css
@@ -222,19 +185,23 @@ user_pref("svg.context-properties.content.enabled", true);
 user_pref("gnomeTheme.activeTabContrast", true);
 EOF
 
-# Firefox theme updater
-tee /home/${NEW_USER}/.local/bin/update-firefox-theme << 'EOF'
-#!/usr/bin/bash
+# Qt
+pacman -S --noconfirm kvantum
 
-# Update Firefox theme
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
-rm -rf ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
-git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+sudo -u ${NEW_USER} paru -S --noconfirm kvantum-theme-libadwaita-git
+
+mkdir -p /home/${NEW_USER}/Kvantum
+
+echo 'theme=KvLibadwaita' >> /home/${NEW_USER}/Kvantum/kvantum.kvconfig
+
+tee -a /etc/environment << EOF
+
+# Qt
+QT_QPA_PLATFORM=wayland
+QT_STYLE_OVERRIDE=kvantum
+XCURSOR_THEME=Adwaita
+XCURSOR_SIZE=24
 EOF
-
-chmod +x /home/${NEW_USER}/.local/bin/update-firefox-theme
-
-sed -i "/flatpak update -y/a\    # Update Firefox theme\n    update-firefox-theme" /home/${NEW_USER}/.zshrc.local
 
 ################################################
 ##### Gnome configurations

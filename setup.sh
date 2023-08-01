@@ -528,6 +528,7 @@ flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg
 # Allow read-only access to GTK configs
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
+flatpak override --filesystem=/home/${NEW_USER}/.local/share/themes
 
 # Allow access to Downloads directory
 flatpak override --filesystem=xdg-download
@@ -539,11 +540,6 @@ flatpak install -y flathub org.freedesktop.Platform.GL32.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GL.default/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
 flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
-
-# Install GTK themes
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 ################################################
 ##### Syncthing
@@ -795,6 +791,9 @@ tee -a /home/${NEW_USER}/.zshenv << EOF
 export MOZ_ENABLE_WAYLAND=1
 EOF
 
+# Temporarily open firefox to create profile folder
+sudo -u ${NEW_USER} timeout 5 firefox --headless
+
 ################################################
 ##### VSCode
 ################################################
@@ -916,6 +915,7 @@ pacman -S --noconfirm \
     ttf-sourcecodepro-nerd \
     ttf-ubuntu-nerd \
     ttf-ubuntu-mono-nerd \
+    ttf-hack \
     inter-font
 
 # Install and enable power profiles daemon
