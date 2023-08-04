@@ -605,15 +605,23 @@ EOF
 # References:
 # https://wiki.archlinux.org/title/Libvirt
 # https://wiki.archlinux.org/title/QEMU
+# https://wiki.archlinux.org/title/Virt-Manager
 
 # Install QEMU and dependencies
-pacman -S --noconfirm libvirt qemu-desktop dnsmasq
+pacman -S --noconfirm libvirt qemu-desktop dnsmasq virt-manager
 
 # Add user to libvirt group
 gpasswd -a ${NEW_USER} libvirt
 
 # Enable libvirtd service
 systemctl enable libvirtd.service
+
+# Use as a normal user
+sed -i "s|^#unix_sock_group = \"libvirt\"|unix_sock_group = \"libvirt\"|g" /etc/libvirt/libvirtd.conf
+sed -i "s|^#unix_sock_rw_perms = \"0770\"|unix_sock_rw_perms = \"0770\"|g" /etc/libvirt/libvirtd.conf
+
+sed -i "s|^#user = \"libvirt-qemu\"|user = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
+sed -i "s|^#group = \"libvirt-qemu\"|group = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
 
 ################################################
 ##### Kubernetes
