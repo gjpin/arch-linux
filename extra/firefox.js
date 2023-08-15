@@ -260,6 +260,10 @@ user_pref("experiments.enabled", false);
 user_pref("experiments.manifest.uri", "");
 user_pref("network.allow-experiments", false);
 
+// Always use Downloads directory
+user_pref("browser.download.useDownloadDir", true);
+user_pref("browser.download.always_ask_before_handling_new_types", false);
+
 // Enable FFMPEG VA-API
 user_pref("media.ffmpeg.vaapi.enabled", true);
 
