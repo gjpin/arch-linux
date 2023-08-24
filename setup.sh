@@ -523,23 +523,21 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak update
 
 # Global override to deny all applications the permission to access certain directories
-flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
+# flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
+# flatpak override --filesystem=xdg-download
 
 # Allow read-only access to GTK configs
 flatpak override --filesystem=xdg-config/gtk-3.0:ro
 flatpak override --filesystem=xdg-config/gtk-4.0:ro
 flatpak override --filesystem=/home/${NEW_USER}/.local/share/themes
 
-# Allow access to Downloads directory
-flatpak override --filesystem=xdg-download
-
-# Install runtimes
+# Install Flatpak runtimes
 flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
 flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/22.08
-flatpak install -y flathub org.freedesktop.Platform.GL32.default/x86_64/22.08
-flatpak install -y flathub org.freedesktop.Platform.GL.default/x86_64/22.08
-flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
-flatpak install -y flathub org.gnome.Platform.Compat.i386/x86_64/43
+
+if lspci | grep VGA | grep "Intel" > /dev/null; then
+  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
+fi
 
 ################################################
 ##### Syncthing
@@ -647,13 +645,6 @@ EOF
 pacman -S --noconfirm kubectl helm k9s
 
 ################################################
-##### Cloud
-################################################
-
-# Install HashiCorp tools
-pacman -S --noconfirm terraform packer
-
-################################################
 ##### Paru
 ################################################
 
@@ -690,25 +681,36 @@ sudo -u ${NEW_USER} paru -S --noconfirm \
 ##### Development (languages, LSP, neovim)
 ################################################
 
-# Go
-pacman -S --noconfirm go go-tools gopls
+# Set git configurations
+git config --global init.defaultBranch main
 
+# Install Python and create alias for python venv
+pacman -S --noconfirm python
+mkdir -p /home/${NEW_USER}/.python
+python -m venv /home/${NEW_USER}/.python/play
+tee -a /home/${NEW_USER}/.zshrc.local << 'EOF'
+
+# Python
+alias pythonplay="source ${HOME}/.python/play/bin/activate"
+EOF
+
+# Install Go
+pacman -S --noconfirm go go-tools gopls
+mkdir -p /home/${NEW_USER}/.go
 tee -a /home/${NEW_USER}/.zshenv << 'EOF'
 
 # Go
 export GOPATH="${HOME}/.go"
-export PATH="${GOPATH}/bin:${PATH}"
 EOF
 
-# Node.js
+# Install Node.js and NPM
 pacman -S --noconfirm nodejs npm
 
-# Deno
+# Install Deno
 pacman -S --noconfirm deno
 
-# Neovim
+# Install Neovim and set as default editor
 pacman -S --noconfirm neovim
-
 tee -a /home/${NEW_USER}/.zshrc.local << EOF
 
 # Neovim
@@ -723,26 +725,12 @@ EDITOR=nvim
 VISUAL=nvim
 EOF
 
-# Language servers
+# Install language servers
 pacman -S --noconfirm \
     typescript-language-server \
     bash-language-server \
     python-lsp-server \
     yaml-language-server
-
-################################################
-##### Wayland configurations
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Wayland#Electron
-# https://wiki.archlinux.org/title/wayland#XWayland
-
-# Run Electron applications natively under Wayland
-# tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
-# --enable-features=WaylandWindowDecorations
-# --ozone-platform-hint=auto
-# EOF
 
 ################################################
 ##### thermald
@@ -802,6 +790,19 @@ EOF
 # Temporarily open firefox to create profile folder
 sudo -u ${NEW_USER} timeout 5 firefox --headless
 
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.mozilla/firefox/*.default-release)
+
+# Import extensions
+mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
+curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
+
+# Import Firefox configs
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
+
 ################################################
 ##### VSCode
 ################################################
@@ -814,8 +815,7 @@ pacman -S --noconfirm xorg-server-xvfb
 
 # Install VSCode extensions
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
-sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
 sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
@@ -823,71 +823,8 @@ sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
 sudo -u ${NEW_USER} xvfb-run code --install-extension denoland.vscode-deno
 
 # Import VSCode settings
-mkdir -p "/home/${NEW_USER}/.config/Code/User"
-tee "/home/${NEW_USER}/.config/Code/User/settings.json" << EOF
-{
-    "window.menuBarVisibility": "toggle",
-    "workbench.startupEditor": "none",
-    "editor.fontFamily": "'Hack','Noto Sans Mono'",
-    "workbench.settings.enableNaturalLanguageSearch": false,
-    "workbench.iconTheme": null,
-    "workbench.tree.indent": 12,
-    "window.titleBarStyle": "native",
-    "files.associations": {
-      "*.j2": "terraform",
-      "*.hcl": "terraform",
-      "*.bu": "yaml",
-      "*.ign": "json",
-      "*.service": "ini"
-    },
-    "git.enableSmartCommit": true,
-    "git.confirmSync": false,
-    "git.autofetch": true,
-    "git.useIntegratedAskPass": false,
-    "workbench.enableExperiments": false,
-	"extensions.ignoreRecommendations": true,
-	"redhat.telemetry.enabled": false,
-	"telemetry.telemetryLevel": "off",
-	"terraform.telemetry.enabled": false,
-	"workbench.welcomePage.walkthroughs.openOnInstall": false,
-	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"editor.formatOnSave": true
-}
-EOF
-
-# Run VSCode under Wayland
-# ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
-
-################################################
-##### OpenSnitch
-################################################
-
-# Install OpenSnitch
-# pacman -S --noconfirm opensnitch
-
-# Enable OpenSnitch
-# systemctl enable opensnitchd.service
-
-# Autostart OpenSnitch UI
-# ln -s /usr/share/applications/opensnitch_ui.desktop /home/${NEW_USER}/.config/autostart/opensnitch_ui.desktop
-
-# Import configs
-# mkdir -p /etc/opensnitchd
-# curl -O --output-dir /etc/opensnitchd https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/default-config.json
-
-# Import rules
-# mkdir -p /etc/opensnitchd/rules
-
-# RULES=('bitwarden' 'chromium' 'curl' 'discord' 'dockerd' 'firefox' 'flatpak' 'fwupdmgr' 'git-remote-http' 'insomnia' 'networkmanager' 'obsidian' 'pacman' 'paru' 'plasmashell' 'ssh' 'syncthing' 'systemd-timesyncd' 'visual-studio-code' 'wireguard')
-# for RULE in "${RULES[@]}"
-# do
-#     curl -O --output-dir /etc/opensnitchd/rules https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/opensnitch/rules/${RULE}.json
-# done
+mkdir -p /home/${NEW_USER}/.config/Code/User
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
 
 ################################################
 ##### Desktop Environment

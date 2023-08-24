@@ -1,0 +1,67 @@
+{
+    "env": {
+        "PATH": "$(PATH):$(HOME)\/.local\/bin"
+    },
+    "apps": [
+        {
+            "name": "Steam - 1280x720",
+            "image-path": "",
+            "cmd": "mangohud steam-runtime -gamepadui",
+            "prep-cmd": [
+                {
+                    "do": "killall -q -HUP steam || /bin/true",
+                    "undo": ""
+                },
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.1280x720@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "exclude-global-prep-cmd": "false"
+        },
+        {
+            "name": "Steam - 1920x1080",
+            "image-path": "",
+            "cmd": "mangohud steam-runtime -gamepadui",
+            "prep-cmd": [
+                {
+                    "do": "killall -q -HUP steam || /bin/true",
+                    "undo": ""
+                },
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.1920x1080@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "exclude-global-prep-cmd": "false"
+        },
+        {
+            "name": "Desktop - 1280x720",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.1280x720@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "image-path": ""
+        },
+        {
+            "name": "Desktop - 1920x1080",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.1920x1080@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "image-path": ""
+        }
+    ]
+}

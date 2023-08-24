@@ -1,0 +1,67 @@
+{
+    "env": {
+        "PATH": "$(PATH):$(HOME)\/.local\/bin"
+    },
+    "apps": [
+        {
+            "name": "Steam - 1280x720",
+            "image-path": "",
+            "cmd": "mangohud steam-runtime -gamepadui",
+            "prep-cmd": [
+                {
+                    "do": "killall -q -HUP steam || /bin/true",
+                    "undo": ""
+                },
+                {
+                    "do": "gnome-randr --output DP-1 --mode 1280x720 --rate 60",
+                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                }
+            ],
+            "exclude-global-prep-cmd": "false"
+        },
+        {
+            "name": "Steam - 1920x1080",
+            "image-path": "",
+            "cmd": "mangohud steam-runtime -gamepadui",
+            "prep-cmd": [
+                {
+                    "do": "killall -q -HUP steam || /bin/true",
+                    "undo": ""
+                },
+                {
+                    "do": "gnome-randr --output DP-1 --mode 1920x1080 --rate 60",
+                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                }
+            ],
+            "exclude-global-prep-cmd": "false"
+        },
+        {
+            "name": "Desktop - 1280x720",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "gnome-randr --output DP-1 --mode 1280x720 --rate 60",
+                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                }
+            ],
+            "image-path": ""
+        },
+        {
+            "name": "Desktop - 1920x1080",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "gnome-randr --output DP-1 --mode 1920x1080 --rate 60",
+                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                }
+            ],
+            "image-path": ""
+        }
+    ]
+}

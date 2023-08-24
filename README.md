@@ -36,24 +36,6 @@ For GRUB with BTRFS snapshots see branch 'grub'
 11. Copy wireguard config to /etc/wireguard/wg0.conf
 12. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
-14. Configure Firefox:
-
-```
-# Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.mozilla/firefox/*.default-release)
-
-# Import Firefox configs
-wget https://raw.githubusercontent.com/gjpin/arch-linux/main/extra/firefox.js -O ${FIREFOX_PROFILE_PATH}/user.js
-
-# Create extensisons folder
-mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
-
-# Import extensions
-curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-```
 
 ## Misc guides
 
@@ -115,59 +97,6 @@ gamescope -W 2560 -H 1440 -f -- mangohud %command%
 gamescope -h 1080 -H 1440 -U -f -- mangohud %command%
 ```
 
-### AppArmor
-
-```bash
-# References:
-# https://wiki.archlinux.org/title/AppArmor
-# https://wiki.archlinux.org/title/Audit_framework
-# https://github.com/roddhjav/apparmor.d
-
-# Install AppArmor
-pacman -S --noconfirm apparmor
-
-# Enable AppArmor service
-systemctl enable --now apparmor.service
-
-# Enable AppArmor as default security model
-sed -i "s|=system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch.conf
-sed -i "s|=system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch-lts.conf
-
-# Enable caching AppArmor profiles
-sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
-sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
-
-# Install and enable Audit Framework
-pacman -S --noconfirm audit
-
-systemctl enable auditd.service
-
-# Allow user to read audit logs and get desktop notification on DENIED actions
-groupadd -r audit
-
-gpasswd -a ${NEW_USER} audit
-
-sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
-
-pacman -S --noconfirm python-notify2 python-psutil
-
-mkdir -p /home/${NEW_USER}/.config/autostart
-
-tee /home/${NEW_USER}/.config/autostart/apparmor-notify.desktop << EOF
-[Desktop Entry]
-Type=Application
-Name=AppArmor Notify
-Comment=Receive on screen notifications of AppArmor denials
-TryExec=aa-notify
-Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
-StartupNotify=false
-NoDisplay=true
-EOF
-
-# Install additional AppArmor profiles
-sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
-```
-
 ## keyring issues
 
 ```bash
@@ -220,7 +149,6 @@ sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
 ```
 
 ### Wake-on-LAN quirks
-
 ```bash
 # References:
 # https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks

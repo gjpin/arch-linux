@@ -1,10 +1,8 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 # References:
 # https://wiki.archlinux.org/title/GNOME
 # https://aur.archlinux.org/cgit/aur.git/tree/INSTALL.md?h=firefox-gnome-theme-git
-# https://github.com/rafaelmardojai/firefox-gnome-theme/blob/master/configuration/user.js
-# https://github.com/lassekongo83/adw-gtk3
 # https://wiki.archlinux.org/title/GDM
 # https://help.gnome.org/admin/system-admin-guide/stable/dconf-custom-defaults.html.en
 # https://wiki.archlinux.org/title/mpv#Hardware_video_acceleration
@@ -81,9 +79,14 @@ pacman -S --noconfirm webp-pixbuf-loader
 # Install Gnome's default file associations
 sudo -u ${NEW_USER} paru -S --noconfirm shared-mime-info-gnome
 
-# Install Flatpaks
+################################################
+##### Flatpak
+################################################
+
+# Install applications
 flatpak install -y flathub com.belmoussaoui.Authenticator
 flatpak install -y flathub com.github.marhkb.Pods
+flatpak install -y flathub com.mattjakeman.ExtensionManager
 
 ################################################
 ##### Gnome Shell extensions
@@ -95,17 +98,9 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 pacman -S --noconfirm libappindicator-gtk3
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v53.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v56.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
-rm -f shell-extension.zip
-
-# GSConnect
-# https://extensions.gnome.org/extension/1319/gsconnect/
-pacman -S --noconfirm openssl
-curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 rm -f shell-extension.zip
 
 # Dark Variant
@@ -114,6 +109,21 @@ pacman -S --noconfirm xorg-xprop
 curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v9.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
+rm -f shell-extension.zip
+
+# Grand Theft Focus
+# # https://extensions.gnome.org/extension/5410/grand-theft-focus
+curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v5.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
+rm -f shell-extension.zip
+
+# GSConnect
+# https://extensions.gnome.org/extension/1319/gsconnect/
+pacman -S --noconfirm openssl
+curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 rm -f shell-extension.zip
 
 # Rounded Window Corners
@@ -125,83 +135,76 @@ rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v5.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v7.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
 
-# Grand Theft Focus
-# # https://extensions.gnome.org/extension/5410/grand-theft-focus
-curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v3.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
-rm -f shell-extension.zip
+################################################
+##### Firefox
+################################################
+
+# References:
+# https://github.com/rafaelmardojai/firefox-gnome-theme
+
+# Set Firefox profile path
+FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+
+# Install Firefox Gnome theme
+sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
+mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
+ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
+echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
+
+# Gnome specific configurations
+tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
+
+// Firefox Gnome theme
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("browser.uidensity", 0);
+user_pref("svg.context-properties.content.enabled", true);
+user_pref("browser.theme.dark-private-windows", false);
+user_pref("gnomeTheme.activeTabContrast", true);
+EOF
 
 ################################################
-##### Theming
+##### VSCode
+################################################
+
+# References:
+# https://github.com/piousdeer/vscode-adwaita
+
+# Install VSCode Gnome theme
+sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
+
+# Change VSCode config to use theme
+sed -i '2 i \ \ \ \ "workbench.preferredDarkColorTheme": "Adwaita Dark",' /home/${NEW_USER}/.config/Code/User/settings.json
+sed -i '2 i \ \ \ \ "workbench.preferredLightColorTheme": "Adwaita Light",' /home/${NEW_USER}/.config/Code/User/settings.json
+sed -i '2 i \ \ \ \ "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' /home/${NEW_USER}/.config/Code/User/settings.json
+
+################################################
+##### GTK theme
 ################################################
 
 # References:
 # https://github.com/lassekongo83/adw-gtk3
-# https://github.com/piousdeer/vscode-adwaita
-# https://github.com/rafaelmardojai/firefox-gnome-theme
-# https://github.com/birneee/obsidian-adwaita-theme
-# https://github.com/GabePoel/KvLibadwaita
-# https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
 
-# GTK3: adw-gtk3
-sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
+# Install adw-gtk3 flatpak
 flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
 flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
-# VSCode: Adwaita theme
-sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-sed -i '/    "window.menuBarVisibility": "toggle",/a "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' "/home/${NEW_USER}/.config/Code/User/settings.json"
+# Install adw-gtk3
+sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
 
-# Firefox: Gnome theme
-sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
 
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+################################################
+##### Utilities
+################################################
 
-mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-
-ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
-
-echo "@import \"firefox-gnome-theme/userChrome.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
-echo "@import \"firefox-gnome-theme/userContent.css\"" > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
-
-tee -a ${FIREFOX_PROFILE_PATH}/user.js << EOF
-
-// Enable customChrome.css
-user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
-
-// Set UI density to normal
-user_pref("browser.uidensity", 0);
-
-// Enable SVG context-propertes
-user_pref("svg.context-properties.content.enabled", true);
-
-// Add more contrast to the active tab
-user_pref("gnomeTheme.activeTabContrast", true);
-EOF
-
-# Qt
-pacman -S --noconfirm kvantum
-
-sudo -u ${NEW_USER} paru -S --noconfirm kvantum-theme-libadwaita-git
-
-mkdir -p /home/${NEW_USER}/Kvantum
-
-echo 'theme=KvLibadwaita' >> /home/${NEW_USER}/Kvantum/kvantum.kvconfig
-
-tee -a /etc/environment << EOF
-
-# Qt
-QT_QPA_PLATFORM=wayland
-QT_STYLE_OVERRIDE=kvantum
-XCURSOR_THEME=Adwaita
-XCURSOR_SIZE=24
-EOF
+# Install gnome-randr
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/apps/gnome-randr.py -o /usr/local/bin/gnome-randr
+chmod +x /usr/local/bin/gnome-randr
 
 ################################################
 ##### Gnome configurations
@@ -270,7 +273,7 @@ disable-user-extensions=false
 favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
-enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'gsconnect@andyholmes.github.io', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
+enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'grand-theft-focus@zalckos.github.com', 'gsconnect@andyholmes.github.io', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
 
 [org/gnome/shell/extensions/dark-variant]
 applications=['code.desktop', 'code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop', 'com.discordapp.Discord.desktop']
@@ -343,6 +346,13 @@ disable-extension-version-validation=true
 
 [org/gnome/desktop/interface]
 font-antialiasing='rgba'
+
+[org/gnome/desktop/search-provers]
+disable-external=true
+
+[org/freedesktop/Tracker3/Miner/Files]
+index-single-directories="@as []"
+index-recursive-directories="@as []"
 EOF
 
 # Laptop specific Gnome configurations

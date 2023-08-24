@@ -1,0 +1,32 @@
+{
+    "telemetry.telemetryLevel": "off",
+    "redhat.telemetry.enabled": false,
+    "terraform.telemetry.enabled": false,
+    "window.menuBarVisibility": "toggle",
+    "workbench.startupEditor": "none",
+    "editor.fontFamily": "'Hack', 'Noto Sans Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "workbench.iconTheme": null,
+    "workbench.tree.indent": 12,
+    "window.titleBarStyle": "native",
+    "editor.fontWeight": "500",
+    "files.associations": {
+        "*.j2": "terraform",
+        "*.hcl": "terraform",
+        "*.bu": "yaml",
+        "*.ign": "json",
+        "*.service": "ini"
+    },
+    "extensions.ignoreRecommendations": true,
+    "editor.formatOnSave": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}

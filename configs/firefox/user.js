@@ -262,19 +262,11 @@ user_pref("network.allow-experiments", false);
 user_pref("browser.download.useDownloadDir", true);
 user_pref("browser.download.always_ask_before_handling_new_types", false);
 
-// Enable FFMPEG VA-API
-user_pref("media.ffmpeg.vaapi.enabled", true);
-
 // Hardware video decoding
-user_pref("media.hardware-video-decoding.force-enabled", true);
+user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("gfx.webrender.all", true);
+user_pref("media.hardware-video-decoding.force-enabled", true);
 user_pref("media.av1.enabled", false);
-
-// KDE integration
-// https://wiki.archlinux.org/title/firefox#KDE_integration
-user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
-user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-// user_pref("media.hardwaremediakeys.enabled", false);
 
 /****************************************************************************
  * END: BETTERFOX                                                           *
