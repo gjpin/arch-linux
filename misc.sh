@@ -80,6 +80,33 @@ do
 done
 
 ################################################
+##### Gnome Shell Extensions
+################################################
+
+# AppIndicator and KStatusNotifierItem Support
+# https://extensions.gnome.org/extension/615/appindicator-support/
+pacman -S --noconfirm libappindicator-gtk3
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v56.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
+rm -f shell-extension.zip
+
+# GSConnect
+# https://extensions.gnome.org/extension/1319/gsconnect/
+pacman -S --noconfirm openssl
+curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
+rm -f shell-extension.zip
+
+# Legacy (GTK3) Theme Scheme Auto Switcher
+# https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v7.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+rm -f shell-extension.zip
+
+################################################
 ##### Wayland configurations
 ################################################
 

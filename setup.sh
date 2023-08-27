@@ -274,7 +274,7 @@ update-all() {
     sudo pacman -Syu
 
     # Update AUR packages
-    paru -Syu
+    paru -Sua
 
     # Update firmware
     sudo fwupdmgr refresh
@@ -615,11 +615,11 @@ gpasswd -a ${NEW_USER} libvirt
 systemctl enable libvirtd.service
 
 # Use as a normal user
-sed -i "s|^#unix_sock_group = \"libvirt\"|unix_sock_group = \"libvirt\"|g" /etc/libvirt/libvirtd.conf
-sed -i "s|^#unix_sock_rw_perms = \"0770\"|unix_sock_rw_perms = \"0770\"|g" /etc/libvirt/libvirtd.conf
+# sed -i "s|^#unix_sock_group = \"libvirt\"|unix_sock_group = \"libvirt\"|g" /etc/libvirt/libvirtd.conf
+# sed -i "s|^#unix_sock_rw_perms = \"0770\"|unix_sock_rw_perms = \"0770\"|g" /etc/libvirt/libvirtd.conf
 
-sed -i "s|^#user = \"libvirt-qemu\"|user = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
-sed -i "s|^#group = \"libvirt-qemu\"|group = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
+# sed -i "s|^#user = \"libvirt-qemu\"|user = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
+# sed -i "s|^#group = \"libvirt-qemu\"|group = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
 
 ################################################
 ##### Kubernetes
@@ -647,6 +647,9 @@ pacman -S --noconfirm kubectl helm k9s
 ################################################
 ##### Paru
 ################################################
+
+# References:
+# https://github.com/Morganamilo/paru
 
 # (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
 echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers

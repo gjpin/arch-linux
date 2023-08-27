@@ -4,7 +4,7 @@
     },
     "apps": [
         {
-            "name": "Steam - 1280x720",
+            "name": "Steam - 1280x800",
             "image-path": "",
             "cmd": "mangohud steam-runtime -gamepadui",
             "prep-cmd": [
@@ -13,7 +13,7 @@
                     "undo": ""
                 },
                 {
-                    "do": "kscreen-doctor output.DP-1.mode.1280x720@60",
+                    "do": "kscreen-doctor output.DP-1.mode.1280x800@60",
                     "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
                 }
             ],
@@ -36,14 +36,14 @@
             "exclude-global-prep-cmd": "false"
         },
         {
-            "name": "Desktop - 1280x720",
+            "name": "Desktop - 1280x800",
             "output": "",
             "cmd": "",
             "exclude-global-prep-cmd": "false",
             "elevated": "false",
             "prep-cmd": [
                 {
-                    "do": "kscreen-doctor output.DP-1.mode.1280x720@60",
+                    "do": "kscreen-doctor output.DP-1.mode.1280x800@60",
                     "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
                 }
             ],

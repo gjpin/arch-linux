@@ -95,14 +95,6 @@ flatpak install -y flathub com.mattjakeman.ExtensionManager
 # Create Gnome shell extensions folder
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
-# AppIndicator and KStatusNotifierItem Support
-# https://extensions.gnome.org/extension/615/appindicator-support/
-pacman -S --noconfirm libappindicator-gtk3
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v56.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
-rm -f shell-extension.zip
-
 # Dark Variant
 # https://extensions.gnome.org/extension/4488/dark-variant/
 pacman -S --noconfirm xorg-xprop
@@ -118,26 +110,11 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 rm -f shell-extension.zip
 
-# GSConnect
-# https://extensions.gnome.org/extension/1319/gsconnect/
-pacman -S --noconfirm openssl
-curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
-rm -f shell-extension.zip
-
 # Rounded Window Corners
 # https://extensions.gnome.org/extension/5237/rounded-window-corners/
 curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v11.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
-rm -f shell-extension.zip
-
-# Legacy (GTK3) Theme Scheme Auto Switcher
-# https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v7.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
 
 ################################################
@@ -273,10 +250,7 @@ disable-user-extensions=false
 favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
-enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com', 'dark-variant@hardpixel.eu', 'grand-theft-focus@zalckos.github.com', 'gsconnect@andyholmes.github.io', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
-
-[org/gnome/shell/extensions/dark-variant]
-applications=['code.desktop', 'code-oss.desktop', 'visual-studio-code.desktop', 'rest.insomnia.Insomnia.desktop', 'io.podman_desktop.PodmanDesktop.desktop', 'com.spotify.Client.desktop', 'org.gimp.GIMP.desktop', 'com.heroicgameslauncher.hgl.desktop', 'md.obsidian.Obsidian.desktop', 'obsidian.desktop', 'godot.desktop', 'org.godotengine.Godot.desktop', 'org.blender.Blender.desktop' ,'blender.desktop', 'com.discordapp.Discord.desktop']
+enabled-extensions=['grand-theft-focus@zalckos.github.com', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
