@@ -86,6 +86,7 @@ EOF
 sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
 
 # Enable sunshine service
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable sunshine
 
 # Import sunshine configurations

@@ -140,6 +140,7 @@ chmod +x /usr/local/bin/powerprofilecycle.sh
 
 # Start ssh-agent with systemd user
 # https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable ssh-agent.service
 
 tee /home/${NEW_USER}/.config/environment.d/90-SSH_AUTH_SOCK << 'EOF'

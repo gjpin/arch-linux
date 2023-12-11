@@ -514,6 +514,7 @@ pacman -S --noconfirm \
     wireplumber --ask 4
 
 # Enable PipeWire's user service
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 
 ################################################
@@ -525,6 +526,7 @@ sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 
 # Install Flatpak and applications
 pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
 
 # Add Flathub repositories
@@ -554,6 +556,7 @@ fi
 pacman -S --noconfirm syncthing
 
 # Enable Syncthing's user service
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
@@ -604,8 +607,13 @@ systemctl enable libvirtd.service
 
 # Install and configure minikube
 pacman -S --noconfirm minikube
-sudo -u ${NEW_USER} minikube config set driver kvm2
-sudo -u ${NEW_USER} minikube config set container-runtime containerd
+mkdir -p /home/${NEW_USER}/.minikube/config
+tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
+{
+    "container-runtime": "containerd",
+    "driver": "kvm2"
+}
+EOF
 
 # Install k8s applications
 pacman -S --noconfirm kubectl helm k9s kubectx
