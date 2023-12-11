@@ -106,7 +106,33 @@ pacman-key --init
 pacman-key --populate
 ```
 
-## Auto-mount extra drive
+## Auto-mount extra drive (drive in use)
+
+```bash
+# Encrypt and open LUKS partition
+sudo cryptsetup luksOpen /dev/disk/by-partlabel/LUKSDATA data
+
+# Mount root device
+sudo mkdir -p /data
+sudo mount -t ext4 LABEL=data /data
+
+# Auto-mount
+sudo tee -a /etc/fstab << EOF
+
+# data disk
+/dev/mapper/data /data ext4 defaults 0 0
+EOF
+
+sudo tee -a /etc/crypttab << EOF
+
+data UUID=$(sudo blkid -s UUID -o value /dev/nvme1n1p1) none
+EOF
+
+# Auto unlock
+sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
+```
+
+## Auto-mount extra drive (from scratch)
 
 ```bash
 # Delete old partition layout and re-read partition table
