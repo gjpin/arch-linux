@@ -65,38 +65,6 @@ sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 pacman -Syy
 
 ################################################
-##### ZSH
-################################################
-
-# Install ZSH and plugins
-pacman -S --noconfirm zsh zsh-completions zsh-autosuggestions zsh-syntax-highlighting
-
-# Install Oh-My-Zsh
-# https://github.com/ohmyzsh/ohmyzsh#manual-installation
-git clone https://github.com/ohmyzsh/ohmyzsh.git /home/${NEW_USER}/.oh-my-zsh
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc -o /home/${NEW_USER}/.zshrc
-
-# Install powerlevel10k zsh theme
-# https://github.com/romkatv/powerlevel10k#oh-my-zsh
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/${NEW_USER}/.oh-my-zsh/custom/themes/powerlevel10k
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
-
-# Create zsh configs directory
-mkdir -p /home/${NEW_USER}/.zshrc.d
-
-# Add ~/.local/bin to the path
-mkdir -p /home/${NEW_USER}/.local/bin
-
-tee /home/${NEW_USER}/.zshrc.d/local-bin << 'EOF'
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH
-EOF
-
-################################################
 ##### Common applications
 ################################################
 
@@ -251,6 +219,9 @@ echo 'vm.max_map_count=1048576' > /etc/sysctl.d/99-max-map-count.conf
 # References:
 # https://wiki.archlinux.org/title/XDG_Base_Directory
 
+# Install ZSH and plugins
+pacman -S --noconfirm zsh zsh-completions zsh-autosuggestions zsh-syntax-highlighting
+
 # Set root password and shell
 echo "root:${NEW_USER_PASSWORD}" | chpasswd
 chsh -s /usr/bin/zsh
@@ -296,6 +267,31 @@ update-all() {
     # Update Flatpak apps
     flatpak update -y
 }
+EOF
+
+# Install Oh-My-Zsh
+# https://github.com/ohmyzsh/ohmyzsh#manual-installation
+git clone https://github.com/ohmyzsh/ohmyzsh.git /home/${NEW_USER}/.oh-my-zsh
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc -o /home/${NEW_USER}/.zshrc
+
+# Install powerlevel10k zsh theme
+# https://github.com/romkatv/powerlevel10k#oh-my-zsh
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/${NEW_USER}/.oh-my-zsh/custom/themes/powerlevel10k
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
+
+# Create zsh configs directory
+mkdir -p /home/${NEW_USER}/.zshrc.d
+
+# Add ~/.local/bin to the path
+mkdir -p /home/${NEW_USER}/.local/bin
+
+tee /home/${NEW_USER}/.zshrc.d/local-bin << 'EOF'
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
 EOF
 
 ################################################

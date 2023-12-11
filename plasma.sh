@@ -137,7 +137,7 @@ EOF
 flatpak install -y flathub org.gtk.Gtk3theme.Breeze org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
 
 # Install Gradience
-flatpak install flathub com.github.GradienceTeam.Gradience
+flatpak install -y flathub com.github.GradienceTeam.Gradience
 
 # Import Gradience Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.GradienceTeam.Gradience -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.github.GradienceTeam.Gradience
