@@ -790,7 +790,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
-export FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
+export FIREFOX_PROFILE_PATH=$(find /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox -type d -name "*.default-release")
 
 # Import extensions
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions

@@ -182,7 +182,7 @@ EOF
 sudo -u ${NEW_USER} timeout 5 firefox --headless
 
 # Set Firefox profile path
-export FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
+export FIREFOX_PROFILE_PATH=$(find /home/${NEW_USER}/.mozilla/firefox -type d -name "*.default-release")
 
 # Import extensions
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
