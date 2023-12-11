@@ -20,14 +20,14 @@ For GRUB with BTRFS snapshots see branch 'grub'
 
 ## Installation guide
 
-1. Disable secure boot and delete existing keys (go into setup mode)
+1. Delete secure boot keys (automatically enters setup mode)
 2. Boot into Arch Linux ISO
 3. Connect to the internet. If using wifi, you can use `iwctl` to connect to a network:
    - scan for networks: `station wlan0 scan`
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
-4. Init keyring: `pacman-key --init && pacman-key --populate`
-5. Update repos and install git: `pacman -Sy git`
+4. Update repos and install git: `pacman -Sy git`
+5. (if previous step fails) Init keyring: `pacman-key --init && pacman-key --populate`
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
 8. Reboot and re-enable secure boot
@@ -138,7 +138,7 @@ EOF
 
 sudo tee -a /etc/crypttab << EOF
 
-data UUID=$(blkid -s UUID -o value /dev/nvme1n1p1) none
+data UUID=$(sudo blkid -s UUID -o value /dev/nvme1n1p1) none
 EOF
 
 # Change ownership to user
