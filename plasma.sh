@@ -12,6 +12,7 @@ pacman -S --noconfirm \
     kde-gtk-config \
     kdecoration \
     kdeplasma-addons \
+    kgamma \
     khotkeys \
     kinfocenter \
     kmenuedit \

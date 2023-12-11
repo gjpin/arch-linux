@@ -1,13 +1,19 @@
 # get KDE packages
+
 # https://download.kde.org/stable/plasma/
-# packages=$(curl -s https://download.kde.org/stable/plasma/5.27.5/ | grep -o -P '(?<=<a href=")(.*)(?=-5.27.5.tar.xz.sig"><img)')
+
+# packages=$(curl -s https://download.kde.org/stable/plasma/5.27.10/ | grep -o -P '(?<=<a href=")(.*)(?=-5.27.10.tar.xz.sig"><img)')
 
 # packages to remove from Plasma Desktop:
+
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
+
 # echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests\|qqc2-breeze-style/d'
 
 # Plasma packages
+
 # filtered from above
+
 bluedevil
 breeze
 breeze-grub # skip
@@ -61,7 +67,9 @@ systemsettings
 xdg-desktop-portal-kde
 
 # Non-Plasma packages
+
 # https://community.kde.org/Distributions/Packaging_Recommendations#Non-Plasma_packages
+
 baloo-widgets
 dolphin-plugins
 ffmpegthumbs
@@ -79,7 +87,9 @@ phonon-vlc # phonon-qt5-vlc
 print-manager # skip
 
 # 3rd-party packages
+
 # https://community.kde.org/Distributions/Packaging_Recommendations#3rd-party_packages
+
 iio-sensor-proxy
 noto-sans # noto-fonts
 noto-color-emoji # noto-fonts-emoji
@@ -89,7 +99,9 @@ xdg-desktop-portal-gtk
 xsettingsd
 
 # KDE applications
+
 # https://apps.kde.org/
+
 konsole # terminal
 okular # document viewer
 dolphin # file manager
@@ -103,7 +115,7 @@ kwalletmanager # wallet management tool
 kcolorchooser # color chooser
 partitionmanager # partition editor
 
-
 # firefox (about:config)
+
 widget.use-xdg-desktop-portal.file-picker=1
 media.hardwaremediakeys.enabled=false
