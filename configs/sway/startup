@@ -1,0 +1,31 @@
+################################################################################
+#
+# What to run on Sway startup
+#
+################################################################################
+
+# TIP: Currently I don't know of any clean way of creating complex layouts
+# within a single workspace on startup. The only hacky solution I know about is
+# using timeouts with `sleep` command, e.g.:
+#
+#   sleep 0.3s && swaymsg "exec <command>"
+
+
+### Define some constants
+
+set $neovim $term --title "Neovim" --command nvim
+
+
+### Run applications
+
+exec firefox-developer-edition
+exec thunderbird
+exec $neovim
+exec swaymsg "workspace $workspace_terminals; exec $term"
+exec udiskie
+exec stretchly
+
+
+### Set focus
+
+focus output $output_monitor

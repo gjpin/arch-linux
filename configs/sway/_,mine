@@ -1,0 +1,3 @@
+
+# Start Thunar in daemon mode
+exec thunar --daemon

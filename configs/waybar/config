@@ -1,0 +1,209 @@
+// =============================================================================
+//
+// Waybar configuration
+//
+// Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+//
+// =============================================================================
+
+{
+    // -------------------------------------------------------------------------
+    // Global configuration
+    // -------------------------------------------------------------------------
+
+    "layer": "bottom",
+
+    "position": "top",
+
+    // If height property would be not present, it'd be calculated dynamically
+    "height": 32,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "network",
+        "idle_inhibitor",
+        // "memory",
+        // "cpu",
+        // "temperature",
+        "custom/keyboard_layout",
+        "backlight",
+        "pulseaudio",
+        "battery",
+        "custom/power_profile",
+        "tray",
+        "clock#date",
+        "clock#time"
+    ],
+
+
+    // -------------------------------------------------------------------------
+    // Modules
+    // -------------------------------------------------------------------------
+
+    "backlight": {
+        "format": " {percent}%",
+        "interval": 2,
+        "on-scroll-up": "brightnessctl set +2%",
+        "on-scroll-down": "brightnessctl set 2%-"
+    },
+
+    "custom/power_profile": {
+        "exec": "sleep 0.3 && /usr/local/bin/powerprofilecycle.sh -m",
+        "interval": 120,
+        "on-click": "/usr/local/bin/powerprofilecycle.sh",
+        "exec-on-event": true
+    },
+
+    "battery": {
+        "interval": 10,
+        "states": {
+            "warning": 25,
+            "critical": 15
+        },
+        // Connected to AC
+        "format": " {icon} {capacity}%", // Icon: bolt
+        // Not connected to AC
+        "format-discharging": "{icon} {capacity}%",
+        "format-icons": [
+            "", // Icon: battery-full
+            "", // Icon: battery-three-quarters
+            "", // Icon: battery-half
+            "", // Icon: battery-quarter
+            ""  // Icon: battery-empty
+        ],
+        "tooltip": true
+    },
+
+    "clock#time": {
+        "interval": 1,
+        "format": "{:%H:%M:%S}",
+        "tooltip": false
+    },
+
+    "clock#date": {
+      "interval": 10,
+      "format": " {:%e %b %Y}", // Icon: calendar-alt
+      "tooltip-format": "{:%e %B %Y}",
+      "locale": "en_US.UTF-8",
+      "timezone": "Europe/Lisbon",
+    },
+
+    "cpu": {
+        "interval": 3,
+        "format": " {usage}% ({load})", // Icon: microchip
+        "states": {
+          "warning": 70,
+          "critical": 90
+        },
+    },
+
+    "custom/keyboard_layout": {
+      "exec": "swaymsg -t get_inputs | grep -m1 'xkb_active_layout_name' | cut -d '\"' -f4 | cut -d ' ' -f1",
+      // Interval set only as a fallback, as the value is updated by signal
+      "interval": 10,
+      "format": " {}", // Icon: keyboard
+      // Signal sent by Sway key binding (~/.config/sway/key-bindings)
+      "signal": 1, // SIGHUP
+      "tooltip": false,
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next",
+      "on-scroll-up": "swaymsg input type:keyboard xkb_switch_layout next",
+      "on-scroll-down": "swaymsg input type:keyboard xkb_switch_layout prev",
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": "",
+        },
+    },
+
+    "memory": {
+        "interval": 3,
+        "format": " {}%", // Icon: memory
+        "states": {
+            "warning": 70,
+            "critical": 90
+        }
+    },
+
+    "network": {
+        "interval": 3,
+        "format-wifi": " {essid}", // Icon: wifi
+        "format-ethernet": " {ifname}: {ipaddr}/{cidr}", // Icon: ethernet
+        "format-disconnected": "⚠  Disconnected",
+        "tooltip-format": "{ifname}: {ipaddr} (signal: {signalStrength}%)"
+    },
+
+    "pulseaudio": {
+        "scroll-step": 2,
+        "format": "{icon} {volume}%",
+        "format-muted": " Muted", // Icon: volume-mute
+        "format-icons": {
+            "headphones": "", // Icon: headphones
+            "handsfree": "", // Icon: headset
+            "headset": "", // Icon: headset
+            "phone": "", // Icon: phone
+            "portable": "", // Icon: phone
+            "car": "", // Icon: car
+            "default": ["", ""] // Icons: volume-down, volume-up
+        },
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "alacritty --title='Sound Mixer' --command='pulsemixer'",
+        "tooltip": true
+    },
+
+    "sway/mode": {
+        "format": "<span style=\"italic\"> {}</span>", // Icon: expand-arrows-alt
+        "tooltip": false
+    },
+
+    "sway/window": {
+        "format": "{}",
+        "max-length": 120
+    },
+
+    "sway/workspaces": {
+        "all-outputs": false,
+        "disable-scroll": true,
+        "format": "{icon} {name}",
+        "format-icons": {
+            "1:WWW": "", // Icon: firefox-browser
+            "2:Editor": "", // Icon: code
+            "3:Terminals": "", // Icon: terminal
+            "4:Mail": "", // Icon: mail
+            "8:Documents": "", // Icon: book
+            "9:Multimedia": "", // Icon: music
+            "10:Torrent": "", // Icon: cloud-download-alt
+            "urgent": "",
+            "focused": "",
+            "default": ""
+        }
+    },
+
+    "temperature": {
+      "critical-threshold": 75,
+      "interval": 3,
+      "format": "{icon} {temperatureC}°C",
+      "format-icons": [
+          "", // Icon: temperature-empty
+          "", // Icon: temperature-quarter
+          "", // Icon: temperature-half
+          "", // Icon: temperature-three-quarters
+          ""  // Icon: temperature-full
+      ],
+      "tooltip": true
+    },
+
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    }
+
+}

@@ -1,0 +1,7 @@
+daemonize
+# Default was sans-serif
+font=system-ui
+color=000000
+hide-keyboard-layout
+indicator-caps-lock
+indicator-radius=100

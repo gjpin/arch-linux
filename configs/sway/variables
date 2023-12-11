@@ -1,0 +1,35 @@
+################################################################################
+#
+# Variables
+#
+# Shared variables. Strictly local variables are defined in other files near
+# their usage.
+#
+################################################################################
+
+
+# Outputs
+set $output_laptop eDP-1
+set $output_monitor "Dell Inc. DELL U2412M Y1H5T1B831CL"
+set $output_tv "Goldstar Company Ltd 42PC3RA-ZJ 0x00000101"
+
+# Screen locking application
+set $lock swaylock
+
+# Preferred terminal emulator
+set $term alacritty
+
+# Preferred application launcher
+#
+# NOTE: pass the final command to swaymsg so that the resulting window can be
+# opened on the original workspace that the command was run on.
+set $menu wofi --show=drun --prompt="Enter the application name" | swaymsg exec --
+
+# Workspaces
+set $workspace_www 1:WWW
+set $workspace_editor 2:Editor
+set $workspace_terminals 3:Terminals
+set $workspace_mail 4:Mail
+set $workspace_documents 8:Documents
+set $workspace_multimedia 9:Multimedia
+set $workspace_torrent 10:Torrent

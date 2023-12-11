@@ -1,0 +1,27 @@
+################################################################################
+#
+# Idle configuration
+#
+# Read `man swayidle` for more information about this section.
+#
+################################################################################
+
+
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * dpms off"' \
+#               resume 'swaymsg "output * dpms on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+# Turn off and lock the screen after 3 minutes
+# Lock the screen when going to sleep/hibernating
+exec swayidle -w \
+    timeout 300 "swaymsg 'output * dpms off'; $lock" \
+        resume "swaymsg 'output * dpms on'" \
+    before-sleep "$lock"

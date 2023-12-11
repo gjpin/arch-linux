@@ -1,0 +1,15 @@
+################################################################################
+#
+# Appearance
+#
+################################################################################
+
+
+# Set font (default was monospace)
+font pango:system-ui 14px
+
+# Set wallpaper randomly from a selection
+output * bg `ls -1 ./wallpapers/* | sort -R | head -1` fill
+
+# Gaps
+gaps inner 4

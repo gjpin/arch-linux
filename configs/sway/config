@@ -1,0 +1,16 @@
+include ./variables
+include ./output
+include ./idle
+include ./input
+include ./key_bindings
+include ./bar
+include ./applications
+include ./appearance
+include ./startup
+
+include /etc/sway/config.d/\*
+
+# Enable VRR
+# https://wiki.archlinux.org/title/Variable_refresh_rate#Sway
+
+output * adaptive_sync on

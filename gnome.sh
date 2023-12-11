@@ -80,6 +80,25 @@ pacman -S --noconfirm webp-pixbuf-loader
 sudo -u ${NEW_USER} paru -S --noconfirm shared-mime-info-gnome
 
 ################################################
+##### Remove unneeded packages and services
+################################################
+
+# Disable ABRT service
+systemctl mask abrtd.service
+
+# Disable mobile broadband modem management service
+systemctl mask ModemManager.service
+
+# Disable PC/SC Smart Card service
+systemctl mask pcscd.service
+
+# Disable location lookup service
+systemctl mask geoclue.service
+
+# Disable speech dispatcher
+sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd.conf
+
+################################################
 ##### Flatpak
 ################################################
 
@@ -95,14 +114,6 @@ flatpak install -y flathub com.mattjakeman.ExtensionManager
 # Create Gnome shell extensions folder
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
-# Dark Variant
-# https://extensions.gnome.org/extension/4488/dark-variant/
-pacman -S --noconfirm xorg-xprop
-curl -sSL https://extensions.gnome.org/extension-data/dark-varianthardpixel.eu.v9.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/dark-variant@hardpixel.eu
-rm -f shell-extension.zip
-
 # Grand Theft Focus
 # # https://extensions.gnome.org/extension/5410/grand-theft-focus
 curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v5.shell-extension.zip -o shell-extension.zip
@@ -117,15 +128,19 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-co
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 rm -f shell-extension.zip
 
+# Legacy (GTK3) Theme Scheme Auto Switcher
+# https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v7.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+rm -f shell-extension.zip
+
 ################################################
 ##### Firefox
 ################################################
 
 # References:
 # https://github.com/rafaelmardojai/firefox-gnome-theme
-
-# Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.mozilla/firefox/*.default-release)
 
 # Install Firefox Gnome theme
 sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
@@ -146,21 +161,6 @@ user_pref("gnomeTheme.activeTabContrast", true);
 EOF
 
 ################################################
-##### VSCode
-################################################
-
-# References:
-# https://github.com/piousdeer/vscode-adwaita
-
-# Install VSCode Gnome theme
-sudo -u ${NEW_USER} xvfb-run code --install-extension piousdeer.adwaita-theme
-
-# Change VSCode config to use theme
-sed -i '2 i \ \ \ \ "workbench.preferredDarkColorTheme": "Adwaita Dark",' /home/${NEW_USER}/.config/Code/User/settings.json
-sed -i '2 i \ \ \ \ "workbench.preferredLightColorTheme": "Adwaita Light",' /home/${NEW_USER}/.config/Code/User/settings.json
-sed -i '2 i \ \ \ \ "workbench.colorTheme": "Adwaita Dark & default syntax highlighting",' /home/${NEW_USER}/.config/Code/User/settings.json
-
-################################################
 ##### GTK theme
 ################################################
 
@@ -173,7 +173,6 @@ flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 # Install adw-gtk3
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
-
 
 ################################################
 ##### Utilities
@@ -238,10 +237,10 @@ default-zoom-level='small-plus'
 [org/gnome/desktop/interface]
 font-name='Noto Sans 10'
 document-font-name='Noto Sans 10'
-monospace-font-name='Noto Sans Mono 10'
+monospace-font-name='NotoSansM Nerd Font Mono 10'
 
 [org/gnome/desktop/wm/preferences]
-titlebar-font='Noto Sans Bold 10'
+titlebar-font='NotoSansM Nerd Font Mono Medium 10'
 
 [org/gnome/shell]
 disable-user-extensions=false

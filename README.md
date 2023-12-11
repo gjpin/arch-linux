@@ -149,6 +149,7 @@ sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
 ```
 
 ### Wake-on-LAN quirks
+
 ```bash
 # References:
 # https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
@@ -158,4 +159,15 @@ sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
 # Add kernel boot parameters to enable quirks
 sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch.conf
 sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch-lts.conf
+```
+
+### Download and apply GTK themes with Gradience
+
+```bash
+# Download Breeze themes
+sudo -u ${NEW_USER} flatpak run --command=gradience-cli com.github.GradienceTeam.Gradience download -n "Breeze Dark"
+sudo -u ${NEW_USER} flatpak run --command=gradience-cli com.github.GradienceTeam.Gradience download -n "Breeze Light"
+
+# Apply Breeze Dark theme
+sudo -u ${NEW_USER} flatpak run --command=gradience-cli com.github.GradienceTeam.Gradience apply -n "Breeze Dark" --gtk "both"
 ```

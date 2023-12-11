@@ -61,21 +61,44 @@ sed -i "s|^#VerbosePkgLists|VerbosePkgLists|g" /etc/pacman.conf
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = 5|g" /etc/pacman.conf
 sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 
-# Enable multilib repository
-tee -a /etc/pacman.conf << EOF
-[multilib]
-Include = /etc/pacman.d/mirrorlist
-EOF
-
 # Upgrade system
 pacman -Syy
 
 ################################################
-##### ZSH and common applications
+##### ZSH
 ################################################
 
 # Install ZSH and plugins
-pacman -S --noconfirm zsh zsh-completions grml-zsh-config zsh-autosuggestions zsh-syntax-highlighting
+pacman -S --noconfirm zsh zsh-completions zsh-autosuggestions zsh-syntax-highlighting
+
+# Install Oh-My-Zsh
+# https://github.com/ohmyzsh/ohmyzsh#manual-installation
+git clone https://github.com/ohmyzsh/ohmyzsh.git /home/${NEW_USER}/.oh-my-zsh
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc -o /home/${NEW_USER}/.zshrc
+
+# Install powerlevel10k zsh theme
+# https://github.com/romkatv/powerlevel10k#oh-my-zsh
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/${NEW_USER}/.oh-my-zsh/custom/themes/powerlevel10k
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
+
+# Create zsh configs directory
+mkdir -p /home/${NEW_USER}/.zshrc.d
+
+# Add ~/.local/bin to the path
+mkdir -p /home/${NEW_USER}/.local/bin
+
+tee /home/${NEW_USER}/.zshrc.d/local-bin << 'EOF'
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+EOF
+
+################################################
+##### Common applications
+################################################
 
 # Install common applications
 pacman -S --noconfirm \
@@ -83,7 +106,6 @@ pacman -S --noconfirm \
     htop \
     git \
     p7zip \
-    ripgrep \
     unzip \
     unrar \
     lm_sensors \
@@ -100,7 +122,12 @@ pacman -S --noconfirm \
     util-linux \
     wireguard-tools \
     rsync \
-    jq
+    jq \
+    yq \
+    lazygit \
+    ripgrep \
+    fd \
+    fzf
 
 # Add AppImage support
 pacman -S --noconfirm \
@@ -151,7 +178,10 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
-# https://wiki.cachyos.org/en/home/General_System_Tweaks
+# https://wiki.cachyos.org/general_info/general_system_tweaks/
+
+# Enable trim operations
+systemctl enable fstrim.timer
 
 # Split Lock Mitigate - default: 1
 echo 'kernel.split_lock_mitigate=0' > /etc/sysctl.d/99-splitlock.conf
@@ -234,47 +264,30 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 pacman -S --noconfirm xdg-user-dirs
 sudo -u ${NEW_USER} xdg-user-dirs-update
 
-# Configure ZSH
-tee /home/${NEW_USER}/.zshrc.local << EOF
-# ZSH configs
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-EOF
-
 # Create common directories and configure them
 mkdir -p \
   /home/${NEW_USER}/.local/share/applications \
   /home/${NEW_USER}/.local/share/themes \
   /home/${NEW_USER}/.local/share/fonts \
-  /home/${NEW_USER}/.local/bin \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/environment.d \
   /home/${NEW_USER}/.config/autostart \
+  /home/${NEW_USER}/.config/systemd/user \
   /home/${NEW_USER}/.ssh \
   /home/${NEW_USER}/.icons \
   /home/${NEW_USER}/src
 
 chown 700 /home/${NEW_USER}/.ssh
 
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# Add $HOME/.local/bin/ to the PATH
-export PATH="${HOME}/.local/bin/:${PATH}"
-EOF
-
 # Updater helper
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
-
+tee /home/${NEW_USER}/.zshrc.d/update-all << EOF
 # Update helper
 update-all() {
     # Update keyring
     sudo pacman -Sy --noconfirm archlinux-keyring
 
-    # Update system
-    sudo pacman -Syu
-
-    # Update AUR packages
-    paru -Sua
+    # Update all packages
+    paru -Syu
 
     # Update firmware
     sudo fwupdmgr refresh
@@ -422,7 +435,7 @@ sbctl sign -s /boot/vmlinuz-linux-lts
 # https://wiki.archlinux.org/title/Vulkan
 
 # Install GPU drivers related packages
-pacman -S --noconfirm mesa lib32-mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
+pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Override VA-API driver via environment variable
 tee -a /etc/environment << EOF
@@ -460,14 +473,14 @@ pacman -S --noconfirm ffmpeg
 mkdir -p /etc/systemd/system.conf.d
 tee /etc/systemd/system.conf.d/default-timeout.conf << EOF
 [Manager]
-DefaultTimeoutStopSec=5s
+DefaultTimeoutStopSec=10s
 EOF
 
 # Configure default timeout to stop user units
 mkdir -p /etc/systemd/user.conf.d
 tee /etc/systemd/user.conf.d/default-timeout.conf << EOF
 [Manager]
-DefaultTimeoutStopSec=5s
+DefaultTimeoutStopSec=10s
 EOF
 
 ################################################
@@ -522,21 +535,16 @@ sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak update
 
-# Global override to deny all applications the permission to access certain directories
-# flatpak override --nofilesystem='home' --nofilesystem='host' --nofilesystem='xdg-cache' --nofilesystem='xdg-config' --nofilesystem='xdg-data'
-# flatpak override --filesystem=xdg-download
-
-# Allow read-only access to GTK configs
-flatpak override --filesystem=xdg-config/gtk-3.0:ro
-flatpak override --filesystem=xdg-config/gtk-4.0:ro
-flatpak override --filesystem=/home/${NEW_USER}/.local/share/themes
+# Import global Flatpak overrides
+mkdir -p /home/${NEW_USER}/.local/share/flatpak/overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/global -o /home/${NEW_USER}/.local/share/flatpak/overrides/global
 
 # Install Flatpak runtimes
-flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/22.08
-flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/22.08
+flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/23.08
+flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
 
 if lspci | grep VGA | grep "Intel" > /dev/null; then
-  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/22.08
+  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/23.08
 fi
 
 ################################################
@@ -553,48 +561,17 @@ pacman -S --noconfirm syncthing
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Podman
+##### Docker
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/Podman
-# https://wiki.archlinux.org/title/Buildah
-# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+# https://wiki.archlinux.org/title/docker
 
-# Install Podman and dependencies
-pacman -S --noconfirm podman slirp4netns netavark aardvark-dns
+# Install Docker
+pacman -S --noconfirm docker docker-compose
 
-# Install Podman Compose
-pacman -S --noconfirm podman-compose podman-dnsname
-
-# Install Buildah and dependencies
-pacman -S --noconfirm buildah fuse-overlayfs
-
-# Enable kernel.unprivileged_userns_clone
-echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-unprivileged-userns-clone.conf
-
-# Set subuid and subgid
-usermod --add-subuids 100000-165535 --add-subgids 100000-165535 ${NEW_USER}
-
-# Enable unprivileged ping
-echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
-
-# Create docker/podman alias
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
-
-# Podman
-alias docker=podman
-EOF
-
-# Re-enable unqualified search registries
-tee -a /etc/containers/registries.conf.d/00-unqualified-search-registries.conf << EOF
-unqualified-search-registries = ["docker.io"]
-EOF
-
-tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
-[[registry]]
-location = "docker.io"
-EOF
+# Enable Docker service
+systemctl enable docker.service
 
 ################################################
 ##### Virtualization
@@ -631,18 +608,15 @@ systemctl enable libvirtd.service
 
 # Install and configure minikube
 pacman -S --noconfirm minikube
-
 sudo -u ${NEW_USER} minikube config set driver kvm2
 sudo -u ${NEW_USER} minikube config set container-runtime containerd
 
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# minikube
-export MINIKUBE_IN_STYLE=0
-EOF
-
 # Install k8s applications
-pacman -S --noconfirm kubectl helm k9s
+pacman -S --noconfirm kubectl helm k9s kubectx
+
+# Install Open Lens
+flatpak install -y flathub dev.k8slens.OpenLens
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.k8slens.OpenLens -o /home/${NEW_USER}/.local/share/flatpak/overrides/dev.k8slens.OpenLens
 
 ################################################
 ##### Paru
@@ -667,65 +641,51 @@ rm -rf paru-bin
 ################################################
 
 # Install user applications
-pacman -S --noconfirm \
-    chromium \
-    libreoffice-fresh \
-    blender \
-    bitwarden \
-    keepassxc \
-    obsidian
+flatpak install -y flathub rest.insomnia.Insomnia
+flatpak install -y flathub com.spotify.Client
+flatpak install -y flathub md.obsidian.Obsidian
+flatpak install -y flathub org.keepassxc.KeePassXC
+flatpak install -y flathub com.bitwarden.desktop
+flatpak install -y flathub org.libreoffice.LibreOffice
+flatpak install -y flathub org.chromium.Chromium
 
-sudo -u ${NEW_USER} paru -S --noconfirm \
-    spotify \
-    insomnia-bin \
-    podman-desktop-bin
+# Import Flatpak overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian
 
 ################################################
 ##### Development (languages, LSP, neovim)
 ################################################
 
 # Set git configurations
-git config --global init.defaultBranch main
+sudo -u ${NEW_USER} git config --global init.defaultBranch main
+
+# Create dev tools directory
+mkdir -p /home/${NEW_USER}/.devtools
 
 # Install Python and create alias for python venv
 pacman -S --noconfirm python
-mkdir -p /home/${NEW_USER}/.python
-python -m venv /home/${NEW_USER}/.python/play
-tee -a /home/${NEW_USER}/.zshrc.local << 'EOF'
-
-# Python
-alias pythonplay="source ${HOME}/.python/play/bin/activate"
+mkdir -p /home/${NEW_USER}/.devtools/python
+sudo -u ${NEW_USER} python -m venv /home/${NEW_USER}/.devtools/python/dev
+tee /home/${NEW_USER}/.zshrc.d/python << 'EOF'
+alias pydev="source ${HOME}/.devtools/python/dev/bin/activate"
 EOF
 
 # Install Go
 pacman -S --noconfirm go go-tools gopls
-mkdir -p /home/${NEW_USER}/.go
-tee -a /home/${NEW_USER}/.zshenv << 'EOF'
-
-# Go
-export GOPATH="${HOME}/.go"
+mkdir -p /home/${NEW_USER}/.devtools/go
+tee /home/${NEW_USER}/.zshrc.d/go << 'EOF'
+export GOPATH="$HOME/.devtools/go"
 EOF
 
-# Install Node.js and NPM
-pacman -S --noconfirm nodejs npm
+# Install Node.js and related packages
+pacman -S --noconfirm nodejs npm yarn
 
-# Install Deno
-pacman -S --noconfirm deno
-
-# Install Neovim and set as default editor
-pacman -S --noconfirm neovim
-tee -a /home/${NEW_USER}/.zshrc.local << EOF
-
-# Neovim
-alias vi=nvim
-alias vim=nvim
-EOF
-
-tee -a /etc/environment << EOF
-
-# Editor
-EDITOR=nvim
-VISUAL=nvim
+# Change npm's default directory
+# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+mkdir /home/${NEW_USER}/.devtools/npm-global
+sudo -u ${NEW_USER} npm config set prefix "/home/${NEW_USER}/.devtools/npm-global"
+tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
+export PATH=$HOME/.devtools/npm-global/bin:$PATH
 EOF
 
 # Install language servers
@@ -734,6 +694,54 @@ pacman -S --noconfirm \
     bash-language-server \
     python-lsp-server \
     yaml-language-server
+
+# Install Terraform
+pacman -S --noconfirm terraform
+
+################################################
+##### Neovim
+################################################
+
+# Install Neovim and set as default editor
+pacman -S --noconfirm neovim
+tee /home/${NEW_USER}/.zshrc.d/neovim << 'EOF'
+# Set neovim alias
+alias vi=nvim
+alias vim=nvim
+
+# Set preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+  export VISUAL='vim'
+else
+  export EDITOR='nvim'
+  export VISUAL='nvim'
+fi
+EOF
+
+# Install LazyVim
+# https://www.lazyvim.org/installation
+git clone https://github.com/LazyVim/starter /home/${NEW_USER}/.config/nvim
+rm -rf /home/${NEW_USER}/.config/nvim/.git
+
+# Install arctic.nvim (Dark Modern) color scheme in neovim
+# https://github.com/rockyzhang24/arctic.nvim/tree/v2
+# https://www.lazyvim.org/plugins/colorscheme
+tee /home/${NEW_USER}/.config/nvim/lua/plugins/colorscheme.lua << 'EOF'
+return {
+    {
+        "gjpin/arctic.nvim",
+        branch = "v2",
+        dependencies = { "rktjmp/lush.nvim" }
+    },
+    {
+        "LazyVim/LazyVim",
+        opts = {
+            colorscheme = "arctic",
+        }
+    }
+}
+EOF
 
 ################################################
 ##### thermald
@@ -768,33 +776,25 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 fi
 
 ################################################
-##### Firefox
+##### Firefox (Flatpak)
 ################################################
 
-# References:
-# https://wiki.archlinux.org/title/Firefox
-# https://github.com/pyllyukko/user.js/blob/master/user.js
-
 # Install Firefox
-pacman -S --noconfirm firefox
+flatpak install -y flathub org.mozilla.firefox
 
 # Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
+sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.desktop
+sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
+sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
-# Run Firefox natively under Wayland
-tee -a /home/${NEW_USER}/.zshenv << EOF
-
-# Firefox
-export MOZ_ENABLE_WAYLAND=1
-EOF
+# Import Flatpak overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.mozilla.firefox -o /home/${NEW_USER}/.local/share/flatpak/overrides/org.mozilla.firefox
 
 # Temporarily open firefox to create profile folder
-sudo -u ${NEW_USER} timeout 5 firefox --headless
+sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
-FIREFOX_PROFILE_PATH=$(realpath /${HOME}/.mozilla/firefox/*.default-release)
+export FIREFOX_PROFILE_PATH=$(realpath /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
 
 # Import extensions
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
@@ -823,7 +823,7 @@ sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
 sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
-sudo -u ${NEW_USER} xvfb-run code --install-extension denoland.vscode-deno
+sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
 
 # Import VSCode settings
 mkdir -p /home/${NEW_USER}/.config/Code/User
@@ -841,11 +841,16 @@ pacman -S --noconfirm \
     noto-fonts-extra \
     ttf-liberation \
     otf-cascadia-code \
+    ttf-firacode-nerd \
+    ttf-hack-nerd \
+ 	ttf-noto-nerd \
     ttf-sourcecodepro-nerd \
     ttf-ubuntu-nerd \
     ttf-ubuntu-mono-nerd \
     ttf-hack \
-    inter-font
+    inter-font \
+    cantarell-fonts \
+    otf-font-awesome
 
 # Install and enable power profiles daemon
 pacman -S --noconfirm power-profiles-daemon

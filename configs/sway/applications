@@ -1,0 +1,33 @@
+################################################################################
+#
+# Applications settings
+#
+################################################################################
+
+
+### Assign applications to workspaces
+
+assign [window_role="^browser$"]   → workspace $workspace_www
+assign [class="Thunderbird"]       → workspace $workspace_mail
+assign [title="^Neovim$"]          → workspace $workspace_editor
+assign [app_id="deadbeef"]         → workspace $workspace_multimedia
+assign [class="vlc"]               → workspace $workspace_multimedia
+assign [app_id="org.pwmt.zathura"] → workspace $workspace_documents
+assign [class="qBittorrent"]       → workspace $workspace_torrent
+
+
+### Change window settings
+#
+# To see attributes of windows use `swaymsg -t get_tree`.
+
+# Floating windows
+for_window [window_role="browser"] layout tabbed
+for_window [title="Sound Mixer"] floating enabled
+for_window [class="Thunderbird" instance="Msgcompose"] floating enabled
+for_window [class="Thunderbird" instance="Calendar"] floating enabled
+for_window [class="Stretchly"] floating enabled
+
+# Do not activate swayidle when in calls
+for_window [window_role="browser" title="Meet - .*-.*-.*"] inhibit_idle focus
+for_window [window_role="browser" title="Hangouts Video Call"] inhibit_idle focus
+for_window [window_role="browser" title=".*Microsoft Teams"] inhibit_idle focus

@@ -1,0 +1,14 @@
+################################################################################
+#
+# Status Bar
+#
+# Read `man 5 sway-bar` for more information about this section.
+#
+################################################################################
+
+
+bar {
+    # Run waybar instead of swaybar.
+    # It's config is in ~/.config/waybar/.
+    swaybar_command waybar
+}

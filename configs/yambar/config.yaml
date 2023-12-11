@@ -1,0 +1,23 @@
+# fonts
+awesome: &awesome Font Awesome 6 Free:style=solid:pixelsize=10
+firacode: &firacode Fira Code Nerd Font Mono:pixelsize=10
+
+bar:
+  height: 26
+  location: top
+  spacing: 5
+  margin: 7
+
+  font: Fira Code Nerd Font Mono:pixelsize=10
+
+  foreground: ccccccff
+  background: 181818ff
+
+  border:
+    width: 1
+    color: 181818ff
+    margin: 5
+    top-margin: 0
+
+  left:
+    - i3:    

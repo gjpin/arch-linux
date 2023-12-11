@@ -1,0 +1,34 @@
+################################################################################
+#
+# Output configuration
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs.
+#
+# Read `man 5 sway-output` for more information about this section.
+#
+################################################################################
+
+
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+output $output_monitor pos 0 0       res 1920x1200
+output $output_laptop  pos 1920 650  res 1920x1080
+output $output_tv      disable
+
+# Disable laptop output when the lid is closed
+bindswitch --reload --locked lid:on output $output_laptop disable
+bindswitch --reload --locked lid:off output $output_laptop enable
+
+# Assign workspaces to outputs
+workspace $workspace_www        output $output_monitor $output_laptop
+workspace $workspace_mail       output $output_laptop $output_monitor
+workspace $workspace_editor     output $output_monitor $output_laptop
+workspace $workspace_terminals  output $output_monitor $output_laptop
+workspace 5                     output $output_monitor $output_laptop
+workspace 6                     output $output_monitor $output_laptop
+workspace 7                     output $output_monitor $output_laptop
+workspace $workspace_documents  output $output_monitor $output_laptop
+workspace $workspace_multimedia output $output_monitor $output_laptop
+workspace $workspace_torrent    output $output_laptop $output_monitor
