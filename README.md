@@ -27,16 +27,15 @@ For GRUB with BTRFS snapshots see branch 'grub'
    - list available networks: `station wlan0 get-networks`
    - connect to a network: `station wlan0 connect SSID`
 4. Update repos and install git: `pacman -Sy git`
-5. (if previous step fails) Init keyring: `pacman-key --init && pacman-key --populate`
+5. (if previous step fails) Init and populate keyring: `pacman-key --init && pacman-key --populate`
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
-8. Reboot and re-enable secure boot
-9. Boot into new installation
-10. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
-11. Copy wireguard config to /etc/wireguard/wg0.conf
-12. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
-13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
-14. Re-configure p10k: `p10k configure`
+8. Reboot
+9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
+10. Copy wireguard config to /etc/wireguard/wg0.conf
+11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
+12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
+13. Re-configure p10k: `p10k configure`
 
 ## Misc guides
 
