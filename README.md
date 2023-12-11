@@ -36,6 +36,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 11. Copy wireguard config to /etc/wireguard/wg0.conf
 12. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 13. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
+14. Re-configure p10k: `p10k configure`
 
 ## Misc guides
 
