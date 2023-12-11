@@ -54,6 +54,9 @@ flatpak install -y flathub com.heroicgameslauncher.hgl
 # Create directory for Heroic games
 mkdir -p /home/${NEW_USER}/Games/Heroic
 
+# Create Documents folder
+mkdir -p /home/${NEW_USER}/Games/Heroic/Prefixes/default/drive_c/users/${NEW_USER}/Documents
+
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl
 
