@@ -652,6 +652,7 @@ flatpak install -y flathub org.keepassxc.KeePassXC
 flatpak install -y flathub com.bitwarden.desktop
 flatpak install -y flathub org.libreoffice.LibreOffice
 flatpak install -y flathub org.chromium.Chromium
+flatpak install -y flathub com.belmoussaoui.Authenticator
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian

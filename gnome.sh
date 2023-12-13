@@ -103,7 +103,6 @@ sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd
 ################################################
 
 # Install applications
-flatpak install -y flathub com.belmoussaoui.Authenticator
 flatpak install -y flathub com.github.marhkb.Pods
 flatpak install -y flathub com.mattjakeman.ExtensionManager
 
