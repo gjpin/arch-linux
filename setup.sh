@@ -250,6 +250,9 @@ mkdir -p \
 
 chown 700 /home/${NEW_USER}/.ssh
 
+# Create zsh configs directory
+mkdir -p /home/${NEW_USER}/.zshrc.d
+
 # Updater helper
 tee /home/${NEW_USER}/.zshrc.d/update-all << EOF
 # Update helper
@@ -278,9 +281,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc 
 # https://github.com/romkatv/powerlevel10k#oh-my-zsh
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/${NEW_USER}/.oh-my-zsh/custom/themes/powerlevel10k
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
-
-# Create zsh configs directory
-mkdir -p /home/${NEW_USER}/.zshrc.d
 
 # Add ~/.local/bin to the path
 mkdir -p /home/${NEW_USER}/.local/bin
