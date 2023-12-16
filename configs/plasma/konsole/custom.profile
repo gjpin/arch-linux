@@ -1,7 +1,7 @@
 [Appearance]
 ColorScheme=Breeze_Dark_Modern
 Font=NotoSansM Nerd Font Mono,10,-1,5,57,0,0,0,0,0,Medium
-TabColor=0,120,212
+TabColor=27,30,32,0
 
 [General]
 Name=custom
