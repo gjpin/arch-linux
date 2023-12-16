@@ -622,6 +622,19 @@ pacman -S --noconfirm kubectl helm k9s kubectx
 flatpak install -y flathub dev.k8slens.OpenLens
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.k8slens.OpenLens -o /home/${NEW_USER}/.local/share/flatpak/overrides/dev.k8slens.OpenLens
 
+# Kubernetes aliases and autocompletion
+tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
+# Aliases
+alias k="kubectl"
+alias kx="kubectx"
+alias kn="kubens"
+
+# Autocompletion
+autoload -Uz compinit
+compinit
+source <(kubectl completion zsh)
+EOF
+
 ################################################
 ##### Paru
 ################################################
