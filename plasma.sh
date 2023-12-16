@@ -130,6 +130,36 @@ QT_QPA_PLATFORM="wayland;xcb"
 EOF
 
 ################################################
+##### Konsole
+################################################
+
+# Create Konsole configs directory
+mkdir -p /home/${NEW_USER}/.local/share/konsole
+
+# Apply Konsole configurations
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/konsole_breeze_modern_dark.css -o /home/${NEW_USER}/.config/konsole_breeze_modern_dark.css
+
+tee /home/${NEW_USER}/.config/konsolerc << EOF
+MenuBar=Disabled
+
+[Desktop Entry]
+DefaultProfile=custom.profile
+
+[KonsoleWindow]
+RememberWindowSize=false
+
+[TabBar]
+TabBarUseUserStyleSheet=true
+TabBarUserStyleSheetFile=file:///home/${NEW_USER}/.config/konsole_breeze_modern_dark.css
+EOF
+
+# Import Konsole custom profile
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/custom.profile -o /home/${NEW_USER}/.local/share/konsole/custom.profile
+
+# Import Konsole custom color scheme
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/Breeze_Dark_Modern.profile -o /home/${NEW_USER}/.local/share/konsole/Breeze_Dark_Modern.profile
+
+################################################
 ##### GTK theming
 ################################################
 
@@ -232,7 +262,8 @@ curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.gi
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/ObsidianDark.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/SlackAubergineLightcolors.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Spotify.colors
-curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/VSCodeDefaultDark.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/VSCodeDarkModern.colors
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Konsole.colors
 
 # Set Plasma theme
 sudo -u ${NEW_USER} kwriteconfig5 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezedark.desktop"
@@ -283,8 +314,7 @@ sudo -u ${NEW_USER} kwriteconfig5 --file konsolerc --group "MainWindow" --key "M
 
 # Window decorations
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key Description "Application settings for vscode"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key decocolor "VSCodeDefaultDark"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key decocolorrule 2
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key decocolor "VSCodeDarkModern"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclass "code"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclasscomplete --type bool true
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 1 --key wmclassmatch 1
@@ -352,6 +382,12 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolorr
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclass "slack"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key clientmachine "localhost"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key Description "Application settings for konsole"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key decocolor "Konsole.colors"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key wmclass "konsole org.kde.konsole"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key wmclassmatch 1
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count 10
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10"

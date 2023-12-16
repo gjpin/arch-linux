@@ -52,13 +52,23 @@ EOF
 flatpak install -y flathub com.heroicgameslauncher.hgl
 
 # Create directory for Heroic games
-mkdir -p /home/${NEW_USER}/Games/Heroic
-
-# Create Documents folder
-mkdir -p /home/${NEW_USER}/Games/Heroic/Prefixes/default/drive_c/users/${NEW_USER}/Documents
+mkdir -p /home/${NEW_USER}/Games/Heroic/{Epic,GOG}
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl
+
+# Configure Heroic
+mkdir -p /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic
+tee /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic/config.json << EOF
+{
+    "defaultInstallPath": "/home/${NEW_USER}/Games/Heroic",
+    "defaultSteamPath": "/home/${NEW_USER}/.var/app/com.valvesoftware.Steam/.steam/steam/",
+    "defaultWinePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes",
+    "winePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes/default",
+  },
+  "version": "v0"
+}
+EOF
 
 # Configure MangoHud for Heroic
 mkdir -p /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud

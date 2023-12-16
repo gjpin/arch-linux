@@ -1,0 +1,15 @@
+QTabBar,
+QTabBar::tab
+{
+    background-color: #181818;
+}
+
+QTabBar::tab:hover
+{
+    background-color: #1f1f1f;
+}
+
+QTabBar::tab:selected
+{
+    background-color: #1f1f1f;
+}

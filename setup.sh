@@ -698,7 +698,8 @@ pacman -S --noconfirm \
     typescript-language-server \
     bash-language-server \
     python-lsp-server \
-    yaml-language-server
+    yaml-language-server \
+    vscode-json-languageserver
 
 # Install Terraform
 pacman -S --noconfirm terraform
