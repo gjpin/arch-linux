@@ -61,10 +61,17 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 mkdir -p /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic
 tee /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic/config.json << EOF
 {
+  "defaultSettings": {
     "defaultInstallPath": "/home/${NEW_USER}/Games/Heroic",
     "defaultSteamPath": "/home/${NEW_USER}/.var/app/com.valvesoftware.Steam/.steam/steam/",
     "defaultWinePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes",
     "winePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes/default",
+    "enviromentOptions": [
+      {
+        "key": "WINE_LARGE_ADDRESS_AWARE",
+        "value": "0"
+      }
+    ],
   },
   "version": "v0"
 }
