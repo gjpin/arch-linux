@@ -253,6 +253,7 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kglobalshortcutsrc --group kwin --key "
 
 # Import Plasma color schemes
 mkdir -p /home/${NEW_USER}/.local/share/color-schemes
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Aseprite.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Blender.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/DiscordDark.colors
 curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Gimp.colors
@@ -377,17 +378,23 @@ sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key clientmachi
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 9 --key wmclassmatch 1
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key Description "Application settings for slack"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolor "SlackAubergineLight.colors"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolor "SlackAubergineLight"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key decocolorrule 2
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclass "slack"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key clientmachine "localhost"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 10 --key wmclassmatch 1
 
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key Description "Application settings for konsole"
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key decocolor "Konsole.colors"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key decocolor "Konsole"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key wmclass "konsole org.kde.konsole"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key clientmachine "localhost"
 sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 11 --key wmclassmatch 1
 
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count 10
-sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 12 --key Description "Application settings for Aseprite"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 12 --key decocolor "Aseprite"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 12 --key wmclass "aseprite"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 12 --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group 12 --key wmclassmatch 1
+
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key count 12
+sudo -u ${NEW_USER} kwriteconfig5 --file kwinrulesrc --group General --key rules "1,2,3,4,5,6,7,8,9,10,11,12"
