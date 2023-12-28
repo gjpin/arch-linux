@@ -717,6 +717,9 @@ pacman -S --noconfirm \
 # Install Terraform
 pacman -S --noconfirm terraform
 
+# Install LLVM and scons
+pacman -S --noconfirm llvm scons
+
 ################################################
 ##### Neovim
 ################################################
