@@ -244,11 +244,18 @@ mkdir -p \
   /home/${NEW_USER}/.config/environment.d \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/systemd/user \
-  /home/${NEW_USER}/.ssh \
   /home/${NEW_USER}/.icons \
   /home/${NEW_USER}/src
 
+# Create SSH directory and config file
+mkdir -p /home/${NEW_USER}/.ssh
+
 chown 700 /home/${NEW_USER}/.ssh
+
+tee /home/${NEW_USER}/.ssh/config << EOF
+Host *
+    ServerAliveInterval 60
+EOF
 
 # Create zsh configs directory
 mkdir -p /home/${NEW_USER}/.zshrc.d
