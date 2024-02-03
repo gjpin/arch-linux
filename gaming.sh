@@ -18,7 +18,7 @@ flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 flatpak install -y flathub com.valvesoftware.Steam
 
 # Create directory for Steam games
-mkdir -p /home/${NEW_USER}/Games/Steam
+mkdir -p /home/${NEW_USER}/games/steam
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.valvesoftware.Steam
@@ -52,7 +52,7 @@ EOF
 flatpak install -y flathub com.heroicgameslauncher.hgl
 
 # Create directory for Heroic games
-mkdir -p /home/${NEW_USER}/Games/Heroic/{Epic,GOG}
+mkdir -p /home/${NEW_USER}/games/heroic/{epic,gog}
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl

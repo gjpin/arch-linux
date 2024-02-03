@@ -1,5 +1,0 @@
-[Context]
-sockets=wayland;
-
-[Environment]
-MOZ_ENABLE_WAYLAND=1

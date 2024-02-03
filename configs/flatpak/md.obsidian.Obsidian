@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;xdg-documents/obsidian;
+filesystems=!home;home/Sync/obsidian/vault;

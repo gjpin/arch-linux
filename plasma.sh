@@ -87,7 +87,8 @@ pacman -S --noconfirm \
     sshfs \
     kfind \
     quota-tools \
-    filelight
+    filelight \
+    kommit
     
 # Install VLC
 pacman -S --noconfirm vlc

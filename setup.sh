@@ -667,14 +667,14 @@ rm -rf paru-bin
 # Install user applications
 flatpak install -y flathub rest.insomnia.Insomnia
 flatpak install -y flathub com.spotify.Client
-flatpak install -y flathub md.obsidian.Obsidian
 flatpak install -y flathub org.keepassxc.KeePassXC
 flatpak install -y flathub com.bitwarden.desktop
 flatpak install -y flathub org.libreoffice.LibreOffice
-flatpak install -y flathub org.chromium.Chromium
+flatpak install -y flathub com.brave.Browser
 flatpak install -y flathub com.belmoussaoui.Authenticator
 
-# Import Flatpak overrides
+# Install Obsidian
+flatpak install -y flathub md.obsidian.Obsidian
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian
 
 ################################################
@@ -702,14 +702,6 @@ tee /home/${NEW_USER}/.zshrc.d/go << 'EOF'
 export GOPATH="$HOME/.devtools/go"
 EOF
 
-# Change npm's default directory
-# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
-mkdir /home/${NEW_USER}/.devtools/npm-global
-sudo -u ${NEW_USER} npm config set prefix "/home/${NEW_USER}/.devtools/npm-global"
-tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
-export PATH=$HOME/.devtools/npm-global/bin:$PATH
-EOF
-
 # Install language servers
 pacman -S --noconfirm \
     typescript-language-server \
@@ -732,42 +724,20 @@ pacman -S --noconfirm llvm clang lld mold scons
 # https://github.com/nvm-sh/nvm#manual-install
 
 # Install NVM
-git clone https://github.com/nvm-sh/nvm.git /home/${NEW_USER}/.nvm
-cd /home/${NEW_USER}/.nvm
-git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-cd
-
-# Source NVM temporarily
-export NVM_DIR="/home/${NEW_USER}/.nvm"
-[ -s "/home/${NEW_USER}/nvm.sh" ] && \. "/home/${NEW_USER}/nvm.sh"
+paru  -S --noconfirm nvm
 
 # Source NVM permanently
 tee /home/${NEW_USER}/.zshrc.d/nvm << 'EOF'
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Source NVM
+source /usr/share/nvm/init-nvm.sh
 EOF
-
-# NVM updater
-tee /home/${NEW_USER}/.local/bin/update-nvm << 'EOF'
-#!/usr/bin/bash
-
-# Update NVM
-cd ${HOME}/.nvm
-git fetch --tags origin
-git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-EOF
-
-chmod +x /home/${NEW_USER}/.local/bin/update-nvm
-
-# Add nvm updater to updater function
-sed -i '2 i \ ' /home/${NEW_USER}/.zshrc.d/update-all
-sed -i '2 i \ \ update-nvm' /home/${NEW_USER}/.zshrc.d/update-all
-sed -i '2 i \ \ # Update NVM' /home/${NEW_USER}/.zshrc.d/update-all
 
 # Node updater
 tee /home/${NEW_USER}/.local/bin/update-node << 'EOF'
 #!/usr/bin/bash
+
+# Source NVM
+source /usr/share/nvm/init-nvm.sh
 
 # Update node and npm
 nvm install --lts
@@ -780,6 +750,9 @@ chmod +x /home/${NEW_USER}/.local/bin/update-node
 sed -i '2 i \ ' /home/${NEW_USER}/.zshrc.d/update-all
 sed -i '2 i \ \ update-node' /home/${NEW_USER}/.zshrc.d/update-all
 sed -i '2 i \ \ # Update Node' /home/${NEW_USER}/.zshrc.d/update-all
+
+# Source NVM temporarily
+source /usr/share/nvm/init-nvm.sh
 
 # Install Node LTS and latest supported NPM version
 sudo -u ${NEW_USER} nvm install --lts
@@ -873,9 +846,6 @@ flatpak install -y flathub org.mozilla.firefox
 sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.desktop
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
-
-# Import Flatpak overrides
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.mozilla.firefox -o /home/${NEW_USER}/.local/share/flatpak/overrides/org.mozilla.firefox
 
 # Temporarily open firefox to create profile folder
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
