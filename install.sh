@@ -25,6 +25,9 @@ export DESKTOP_ENVIRONMENT
 read -p "Gaming (yes / no): " GAMING
 export GAMING
 
+read -p "Visual Studio Code (yes / no): " VSCODE
+export VSCODE
+
 # CPU vendor
 if cat /proc/cpuinfo | grep "vendor" | grep "GenuineIntel" > /dev/null; then
     export CPU_MICROCODE="intel-ucode"

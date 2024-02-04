@@ -704,11 +704,16 @@ EOF
 
 # Install language servers
 pacman -S --noconfirm \
-    typescript-language-server \
     bash-language-server \
+    eslint-language-server \
     python-lsp-server \
-    yaml-language-server \
-    vscode-json-languageserver
+    typescript-language-server \
+    vue-language-server \
+    vscode-css-languageserver \
+    vscode-html-languageserver \
+    vscode-json-languageserver \
+    vscode-markdown-languageserver \
+    yaml-language-server
 
 # Install Terraform
 pacman -S --noconfirm terraform
@@ -867,24 +872,26 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/use
 ##### VSCode
 ################################################
 
-# Install VSCode
-sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
+if [ ${VSCODE} = "yes" ]; then
+    # Install VSCode
+    sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 
-# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
-pacman -S --noconfirm xorg-server-xvfb
+    # (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
+    pacman -S --noconfirm xorg-server-xvfb
 
-# Install VSCode extensions
-sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
-sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
-sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
-sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
+    # Install VSCode extensions
+    sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
+    sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
+    sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
+    sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+    sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
+    sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
+    sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
 
-# Import VSCode settings
-mkdir -p /home/${NEW_USER}/.config/Code/User
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
+    # Import VSCode settings
+    mkdir -p /home/${NEW_USER}/.config/Code/User
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
+fi
 
 ################################################
 ##### Desktop Environment
