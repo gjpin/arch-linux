@@ -687,6 +687,14 @@ sudo -u ${NEW_USER} git config --global init.defaultBranch main
 # Create dev tools directory
 mkdir -p /home/${NEW_USER}/.devtools
 
+# Change npm's default directory
+# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
+mkdir /home/${NEW_USER}/.devtools/npm-global
+sudo -u ${NEW_USER} npm config set prefix "/home/${NEW_USER}/.devtools/npm-global"
+tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
+export PATH=$HOME/.devtools/npm-global/bin:$PATH
+EOF
+
 # Install Python and create alias for python venv
 pacman -S --noconfirm python
 mkdir -p /home/${NEW_USER}/.devtools/python

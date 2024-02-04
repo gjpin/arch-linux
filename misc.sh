@@ -338,15 +338,3 @@ EOF
 pacman -S --noconfirm terraform packer
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
-
-################################################
-##### Development
-################################################
-
-# Change npm's default directory
-# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
-mkdir /home/${NEW_USER}/.devtools/npm-global
-sudo -u ${NEW_USER} npm config set prefix "/home/${NEW_USER}/.devtools/npm-global"
-tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
-export PATH=$HOME/.devtools/npm-global/bin:$PATH
-EOF
