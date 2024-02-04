@@ -1,7 +1,9 @@
 #!/usr/bin/bash
 
 # Enable kde-unstable repository
-sed -i '/^\[core\]/i \[kde-unstable\]\nInclude = \/etc\/pacman.d\/mirrorlist\n' /etc/pacman.conf
+sed -i '/^\[core\]/i \
+[kde-unstable] \
+Include = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
 
 # Plasma packages
 pacman -S --noconfirm \
