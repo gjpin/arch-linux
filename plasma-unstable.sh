@@ -4,6 +4,7 @@
 sed -i '/^\[core\]/i \
 [kde-unstable] \
 Include = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
+pacman -Syu
 
 # Plasma packages
 pacman -S --noconfirm \
