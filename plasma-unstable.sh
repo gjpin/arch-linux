@@ -118,9 +118,9 @@ GTK_USE_PORTAL=1
 EOF
 
 # Disable baloo (file indexer)
-sudo -u ${NEW_USER} balooctl suspend
-sudo -u ${NEW_USER} balooctl disable
-sudo -u ${NEW_USER} balooctl purge
+sudo -u ${NEW_USER} balooctl6 suspend
+sudo -u ${NEW_USER} balooctl6 disable
+sudo -u ${NEW_USER} balooctl6 purge
 
 ################################################
 ##### SDDM
