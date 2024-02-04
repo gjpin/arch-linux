@@ -1,5 +1,5 @@
 [Appearance]
-ColorScheme=Breeze_Dark_Modern
+ColorScheme=Breeze Dark Modern
 Font=NotoSansM Nerd Font Mono,10,-1,5,57,0,0,0,0,0,Medium
 TabColor=27,30,32,0
 

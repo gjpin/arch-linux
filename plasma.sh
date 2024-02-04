@@ -140,7 +140,7 @@ EOF
 mkdir -p /home/${NEW_USER}/.local/share/konsole
 
 # Apply Konsole configurations
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/konsole_breeze_modern_dark.css -o /home/${NEW_USER}/.config/konsole_breeze_modern_dark.css
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/konsole_breeze_modern_dark.css -o /home/${NEW_USER}/.local/share/konsole/konsole_breeze_modern_dark.css
 
 tee /home/${NEW_USER}/.config/konsolerc << EOF
 MenuBar=Disabled
@@ -153,14 +153,14 @@ RememberWindowSize=false
 
 [TabBar]
 TabBarUseUserStyleSheet=true
-TabBarUserStyleSheetFile=file:///home/${NEW_USER}/.config/konsole_breeze_modern_dark.css
+TabBarUserStyleSheetFile=file:///home/${NEW_USER}/.local/share/konsole/konsole_breeze_modern_dark.css
 EOF
 
 # Import Konsole custom profile
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/custom.profile -o /home/${NEW_USER}/.local/share/konsole/custom.profile
 
 # Import Konsole custom color scheme
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/Breeze_Dark_Modern.profile -o /home/${NEW_USER}/.local/share/konsole/Breeze_Dark_Modern.profile
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/konsole/Breeze_Dark_Modern.colorscheme -o /home/${NEW_USER}/.local/share/konsole/Breeze_Dark_Modern.colorscheme
 
 ################################################
 ##### GTK theming

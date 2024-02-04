@@ -737,7 +737,7 @@ pacman -S --noconfirm llvm clang lld mold scons
 # https://github.com/nvm-sh/nvm#manual-install
 
 # Install NVM
-paru  -S --noconfirm nvm
+sudo -u ${NEW_USER} paru -S --noconfirm nvm
 
 # Source NVM permanently
 tee /home/${NEW_USER}/.zshrc.d/nvm << 'EOF'
