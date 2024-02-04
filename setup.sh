@@ -268,7 +268,7 @@ update-all() {
     sudo pacman -Sy --noconfirm archlinux-keyring
 
     # Update all packages
-    paru -Syu
+    paru -Syyu
 
     # Update firmware
     sudo fwupdmgr refresh

@@ -52,9 +52,11 @@ pacman -S --noconfirm \
     baloo-widgets \
     dolphin-plugins \
     ffmpegthumbs \
+    kde-inotify-survey \
     kdeconnect \
     kdegraphics-thumbnailers \
     kdenetwork-filesharing \
+    kio-admin \
     kio-extras \
     kio-fuse \
     libappindicator-gtk3 \

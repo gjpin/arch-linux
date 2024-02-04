@@ -8,7 +8,7 @@
 
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
 
-# echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests\|qqc2-breeze-style/d'
+# echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests/d'
 
 # Plasma packages
 
@@ -73,12 +73,12 @@ xdg-desktop-portal-kde
 baloo-widgets
 dolphin-plugins
 ffmpegthumbs
-kde-inotify-survey # available on AUR
+kde-inotify-survey
 kdeconnect-kde # kdeconnect
 kdegraphics-thumbnailers
 kdenetwork-filesharing
 kdepim-addons # skip
-kio-admin # available on AUR
+kio-admin
 kio-extras
 kio-fuse
 kio-gdrive # skip
