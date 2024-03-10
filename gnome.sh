@@ -80,7 +80,7 @@ pacman -S --noconfirm webp-pixbuf-loader
 sudo -u ${NEW_USER} paru -S --noconfirm shared-mime-info-gnome
 
 ################################################
-##### Remove unneeded packages and services
+##### Disable unneeded packages and services
 ################################################
 
 # Disable ABRT service
@@ -118,13 +118,6 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v5.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
-rm -f shell-extension.zip
-
-# Rounded Window Corners
-# https://extensions.gnome.org/extension/5237/rounded-window-corners/
-curl -sSL https://extensions.gnome.org/extension-data/rounded-window-cornersyilozt.v11.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/rounded-window-corners@yilozt
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
@@ -248,7 +241,7 @@ disable-user-extensions=false
 favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
-enabled-extensions=['grand-theft-focus@zalckos.github.com', 'rounded-window-corners@yilozt', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
+enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
