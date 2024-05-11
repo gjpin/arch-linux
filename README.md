@@ -42,7 +42,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 ### How to chroot
 
 ```bash
-cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
+cryptsetup luksOpen /dev/disk/by-partlabel/ROOT system
 mount -t ext4 LABEL=system /mnt
 mount /dev/nvme0n1p1 /mnt/boot
 arch-chroot /mnt

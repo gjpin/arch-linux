@@ -404,6 +404,11 @@ pacman -S --noconfirm tpm2-tools tpm2-tss
 sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch.conf
 sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
 
+if [ ${RAID0} = "yes" ]; then
+    sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme1n1p2)=tpm2-device=auto|" /boot/loader/entries/arch.conf
+    sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme1n1p2)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
+fi
+
 ################################################
 ##### Secure boot
 ################################################
