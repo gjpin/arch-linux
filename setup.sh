@@ -263,7 +263,6 @@ mkdir -p /home/${NEW_USER}/.zshrc.d
 
 # Updater helper
 tee /home/${NEW_USER}/.zshrc.d/update-all << EOF
-# Update helper
 update-all() {
     # Update keyring
     sudo pacman -Sy --noconfirm archlinux-keyring
