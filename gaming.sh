@@ -121,7 +121,7 @@ flatpak install -y flathub org.freedesktop.Sdk//23.08 \
 curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
 
 # Install ALVR
-sudo -u ${NEW_USER} flatpak --user install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
 
 # Remove ALVR flatpak
 rm -f com.valvesoftware.Steam.Utility.alvr.flatpak

@@ -965,7 +965,5 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 # Revert sudoers change
 sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
 
-if [ ${VSCODE} = "yes" ]; then
-    # Remove Virtual framebuffer X server
-    pacman -Rs --noconfirm xorg-server-xvfb
-fi
+# Remove Virtual framebuffer X server
+pacman -Rs --noconfirm xorg-server-xvfb
