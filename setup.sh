@@ -95,7 +95,8 @@ pacman -S --noconfirm \
     lazygit \
     ripgrep \
     fd \
-    fzf
+    fzf \
+    gptfdisk
 
 # Add AppImage support
 pacman -S --noconfirm \
