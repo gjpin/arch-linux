@@ -61,6 +61,13 @@ sed -i "s|^#VerbosePkgLists|VerbosePkgLists|g" /etc/pacman.conf
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = 5|g" /etc/pacman.conf
 sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 
+# Enable multilib repository
+tee -a /etc/pacman.conf << EOF
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+EOF
+
 # Upgrade system
 pacman -Syy
 
@@ -465,6 +472,15 @@ pacman -S --noconfirm vulkan-tools
 # Install ffmpeg
 pacman -S --noconfirm ffmpeg
 
+# Install 32-bit packages
+if lspci | grep "VGA" | grep "Intel" > /dev/null; then
+    pacman -S --noconfirm lib32-vulkan-intel
+elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
+    pacman -S --noconfirm lib32-vulkan-radeon
+fi
+
+pacman -S --noconfirm lib32-mesa
+
 ################################################
 ##### systemd
 ################################################
@@ -547,6 +563,10 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/glo
 # Install Flatpak runtimes
 flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/23.08
 flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
+flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
+flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.08
+flatpak install -y flathub org.freedesktop.Platform.GL.default//23.08-extra
+flatpak install -y flathub org.freedesktop.Platform.GL32.default//23.08-extra
 
 if lspci | grep VGA | grep "Intel" > /dev/null; then
   flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/23.08
@@ -724,6 +744,10 @@ pacman -S --noconfirm terraform vault
 
 # Install C++ development related packages
 pacman -S --noconfirm llvm clang lld mold scons
+
+# Install rust
+pacman -S --noconfirm rustup
+sudo -u ${NEW_USER} rustup default stable
 
 ################################################
 ##### Node.js

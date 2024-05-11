@@ -54,6 +54,37 @@ EOF
 sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
 
 ################################################
+##### ALVR (Flatpak)
+################################################
+
+# References:
+# https://github.com/alvr-org/ALVR/wiki/Flatpak
+
+# Download ALVR
+curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
+
+# Install ALVR
+flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+
+# Remove ALVR flatpak
+rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
+
+# Allow ALVR in firewall
+firewall-cmd --zone=block --add-service=alvr
+firewall-cmd --zone=trusted --add-service=alvr
+
+firewall-cmd --permanent --zone=block --add-service=alvr
+firewall-cmd --permanent --zone=trusted --add-service=alvr
+
+# Create ALVR dashboard alias
+tee /home/${NEW_USER}/.zshrc.d/alvr << 'EOF'
+alias alvr="flatpak run --command=alvr_dashboard com.valvesoftware.Steam"
+EOF
+
+# Create ALVR desktop shortcut
+curl https://raw.githubusercontent.com/alvr-org/ALVR/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop -o /home/${NEW_USER}/.local/share/applications/com.valvesoftware.Steam.Utility.alvr.desktop
+
+################################################
 ##### homed
 ################################################
 
@@ -98,11 +129,46 @@ rm -f /root/user_record
 homectl update ${NEW_USER} -G libvirt
 
 ################################################
+##### Steam (Flatpak)
+################################################
+
+# Install Steam
+flatpak install -y flathub com.valvesoftware.Steam
+
+# Create directory for Steam games
+mkdir -p /home/${NEW_USER}/games/steam
+
+# Import Flatpak overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.valvesoftware.Steam
+
+# Steam controllers udev rules
+curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
+udevadm control --reload-rules
+
+# Configure MangoHud for Steam
+mkdir -p /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/config/MangoHud
+tee /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/config/MangoHud/MangoHud.conf << EOF
+legacy_layout=0
+horizontal
+gpu_stats
+cpu_stats
+ram
+fps
+frametime=0
+hud_no_margin
+table_columns=14
+frame_timing=1
+engine_version
+vulkan_driver
+EOF
+
+################################################
 ##### 32-bit packages + native steam/heroic
 ################################################
 
 # Enable multilib repository
 tee -a /etc/pacman.conf << EOF
+
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 EOF
