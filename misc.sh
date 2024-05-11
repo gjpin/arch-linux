@@ -338,3 +338,15 @@ EOF
 pacman -S --noconfirm terraform packer
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
+
+################################################
+##### Other apps
+################################################
+
+# Install Open Lens
+flatpak install -y flathub dev.k8slens.OpenLens
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.k8slens.OpenLens -o /home/${NEW_USER}/.local/share/flatpak/overrides/dev.k8slens.OpenLens
+
+# Install Obsidian
+flatpak install -y flathub md.obsidian.Obsidian
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian

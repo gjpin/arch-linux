@@ -10,6 +10,9 @@ flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
 # Install Gamescope
 flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 
+# Install Gamemode
+pacman -S --noconfirm gamemode
+
 ################################################
 ##### Steam (Flatpak)
 ################################################
@@ -57,26 +60,6 @@ mkdir -p /home/${NEW_USER}/games/heroic/{epic,gog}
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl
 
-# Configure Heroic
-mkdir -p /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic
-tee /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/heroic/config.json << EOF
-{
-  "defaultSettings": {
-    "defaultInstallPath": "/home/${NEW_USER}/Games/Heroic",
-    "defaultSteamPath": "/home/${NEW_USER}/.var/app/com.valvesoftware.Steam/.steam/steam/",
-    "defaultWinePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes",
-    "winePrefix": "/home/${NEW_USER}/Games/Heroic/Prefixes/default",
-    "enviromentOptions": [
-      {
-        "key": "WINE_LARGE_ADDRESS_AWARE",
-        "value": "0"
-      }
-    ],
-  },
-  "version": "v0"
-}
-EOF
-
 # Configure MangoHud for Heroic
 mkdir -p /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud
 tee /home/${NEW_USER}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud/MangoHud.conf << EOF
@@ -119,3 +102,38 @@ if [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
 elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.config/sunshine/apps.json
 fi
+
+################################################
+##### ALVR
+################################################
+
+# References:
+# https://github.com/alvr-org/ALVR/wiki/Flatpak
+
+# Install dependencies
+flatpak install -y flathub org.freedesktop.Sdk//23.08 \
+    org.freedesktop.Sdk.Extension.llvm16//23.08 \
+    org.freedesktop.Sdk.Extension.rust-stable//23.08 \
+    org.freedesktop.Platform.GL.default//23.08-extra \
+    org.freedesktop.Platform.GL32.default//23.08-extra
+
+# Download ALVR
+curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
+
+# Install ALVR
+sudo -u ${NEW_USER} flatpak --user install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+
+# Remove ALVR flatpak
+rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
+
+# Allow ALVR in firewall
+firewall-cmd --zone=block --add-service=alvr
+firewall-cmd --zone=trusted --add-service=alvr
+
+firewall-cmd --permanent --zone=block --add-service=alvr
+firewall-cmd --permanent --zone=trusted --add-service=alvr
+
+# Create ALVR dashboard alias
+tee /home/${NEW_USER}/.zshrc.d/alvr << 'EOF'
+alias alvr="flatpak run --command=alvr_dashboard com.valvesoftware.Steam"
+EOF

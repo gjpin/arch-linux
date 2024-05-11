@@ -625,10 +625,6 @@ EOF
 # Install k8s applications
 pacman -S --noconfirm kubectl helm k9s kubectx
 
-# Install Open Lens
-flatpak install -y flathub dev.k8slens.OpenLens
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.k8slens.OpenLens -o /home/${NEW_USER}/.local/share/flatpak/overrides/dev.k8slens.OpenLens
-
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
 # Aliases
@@ -673,9 +669,9 @@ flatpak install -y flathub org.libreoffice.LibreOffice
 flatpak install -y flathub com.brave.Browser
 flatpak install -y flathub com.belmoussaoui.Authenticator
 
-# Install Obsidian
-flatpak install -y flathub md.obsidian.Obsidian
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian
+# Install Joplin
+flatpak install -y flathub net.cozic.joplin_desktop
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/net.cozic.joplin_desktop -o /home/${NEW_USER}/.local/share/flatpak/overrides/net.cozic.joplin_desktop
 
 ################################################
 ##### Development (languages, LSP, neovim)
@@ -724,7 +720,7 @@ pacman -S --noconfirm \
     yaml-language-server
 
 # Install Terraform
-pacman -S --noconfirm terraform
+pacman -S --noconfirm terraform vault
 
 # Install C++ development related packages
 pacman -S --noconfirm llvm clang lld mold scons
@@ -880,26 +876,24 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/use
 ##### VSCode
 ################################################
 
-if [ ${VSCODE} = "yes" ]; then
-    # Install VSCode
-    sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
+# Install VSCode
+sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 
-    # (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
-    pacman -S --noconfirm xorg-server-xvfb
+# (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
+pacman -S --noconfirm xorg-server-xvfb
 
-    # Install VSCode extensions
-    sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
-    sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
-    sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
-    sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-    sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
-    sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
-    sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
+# Install VSCode extensions
+sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
+sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
+sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
+sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
+sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
 
-    # Import VSCode settings
-    mkdir -p /home/${NEW_USER}/.config/Code/User
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
-fi
+# Import VSCode settings
+mkdir -p /home/${NEW_USER}/.config/Code/User
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
 
 ################################################
 ##### Desktop Environment
