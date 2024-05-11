@@ -113,8 +113,36 @@ setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 ##### ALVR (native)
 ################################################
 
-# Install ALVR
-sudo -u ${NEW_USER} paru -S --noconfirm alvr
+# References:
+# https://github.com/alvr-org/ALVR/blob/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop
+# https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
+
+# Download ALVR
+curl https://github.com/alvr-org/ALVR/releases/latest/download/alvr_streamer_linux.tar.gz -L -O
+
+# Extract ALVR
+tar -xzf alvr_streamer_linux.tar.gz
+mv alvr_streamer_linux /home/${NEW_USER}/.alvr
+
+# Cleanup ALVR.tar.gz
+rm -f alvr_streamer_linux.tar.gz
+
+# Create ALVR shortcut
+tee /home/${NEW_USER}/.local/share/applications/alvr.desktop << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ALVR
+GenericName=Game
+Comment=ALVR is an open source remote VR display which allows playing SteamVR games on a standalone headset such as Gear VR or Oculus Go/Quest.
+Exec=/home/${NEW_USER}/.alvr/bin/alvr_dashboard
+Icon=alvr
+Categories=Game;
+StartupNotify=true
+PrefersNonDefaultGPU=true
+X-KDE-RunOnDiscreteGpu=true
+StartupWMClass=ALVR
+EOF
 
 # Allow ALVR in firewall
 firewall-cmd --zone=block --add-service=alvr

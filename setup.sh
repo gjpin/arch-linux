@@ -435,6 +435,45 @@ sbctl sign -s /boot/vmlinuz-linux
 sbctl sign -s /boot/vmlinuz-linux-lts
 
 ################################################
+##### Paru
+################################################
+
+# References:
+# https://github.com/Morganamilo/paru
+
+# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
+echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
+
+# Install paru
+git clone https://aur.archlinux.org/paru-bin.git
+chown -R ${NEW_USER}:${NEW_USER} paru-bin
+cd paru-bin
+sudo -u ${NEW_USER} makepkg -si --noconfirm
+cd ..
+rm -rf paru-bin
+
+################################################
+##### ffmpeg
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/FFmpeg#Installation
+
+# Install ffmpeg
+pacman -S --noconfirm ffmpeg
+
+# Install dependencies
+# pacman -S --noconfirm tesseract-data-eng tesseract
+
+# Install ffmpeg
+# if lspci | grep "VGA" | grep "Intel" > /dev/null; then
+#     pacman -S --noconfirm vpl-gpu-rt
+#     pacman -S --noconfirm ffmpeg
+# elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
+#     sudo -u ${NEW_USER} paru -S --noconfirm ffmpeg-amd-full
+# fi
+
+################################################
 ##### GPU
 ################################################
 
@@ -468,9 +507,6 @@ pacman -S --noconfirm libva-utils
 
 # Install Vulkan tools
 pacman -S --noconfirm vulkan-tools
-
-# Install ffmpeg
-pacman -S --noconfirm ffmpeg
 
 # Install 32-bit packages
 if lspci | grep "VGA" | grep "Intel" > /dev/null; then
@@ -657,24 +693,6 @@ autoload -Uz compinit
 compinit
 source <(kubectl completion zsh)
 EOF
-
-################################################
-##### Paru
-################################################
-
-# References:
-# https://github.com/Morganamilo/paru
-
-# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
-echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
-
-# Install paru
-git clone https://aur.archlinux.org/paru-bin.git
-chown -R ${NEW_USER}:${NEW_USER} paru-bin
-cd paru-bin
-sudo -u ${NEW_USER} makepkg -si --noconfirm
-cd ..
-rm -rf paru-bin
 
 ################################################
 ##### User applications
