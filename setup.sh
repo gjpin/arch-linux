@@ -102,7 +102,6 @@ pacman -S --noconfirm \
     lazygit \
     ripgrep \
     fd \
-    fzf \
     gptfdisk
 
 # Add AppImage support
@@ -227,8 +226,8 @@ echo 'vm.max_map_count=1048576' > /etc/sysctl.d/99-max-map-count.conf
 # References:
 # https://wiki.archlinux.org/title/XDG_Base_Directory
 
-# Install ZSH and plugins
-pacman -S --noconfirm zsh zsh-completions zsh-autosuggestions zsh-syntax-highlighting
+# Install ZSH and dependencies
+pacman -S --noconfirm zsh fzf
 
 # Set root password and shell
 echo "root:${NEW_USER_PASSWORD}" | chpasswd
@@ -286,14 +285,10 @@ update-all() {
 }
 EOF
 
-# Install Oh-My-Zsh
-# https://github.com/ohmyzsh/ohmyzsh#manual-installation
-git clone https://github.com/ohmyzsh/ohmyzsh.git /home/${NEW_USER}/.oh-my-zsh
+# Configure ZSH
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc -o /home/${NEW_USER}/.zshrc
 
-# Install powerlevel10k zsh theme
-# https://github.com/romkatv/powerlevel10k#oh-my-zsh
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/${NEW_USER}/.oh-my-zsh/custom/themes/powerlevel10k
+# Configure powerlevel10k zsh theme
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
 
 # Add ~/.local/bin to the path
