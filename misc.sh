@@ -54,6 +54,48 @@ EOF
 sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
 
 ################################################
+##### Node.js
+################################################
+
+# References:
+# https://github.com/nvm-sh/nvm#manual-install
+
+# Install NVM
+sudo -u ${NEW_USER} paru -S --noconfirm nvm
+
+# Source NVM permanently
+tee /home/${NEW_USER}/.zshrc.d/nvm << 'EOF'
+# Source NVM
+source /usr/share/nvm/init-nvm.sh
+EOF
+
+# Node updater
+tee /home/${NEW_USER}/.local/bin/update-node << 'EOF'
+#!/usr/bin/bash
+
+# Source NVM
+source /usr/share/nvm/init-nvm.sh
+
+# Update node and npm
+nvm install --lts
+nvm install-latest-npm
+EOF
+
+chmod +x /home/${NEW_USER}/.local/bin/update-node
+
+# Add node updater to updater function
+sed -i '2 i \ ' /home/${NEW_USER}/.zshrc.d/update-all
+sed -i '2 i \ \ update-node' /home/${NEW_USER}/.zshrc.d/update-all
+sed -i '2 i \ \ # Update Node' /home/${NEW_USER}/.zshrc.d/update-all
+
+# Source NVM temporarily
+source /usr/share/nvm/init-nvm.sh
+
+# Install Node LTS and latest supported NPM version
+sudo -u ${NEW_USER} nvm install --lts
+sudo -u ${NEW_USER} nvm install-latest-npm
+
+################################################
 ##### ALVR (Flatpak)
 ################################################
 
@@ -83,6 +125,48 @@ EOF
 
 # Create ALVR desktop shortcut
 curl https://raw.githubusercontent.com/alvr-org/ALVR/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop -o /home/${NEW_USER}/.local/share/applications/com.valvesoftware.Steam.Utility.alvr.desktop
+
+################################################
+##### ALVR (native)
+################################################
+
+# References:
+# https://github.com/alvr-org/ALVR/blob/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop
+# https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
+
+# Download ALVR
+curl https://github.com/alvr-org/ALVR/releases/latest/download/alvr_streamer_linux.tar.gz -L -O
+
+# Extract ALVR
+tar -xzf alvr_streamer_linux.tar.gz
+mv alvr_streamer_linux /home/${NEW_USER}/.alvr
+
+# Cleanup ALVR.tar.gz
+rm -f alvr_streamer_linux.tar.gz
+
+# Create ALVR shortcut
+tee /home/${NEW_USER}/.local/share/applications/alvr.desktop << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ALVR
+GenericName=Game
+Comment=ALVR is an open source remote VR display which allows playing SteamVR games on a standalone headset such as Gear VR or Oculus Go/Quest.
+Exec=/home/${NEW_USER}/.alvr/bin/alvr_dashboard
+Icon=alvr
+Categories=Game;
+StartupNotify=true
+PrefersNonDefaultGPU=true
+X-KDE-RunOnDiscreteGpu=true
+StartupWMClass=ALVR
+EOF
+
+# Allow ALVR in firewall
+firewall-cmd --zone=block --add-service=alvr
+firewall-cmd --zone=trusted --add-service=alvr
+
+firewall-cmd --permanent --zone=block --add-service=alvr
+firewall-cmd --permanent --zone=trusted --add-service=alvr
 
 ################################################
 ##### homed

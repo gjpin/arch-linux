@@ -36,6 +36,7 @@ For GRUB with BTRFS snapshots see branch 'grub'
 11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 13. Re-configure p10k: `p10k configure`
+14. Install SteamVR, run `sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher` and then launch and close SteamVR
 
 ## Misc guides
 

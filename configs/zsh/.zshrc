@@ -32,6 +32,10 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::archlinux
+zinit snippet OMZP::node
+zinit snippet OMZP::npm
+zinit snippet OMZP::golang
+zinit snippet OMZP::python
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found

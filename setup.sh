@@ -61,13 +61,6 @@ sed -i "s|^#VerbosePkgLists|VerbosePkgLists|g" /etc/pacman.conf
 sed -i "s|^#ParallelDownloads.*|ParallelDownloads = 5|g" /etc/pacman.conf
 sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 
-# Enable multilib repository
-tee -a /etc/pacman.conf << EOF
-
-[multilib]
-Include = /etc/pacman.d/mirrorlist
-EOF
-
 # Upgrade system
 pacman -Syy
 
@@ -503,15 +496,6 @@ pacman -S --noconfirm libva-utils
 # Install Vulkan tools
 pacman -S --noconfirm vulkan-tools
 
-# Install 32-bit packages
-if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-    pacman -S --noconfirm lib32-vulkan-intel
-elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-    pacman -S --noconfirm lib32-vulkan-radeon
-fi
-
-pacman -S --noconfirm lib32-mesa
-
 ################################################
 ##### systemd
 ################################################
@@ -716,6 +700,9 @@ sudo -u ${NEW_USER} git config --global init.defaultBranch main
 # Create dev tools directory
 mkdir -p /home/${NEW_USER}/.devtools
 
+# Install NodeJS
+pacman -S --noconfirm nodejs
+
 # Change npm's default directory
 # https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
 mkdir /home/${NEW_USER}/.devtools/npm-global
@@ -761,48 +748,6 @@ pacman -S --noconfirm llvm clang lld mold scons
 # Install rust
 pacman -S --noconfirm rustup
 sudo -u ${NEW_USER} rustup default stable
-
-################################################
-##### Node.js
-################################################
-
-# References:
-# https://github.com/nvm-sh/nvm#manual-install
-
-# Install NVM
-sudo -u ${NEW_USER} paru -S --noconfirm nvm
-
-# Source NVM permanently
-tee /home/${NEW_USER}/.zshrc.d/nvm << 'EOF'
-# Source NVM
-source /usr/share/nvm/init-nvm.sh
-EOF
-
-# Node updater
-tee /home/${NEW_USER}/.local/bin/update-node << 'EOF'
-#!/usr/bin/bash
-
-# Source NVM
-source /usr/share/nvm/init-nvm.sh
-
-# Update node and npm
-nvm install --lts
-nvm install-latest-npm
-EOF
-
-chmod +x /home/${NEW_USER}/.local/bin/update-node
-
-# Add node updater to updater function
-sed -i '2 i \ ' /home/${NEW_USER}/.zshrc.d/update-all
-sed -i '2 i \ \ update-node' /home/${NEW_USER}/.zshrc.d/update-all
-sed -i '2 i \ \ # Update Node' /home/${NEW_USER}/.zshrc.d/update-all
-
-# Source NVM temporarily
-source /usr/share/nvm/init-nvm.sh
-
-# Install Node LTS and latest supported NPM version
-sudo -u ${NEW_USER} nvm install --lts
-sudo -u ${NEW_USER} nvm install-latest-npm
 
 ################################################
 ##### Neovim

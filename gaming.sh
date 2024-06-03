@@ -4,26 +4,35 @@
 ##### Utilities
 ################################################
 
+# References:
+# https://wiki.archlinux.org/title/MangoHud
+
 # Install MangoHud
 flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
 
 # Install Gamescope
 flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 
-# Install Gamemode
-pacman -S --noconfirm gamemode lib32-gamemode
+################################################
+##### Steam (Flatpak)
+################################################
 
-# Install Gamescope
-pacman -S --noconfirm gamescope
+# Install Steam
+flatpak install -y flathub com.valvesoftware.Steam
 
-# Install MangoHud
-pacman -S --noconfirm mangohud lib32-mangohud
+# Create directory for Steam games
+mkdir -p /home/${NEW_USER}/games/steam
 
-# Configure MangoHud
-# https://wiki.archlinux.org/title/MangoHud
-mkdir -p /home/${NEW_USER}/.config/MangoHud
+# Import Flatpak overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.valvesoftware.Steam
 
-tee /home/${NEW_USER}/.config/MangoHud/MangoHud.conf << EOF
+# Steam controllers udev rules
+curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
+udevadm control --reload-rules
+
+# Configure MangoHud for Steam
+mkdir -p /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/config/MangoHud
+tee /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/config/MangoHud/MangoHud.conf << EOF
 legacy_layout=0
 horizontal
 gpu_stats
@@ -37,18 +46,6 @@ frame_timing=1
 engine_version
 vulkan_driver
 EOF
-
-################################################
-##### Steam (native)
-################################################
-
-# Install Steam
-pacman -S --noconfirm steam
-pacman -Rs --noconfirm lib32-amdvlk
-
-# Steam controllers udev rules
-curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
-udevadm control --reload-rules
 
 ################################################
 ##### Heroic Games Launcher (Flatpak)
@@ -118,14 +115,13 @@ setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
 
 # Download ALVR
-curl https://github.com/alvr-org/ALVR/releases/latest/download/alvr_streamer_linux.tar.gz -L -O
+curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
 
-# Extract ALVR
-tar -xzf alvr_streamer_linux.tar.gz
-mv alvr_streamer_linux /home/${NEW_USER}/.alvr
+# Install ALVR
+flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
 
-# Cleanup ALVR.tar.gz
-rm -f alvr_streamer_linux.tar.gz
+# Remove ALVR flatpak
+rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
 
 # Create ALVR shortcut
 tee /home/${NEW_USER}/.local/share/applications/alvr.desktop << EOF
@@ -135,7 +131,7 @@ Type=Application
 Name=ALVR
 GenericName=Game
 Comment=ALVR is an open source remote VR display which allows playing SteamVR games on a standalone headset such as Gear VR or Oculus Go/Quest.
-Exec=/home/${NEW_USER}/.alvr/bin/alvr_dashboard
+Exec=/usr/bin/flatpak run --command=alvr_dashboard com.valvesoftware.Steam
 Icon=alvr
 Categories=Game;
 StartupNotify=true
@@ -145,8 +141,10 @@ StartupWMClass=ALVR
 EOF
 
 # Allow ALVR in firewall
-firewall-cmd --zone=block --add-service=alvr
-firewall-cmd --zone=trusted --add-service=alvr
+firewall-cmd --permanent --add-port=9943/udp
+firewall-cmd --permanent --add-port=9944/udp
 
-firewall-cmd --permanent --zone=block --add-service=alvr
-firewall-cmd --permanent --zone=trusted --add-service=alvr
+# Create ALVR dashboard alias
+tee /home/${NEW_USER}/.zshrc.d/alvr << 'EOF'
+alias alvr="flatpak run --command=alvr_dashboard com.valvesoftware.Steam"
+EOF
