@@ -1,6 +1,72 @@
 #!/usr/bin/bash
 
 ################################################
+##### Sunshine (Flatpak) - untested
+################################################
+
+# References:
+# https://github.com/LizardByte/Sunshine/blob/master/packaging/linux/flatpak/scripts/additional-install.sh
+# https://github.com/LizardByte/Sunshine/blob/master/packaging/linux/sunshine.service.in
+# https://github.com/LizardByte/Sunshine/blob/master/packaging/linux/flatpak/sunshine_kms.desktop
+# https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/setup.html#install
+# https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
+
+# Download Sunshine
+curl https://github.com/LizardByte/Sunshine/releases/latest/download/sunshine_x86_64.flatpak -L -O
+
+# Install Sunshine
+flatpak install -y sunshine_x86_64.flatpak
+
+# Remove Sunshine flatpak
+rm -f sunshine_x86_64.flatpak
+
+# Sunshine udev rules
+tee /etc/udev/rules.d/60-sunshine.rules << 'EOF'
+KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
+EOF
+udevadm control --reload-rules
+udevadm trigger
+modprobe uinput
+
+# Configure Sunshine systemd service
+# tee /home/${NEW_USER}/.config/systemd/user/sunshine.service << 'EOF'
+# [Unit]
+# Description=Sunshine self-hosted game stream host for Moonlight.
+# StartLimitIntervalSec=500
+# StartLimitBurst=5
+# PartOf=graphical-session.target
+# Wants=xdg-desktop-autostart.target
+# After=xdg-desktop-autostart.target
+
+# [Service]
+# ExecStart=/usr/bin/flatpak run dev.lizardbyte.sunshine
+# ExecStop=/usr/bin/flatpak kill dev.lizardbyte.sunshine
+# Restart=on-failure
+# RestartSec=5s
+
+# [Install]
+# WantedBy=xdg-desktop-autostart.target
+# EOF
+
+# sudo -u ${NEW_USER} systemctl --user enable sunshine
+
+# Create Sunshine shortcut
+tee /home/${NEW_USER}/.local/share/applications/sunshine_kms.desktop << EOF
+[Desktop Entry]
+Name=Sunshine (KMS)
+Exec=sudo -i PULSE_SERVER=unix:$(pactl info | awk '/Server String/{print$3}') flatpak run dev.lizardbyte.sunshine
+Terminal=true
+Type=Application
+NoDisplay=true
+EOF
+
+# Allow Sunshine in firewall
+firewall-cmd --permanent --add-port=48010/tcp
+firewall-cmd --permanent --add-port=47998/udp
+firewall-cmd --permanent --add-port=47999/udp
+firewall-cmd --permanent --add-port=48000/udp
+
+################################################
 ##### AppArmor
 ################################################
 

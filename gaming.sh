@@ -29,6 +29,8 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 # Steam controllers udev rules
 curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/60-steam-input.rules -o /etc/udev/rules.d/60-steam-input.rules
 udevadm control --reload-rules
+udevadm trigger
+modprobe uinput
 
 # Configure MangoHud for Steam
 mkdir -p /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/config/MangoHud
@@ -78,7 +80,7 @@ vulkan_driver
 EOF
 
 ################################################
-##### Sunshine
+##### Sunshine (native)
 ################################################
 
 # References:
