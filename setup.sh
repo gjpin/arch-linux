@@ -98,11 +98,7 @@ pacman -S --noconfirm \
     gptfdisk
 
 # Add AppImage support
-pacman -S --noconfirm \
-    fuse-common \
-    fuse2 \
-    fuse3 \
-    fuse2fs
+pacman -S --noconfirm fuse3
 
 ################################################
 ##### Swap
@@ -207,10 +203,6 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable disable-broadcast-messages.service
-
-# Increase vm.max_map_count
-# Same as Fedora and SteamOS: https://fedoraproject.org/wiki/Changes/IncreaseVmMaxMapCount
-echo 'vm.max_map_count=1048576' > /etc/sysctl.d/99-max-map-count.conf
 
 ################################################
 ##### Users
@@ -400,8 +392,8 @@ EOF
 pacman -S --noconfirm tpm2-tools tpm2-tss
 
 # Configure initramfs to unlock the encrypted volume
-sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch.conf
-sed -i "s|=system|& rd.luks.options=$(blkid -s UUID -o value /dev/nvme0n1p2)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
+sed -i "s|=system|& rd.luks.options=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=tpm2-device=auto|" /boot/loader/entries/arch.conf
+sed -i "s|=system|& rd.luks.options=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
 
 ################################################
 ##### Secure boot
@@ -454,17 +446,6 @@ rm -rf paru-bin
 # Install ffmpeg
 pacman -S --noconfirm ffmpeg
 
-# Install dependencies
-# pacman -S --noconfirm tesseract-data-eng tesseract
-
-# Install ffmpeg
-# if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-#     pacman -S --noconfirm vpl-gpu-rt
-#     pacman -S --noconfirm ffmpeg
-# elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-#     sudo -u ${NEW_USER} paru -S --noconfirm ffmpeg-amd-full
-# fi
-
 ################################################
 ##### GPU
 ################################################
@@ -511,14 +492,14 @@ pacman -S --noconfirm vulkan-tools
 mkdir -p /etc/systemd/system.conf.d
 tee /etc/systemd/system.conf.d/default-timeout.conf << EOF
 [Manager]
-DefaultTimeoutStopSec=10s
+DefaultTimeoutStopSec=5s
 EOF
 
 # Configure default timeout to stop user units
 mkdir -p /etc/systemd/user.conf.d
 tee /etc/systemd/user.conf.d/default-timeout.conf << EOF
 [Manager]
-DefaultTimeoutStopSec=10s
+DefaultTimeoutStopSec=5s
 EOF
 
 ################################################
@@ -606,17 +587,43 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker
-pacman -S --noconfirm docker docker-compose
+# Install Podman and dependencies
+pacman -S --noconfirm podman passt netavark aardvark-dns
 
-# Enable Docker service
-systemctl enable docker.service
+# Install Buildah
+pacman -S --noconfirm buildah
+
+# Enable kernel.unprivileged_userns_clone
+echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-unprivileged-userns-clone.conf
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee /home/${NEW_USER}/.zshrc.d/podman << EOF
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf.d/00-unqualified-search-registries.conf << EOF
+unqualified-search-registries = ["docker.io"]
+EOF
+
+tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
+[[registry]]
+location = "docker.io"
+EOF
+
+# Install Podman desktop
+flatpak install -y flathub io.podman_desktop.PodmanDesktop
 
 ################################################
 ##### Virtualization
@@ -682,7 +689,7 @@ EOF
 ################################################
 
 # Install user applications
-flatpak install -y flathub rest.insomnia.Insomnia
+flatpak install -y flathub com.usebruno.Bruno
 flatpak install -y flathub com.spotify.Client
 flatpak install -y flathub org.keepassxc.KeePassXC
 flatpak install -y flathub com.bitwarden.desktop

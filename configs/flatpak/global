@@ -1,5 +1,5 @@
 [Context]
-filesystems=!home;!home/.ssh;!home/.bashrc;!home/.bashrc.d;!home/.zshrc;!home/.zshrc.d;!home/.config;!home/.local/bin;!home/Sync;!host;!host-os;!host-etc;!xdg-config;!xdg-cache;!xdg-data;!xdg-data/flatpak;!xdg-documents;!xdg-videos;!xdg-music;!xdg-pictures;!xdg-desktop;xdg-download;xdg-config/gtk-3.0:ro;xdg-config/gtk-4.0:ro;home/.local/share/themes;
+filesystems=!home;!home/.ssh;!home/.bashrc;!home/.bashrc.d;!home/.zshrc;!home/.zshrc.d;!home/.config;!home/.local/bin;!home/Sync;!host;!xdg-config;!xdg-cache;!xdg-data;!xdg-data/flatpak;!xdg-documents;!xdg-videos;!xdg-music;!xdg-pictures;!xdg-desktop;xdg-download;xdg-config/gtk-3.0:ro;xdg-config/gtk-4.0:ro;home/.local/share/themes;
 
 [Session Bus Policy]
 org.freedesktop.Flatpak=none
