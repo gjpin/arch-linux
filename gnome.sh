@@ -23,12 +23,12 @@ pacman -S --noconfirm \
     gnome-calculator \
     gnome-calendar \
     gnome-color-manager \
+    gnome-console \
     gnome-control-center \
     gnome-disk-utility \
     gnome-font-viewer \
     gnome-keyring \
     gnome-logs \
-    gnome-photos \
     gnome-session \
     gnome-settings-daemon \
     gnome-shell \
@@ -39,7 +39,9 @@ pacman -S --noconfirm \
     gvfs \
     gvfs-mtp \
     gvfs-nfs \
+    loupe \
     nautilus \
+    snapshot \
     sushi \
     xdg-desktop-portal-gnome \
     xdg-user-dirs-gtk
@@ -47,7 +49,6 @@ pacman -S --noconfirm \
 # Additional Gnome/GTK packages
 pacman -S --noconfirm \
     gitg \
-    gnome-terminal \
     xdg-desktop-portal-gtk
 
 # Install and enable GDM
@@ -115,14 +116,14 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
 # Grand Theft Focus
 # # https://extensions.gnome.org/extension/5410/grand-theft-focus
-curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v5.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v6.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v7.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v8.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
@@ -149,6 +150,7 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("browser.uidensity", 0);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("browser.theme.dark-private-windows", false);
+user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("gnomeTheme.activeTabContrast", true);
 EOF
 
@@ -238,7 +240,7 @@ titlebar-font='NotoSansM Nerd Font Mono Medium 10'
 disable-user-extensions=false
 
 [org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
 enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
@@ -254,8 +256,8 @@ custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybin
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
-command='gnome-terminal'
-name='Gnome Terminal'
+command='kgx'
+name='Gnome Console'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>E'

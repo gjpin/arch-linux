@@ -4,6 +4,9 @@
 ##### Set variables
 ################################################
 
+read -p "RAID0 (yes / no): " RAID0
+export RAID0
+
 read -sp "LUKS password: " LUKS_PASSWORD
 export LUKS_PASSWORD
 
@@ -50,34 +53,93 @@ fi
 # References:
 # https://www.rodsbooks.com/gdisk/sgdisk-walkthrough.html
 # https://www.dwarmstrong.org/archlinux-install/
+# https://wiki.archlinux.org/title/RAID#Installation
 
-# Delete old partition layout and re-read partition table
-wipefs -af /dev/nvme0n1
-sgdisk --zap-all --clear /dev/nvme0n1
-partprobe /dev/nvme0n1
+if [ ${RAID0} = "no" ]; then
+    # Delete old partition layout and re-read partition table
+    wipefs -af /dev/nvme0n1
+    sgdisk --zap-all --clear /dev/nvme0n1
+    partprobe /dev/nvme0n1
 
-# Partition disk and re-read partition table
-sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
-sgdisk -n 2:0:0 -t 2:8309 -c 2:LUKS /dev/nvme0n1
-partprobe /dev/nvme0n1
+    # Partition disk and re-read partition table
+    sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
+    sgdisk -n 2:0:0 -t 2:8309 -c 2:LUKS /dev/nvme0n1
+    partprobe /dev/nvme0n1
+elif [ ${RAID0} = "yes" ]; then
+    # Install mdadm
+    pacman -S --noconfirm mdadm
+
+    # Delete old partition layout and re-read partition table
+    wipefs -af /dev/nvme0n1
+    wipefs -af /dev/nvme0n2
+
+    # Partition disk and re-read partition table
+    sgdisk --zap-all --clear /dev/nvme0n1
+    sgdisk --zap-all --clear /dev/nvme0n2
+
+    partprobe /dev/nvme0n1
+    partprobe /dev/nvme0n2
+
+    # Erase old RAID configuration information
+    mdadm --misc --zero-superblock /dev/nvme0n1
+    mdadm --misc --zero-superblock /dev/nvme0n2
+
+    # Partition disk and re-read partition table
+    sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
+    sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n1
+    sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFIDUMMY /dev/nvme0n2
+    sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n2
+
+    # Build RAID array
+    mdadm --create --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 /dev/md/ArchArray /dev/nvme0n1 /dev/nvme0n2
+
+    # Update mdadm configuration file
+    mdadm --detail --scan >> /etc/mdadm.conf
+fi
 
 ################################################
 ##### LUKS / System and boot partitions
 ################################################
 
-# Encrypt and open LUKS partition
-echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/disk/by-partlabel/LUKS
-echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
+# References:
+# https://github.com/tytso/e2fsprogs/blob/master/misc/mke2fs.conf.in
+# https://wiki.archlinux.org/title/RAID#Format_the_RAID_filesystem
 
-# Format partition to EXT4
-mkfs.ext4 -L system /dev/mapper/system
+if [ ${RAID0} = "no" ]; then
+    # Encrypt and open LUKS partition
+    echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/disk/by-partlabel/LUKS
+    echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/disk/by-partlabel/LUKS system
 
-# Mount root device
-mount -t ext4 LABEL=system /mnt
+    # Format partition to EXT4
+    mkfs.ext4 -L system /dev/mapper/system
 
-# Format and mount EFI/boot partition
-mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
-mount --mkdir /dev/nvme0n1p1 /mnt/boot
+    # Mount root device
+    mount -t ext4 LABEL=system /mnt
+
+    # Format and mount EFI/boot partition
+    mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
+    mount --mkdir /dev/nvme0n1p1 /mnt/boot
+elif [ ${RAID0} = "yes" ]; then
+    # Format the RAID filesystem
+    mkfs.ext4 -v -L archarray -b 4096 -E stride=128,stripe-width=256 /dev/md/ArchArray
+
+    # Mount RAID partition
+    mdadm --assemble /dev/md/ArchArray /dev/nvme0n1 /dev/nvme0n2
+
+    # Encrypt and open LUKS partition
+    echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/md/ArchArray
+    echo ${LUKS_PASSWORD} | cryptsetup luksOpen /dev/md/ArchArray system
+
+    # Format partition to EXT4
+    mkfs.ext4 -L system /dev/mapper/system
+
+    # Mount root device
+    mount -t ext4 LABEL=system /mnt
+
+    # Format and mount EFI/boot partition
+    mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
+    mount --mkdir /dev/nvme0n1p1 /mnt/boot
+fi
 
 ################################################
 ##### Install system
@@ -93,8 +155,13 @@ EOF
 # Synchronize package databases
 pacman -Syy
 
+# Update mdadm configuration file
+if [ ${RAID0} = "yes" ]; then
+    mdadm --detail --scan >> /mnt/etc/mdadm.conf
+fi
+
 # Install system
-pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs ${CPU_MICROCODE}
+pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs mdadm ${CPU_MICROCODE}
 
 # Generate filesystem tab
 genfstab -U /mnt >> /mnt/etc/fstab

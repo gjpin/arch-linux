@@ -2,13 +2,17 @@
 
 # https://download.kde.org/stable/plasma/
 
-# packages=$(curl -s https://download.kde.org/stable/plasma/5.27.10/ | grep -o -P '(?<=<a href=")(.*)(?=-5.27.10.tar.xz.sig"><img)')
+```
+packages=$(curl -s https://download.kde.org/stable/plasma/6.1.0/ | grep -o -P '(?<=<a href=")(.*)(?=-6.1.0.tar.xz.sig"><img)')
+```
 
 # packages to remove from Plasma Desktop:
 
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
 
-# echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests/d'
+```
+echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests/d'
+```
 
 # Plasma packages
 
@@ -27,25 +31,31 @@ kde-cli-tools
 kde-gtk-config
 kdecoration
 kdeplasma-addons
-kgamma5
-khotkeys
+kgamma
+kglobalacceld
 kinfocenter
 kmenuedit
 kpipewire
+krdp # skip
 kscreen
 kscreenlocker
 ksshaskpass
 ksystemstats
 kwallet-pam
+kwayland
 kwayland-integration
 kwin
 kwrited
 layer-shell-qt
 libkscreen
 libksysguard
+libplasma
 milou
-oxygen # skip
-oxygen-sounds # skip
+ocean-sound-theme
+oxygen
+oxygen-sounds
+plasma-activities
+plasma-activities-stats
 plasma-browser-integration
 plasma-desktop
 plasma-disks
@@ -59,11 +69,15 @@ plasma-vault
 plasma-welcome # skip
 plasma-workspace
 plasma-workspace-wallpapers
+plasma5support
 plymouth-kcm # skip
-polkit-kde-agent-1 # polkit-kde-agent
+polkit-kde-agent-1
 powerdevil
+print-manager
+qqc2-breeze-style
 sddm-kcm
 systemsettings
+wacomtablet
 xdg-desktop-portal-kde
 
 # Non-Plasma packages
@@ -78,42 +92,51 @@ kdeconnect-kde # kdeconnect
 kdegraphics-thumbnailers
 kdenetwork-filesharing
 kdepim-addons # skip
+kimageformats
 kio-admin
 kio-extras
 kio-fuse
 kio-gdrive # skip
 libappindicator-gtk3
 phonon-vlc # phonon-qt5-vlc
-print-manager # skip
+qt-imageformats
+xwaylandvideobridge
 
 # 3rd-party packages
 
 # https://community.kde.org/Distributions/Packaging_Recommendations#3rd-party_packages
 
+icoutils
 iio-sensor-proxy
-noto-sans # noto-fonts
-noto-color-emoji # noto-fonts-emoji
+noto-sans # noto-fonts. installed globally
+noto-color-emoji # noto-fonts-emoji. installed globally
 maliit-keyboard # skip
-power-profiles-daemon
+power-profiles-daemon # installed globally
+switcheroo-control
 xdg-desktop-portal-gtk
 xsettingsd
+orca # skip
+systemd-coredumpd # cannot find in arch packages
 
 # KDE applications
 
 # https://apps.kde.org/
 
-konsole # terminal
-okular # document viewer
-dolphin # file manager
 ark # archiving tool
-kate # text editor
-spectacle # screenshot capture utility
-plasma-systemmonitor # system monitor
+dolphin # file manager
+filelight # disk usage statistics
 gwenview # image viewer
+kate # text editor
 kcalc # calculator
-kwalletmanager # wallet management tool
 kcolorchooser # color chooser
+kfind # find files/folders
+kompare # diff/patch frontend
+konsole # terminal
+kwalletmanager # wallet management tool
+okular # document viewer
 partitionmanager # partition editor
+plasma-systemmonitor # system monitor
+spectacle # screenshot capture utility
 
 # firefox (about:config)
 

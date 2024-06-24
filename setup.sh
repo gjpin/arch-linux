@@ -328,9 +328,12 @@ pacman -S --noconfirm iptables-nft --ask 4
 ##### initramfs
 ################################################
 
+# References:
+# https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio
+
 # Configure mkinitcpio
 sed -i "s|MODULES=()|MODULES=(ext4${MKINITCPIO_MODULES})|" /etc/mkinitcpio.conf
-sed -i "s|^HOOKS.*|HOOKS=(systemd autodetect keyboard sd-vconsole modconf block sd-encrypt filesystems fsck)|" /etc/mkinitcpio.conf
+sed -i "s|^HOOKS.*|HOOKS=(systemd autodetect keyboard sd-vconsole modconf block $(if [ ${RAID0} = "yes" ]; then echo "mdadm_udev"; fi) sd-encrypt filesystems fsck)|" /etc/mkinitcpio.conf
 sed -i "s|#COMPRESSION=\"zstd\"|COMPRESSION=\"zstd\"|" /etc/mkinitcpio.conf
 sed -i "s|#COMPRESSION_OPTIONS=()|COMPRESSION_OPTIONS=(-2)|" /etc/mkinitcpio.conf
 
@@ -343,6 +346,7 @@ mkinitcpio -P
 
 # References:
 # https://wiki.archlinux.org/title/systemd-boot
+# https://wiki.archlinux.org/title/RAID#RAID0_layout
 
 # Install systemd-boot to the ESP
 bootctl install
@@ -374,7 +378,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 tee /boot/loader/entries/arch-lts.conf << EOF
@@ -382,7 +386,7 @@ title   Arch Linux LTS
 linux   /vmlinuz-linux-lts
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux-lts.img
-options rd.luks.name=$(blkid -s UUID -o value /dev/nvme0n1p2)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
