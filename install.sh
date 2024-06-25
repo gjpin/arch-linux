@@ -107,7 +107,7 @@ elif [ ${RAID0} = "yes" ]; then
     sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n2
 
     # Build RAID array
-    mdadm --create /dev/md/ArchArray --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/nvme0n1 /dev/nvme0n2
+    mdadm --create /dev/md/ArchArray --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/nvme0n1p2 /dev/nvme0n2p2
 
     # Update mdadm configuration file
     mdadm --detail --scan >> /etc/mdadm.conf
@@ -140,7 +140,7 @@ elif [ ${RAID0} = "yes" ]; then
     mkfs.ext4 -v -L archarray -b 4096 -E stride=128,stripe-width=256 /dev/md/ArchArray
 
     # Mount RAID partition
-    mdadm --assemble /dev/md/ArchArray /dev/nvme0n1 /dev/nvme0n2
+    mdadm --assemble /dev/md/ArchArray /dev/nvme0n1p2 /dev/nvme0n2p2
 
     # Encrypt and open LUKS partition
     echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/md/ArchArray
