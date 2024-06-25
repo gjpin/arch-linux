@@ -1,20 +1,8 @@
 #!/usr/bin/bash
 
 ################################################
-##### Logs
+##### Plasma
 ################################################
-
-# Define the log file
-LOGFILE="plasma.log"
-
-# Start logging all output to the log file
-exec > >(tee -a "$LOGFILE") 2>&1
-
-# Log each command before executing it
-log_command() {
-    echo "\$ $BASH_COMMAND" >> "$LOGFILE"
-}
-trap log_command DEBUG
 
 # Plasma packages
 pacman -S --noconfirm \
@@ -208,6 +196,13 @@ EOF
 ##### Plasma shortcuts
 ################################################
 
+# Konsole shortcut
+sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group org.kde.konsole.desktop --key "_launch" "Meta+Return,none,Konsole"
+
+# Close windows shortcut
+sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Shift+Q,none,Close Window"
+
+# Disable task manager entry activation
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 1" "none,none,Activate Task Manager Entry 1"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 2" "none,none,Activate Task Manager Entry 2"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 3" "none,none,Activate Task Manager Entry 3"
@@ -219,6 +214,7 @@ sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell 
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 9" "none,none,Activate Task Manager Entry 9"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 10" "none,none,Activate Task Manager Entry 10"
 
+# Go to vitual desktop
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 1" "Meta+1,none,Switch to Desktop 1"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 2" "Meta+2,none,Switch to Desktop 2"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 3" "Meta+3,none,Switch to Desktop 3"
@@ -230,6 +226,7 @@ sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 9" "Meta+9,none,Switch to Desktop 9"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 10" "Meta+0,none,Switch to Desktop 10"
 
+# Move window to vitual desktop
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 1" "Meta+\!,none,Window to Desktop 1"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 2" "Meta+@,none,Window to Desktop 2"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 3" "Meta+#,none,Window to Desktop 3"
@@ -240,3 +237,31 @@ sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 8" "Meta+*,none,Window to Desktop 8"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 9" "Meta+(,none,Window to Desktop 9"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 10" "Meta+),none,Window to Desktop 10"
+
+################################################
+##### Plasma UI / UX changes
+################################################
+
+# Set SDDM theme
+kwriteconfig6 --file /etc/sddm.conf.d/kde_settings.conf --group Theme --key "Current" "breeze"
+
+# Set Plasma theme
+sudo -u ${NEW_USER} kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezedark.desktop"
+
+# Enable 2 desktops
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Name_2 "Desktop 2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Number "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Rows "1"
+
+# Change window decorations
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft ""
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight "IAX"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ShowToolTips --type bool false
+
+# Disable app launch feedback
+sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group BusyCursorSettings --key "Bouncing" --type bool false
+sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group FeedbackStyle --key "BusyCursor" --type bool false
+
+# Disable cursor shake
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Plugins --key "shakecursorEnabled" --type bool false
+

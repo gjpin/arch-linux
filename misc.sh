@@ -22,40 +22,13 @@ fi
 ##### Plasma UI / UX changes
 ################################################
 
-# Set Plasma theme
-sudo -u ${NEW_USER} kwriteconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage "org.kde.breezedark.desktop"
-
-# Set SDDM theme
-kwriteconfig6 --file /etc/sddm.conf.d/kde_settings.conf --group Theme --key "Current" "breeze"
-
-# Change window decorations
-sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ShowToolTips --type bool false
-
 # Disable splash screen
 sudo -u ${NEW_USER} kwriteconfig6 --file ksplashrc --group KSplash --key Engine "none"
 sudo -u ${NEW_USER} kwriteconfig6 --file ksplashrc --group KSplash --key Theme "none"
 
-# Disable app launch feedback
-sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group BusyCursorSettings --key "Bouncing" --type bool false
-sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group FeedbackStyle --key "BusyCursor" --type bool false
-
-# Konsole shortcut
-sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group org.kde.konsole.desktop --key "_launch" "Meta+Return,none,Konsole"
-
-# Spectacle shortcut
-sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group "org.kde.spectacle.desktop" --key "RectangularRegionScreenShot" "Meta+Shift+S,none,Capture Rectangular Region"
-
-# Close windows shortcut
-sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Shift+Q,none,Close Window"
-
 # Replace plasmashell
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group "plasmashell.desktop" --key "_k_friendly_name" "plasmashell --replace"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group "plasmashell.desktop" --key "_launch" "Ctrl+Alt+Del,none,plasmashell --replace"
-
-# Enable 2 desktops
-sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Name_2 "Desktop 2"
-sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Number "2"
-sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Desktops --key Rows "1"
 
 # Configure konsole
 sudo -u ${NEW_USER} kwriteconfig6 --file konsolerc --group "KonsoleWindow" --key "RememberWindowSize" --type bool false

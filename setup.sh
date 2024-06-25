@@ -1,22 +1,6 @@
 #!/usr/bin/bash
 
 ################################################
-##### Logs
-################################################
-
-# Define the log file
-LOGFILE="setup.log"
-
-# Start logging all output to the log file
-exec > >(tee -a "$LOGFILE") 2>&1
-
-# Log each command before executing it
-log_command() {
-    echo "\$ $BASH_COMMAND" >> "$LOGFILE"
-}
-trap log_command DEBUG
-
-################################################
 ##### Time
 ################################################
 
@@ -727,12 +711,13 @@ sudo -u ${NEW_USER} git config --global init.defaultBranch main
 # Create dev tools directory
 mkdir -p /home/${NEW_USER}/.devtools
 
-# Install NodeJS
-pacman -S --noconfirm nodejs
+# Install NodeJS and npm
+pacman -S --noconfirm nodejs npm
 
 # Change npm's default directory
 # https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
 mkdir /home/${NEW_USER}/.devtools/npm-global
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/.devtools/npm-global
 sudo -u ${NEW_USER} npm config set prefix "/home/${NEW_USER}/.devtools/npm-global"
 tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
 export PATH=$HOME/.devtools/npm-global/bin:$PATH
@@ -741,6 +726,7 @@ EOF
 # Install Python and create alias for python venv
 pacman -S --noconfirm python
 mkdir -p /home/${NEW_USER}/.devtools/python
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/.devtools/python
 sudo -u ${NEW_USER} python -m venv /home/${NEW_USER}/.devtools/python/dev
 tee /home/${NEW_USER}/.zshrc.d/python << 'EOF'
 alias pydev="source ${HOME}/.devtools/python/dev/bin/activate"
@@ -763,7 +749,6 @@ pacman -S --noconfirm \
     vscode-css-languageserver \
     vscode-html-languageserver \
     vscode-json-languageserver \
-    vscode-markdown-languageserver \
     yaml-language-server
 
 # Install Terraform
@@ -866,6 +851,7 @@ sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handle
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
 # Temporarily open firefox to create profile folder
+sysctl kernel.unprivileged_userns_clone=1
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
