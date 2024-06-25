@@ -1,6 +1,6 @@
 # Arch Linux install scripts
 
-For GRUB with BTRFS snapshots see branch 'grub'
+WARNING: Running install.sh with delete all data in nvme0n1 and nvme0n2 (if using RAID0) without confirmation.
 
 ## Requirements
 
