@@ -1,6 +1,42 @@
 #!/usr/bin/bash
 
 ################################################
+##### Swapfile
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/swap#Swap_file
+# https://wiki.archlinux.org/title/swap#Swappiness
+# https://wiki.archlinux.org/title/Improving_performance#zram_or_zswap
+# https://wiki.gentoo.org/wiki/Zram
+# https://www.dwarmstrong.org/zram-swap/
+# https://www.reddit.com/r/Fedora/comments/mzun99/new_zram_tuning_benchmarks/
+
+# Create swap file
+dd if=/dev/zero of=/swapfile bs=1M count=8k status=progress
+
+# Set swapfile permissions
+chmod 0600 /swapfile
+
+# Format swapfile to swap
+mkswap -U clear /swapfile
+
+# Activate swap file
+swapon /swapfile
+
+# Add swapfile to fstab configuration
+tee -a /etc/fstab << EOF
+# swapfile
+/swapfile none swap defaults 0 0
+EOF
+
+# Set swappiness
+echo 'vm.swappiness=10' > /etc/sysctl.d/99-swappiness.conf
+
+# Set vfs cache pressure
+echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
+
+################################################
 ##### ffmpeg-full (AUR)
 ################################################
 

@@ -136,9 +136,6 @@ if [ ${RAID0} = "no" ]; then
     mkfs.fat -F32 -n EFI /dev/disk/by-partlabel/EFI
     mount --mkdir /dev/nvme0n1p1 /mnt/boot
 elif [ ${RAID0} = "yes" ]; then
-    # Format the RAID filesystem
-    mkfs.ext4 -v -L archarray -b 4096 -E stride=128,stripe-width=256 /dev/md/ArchArray
-
     # Mount RAID partition
     mdadm --assemble /dev/md/ArchArray /dev/nvme0n1p2 /dev/nvme0n2p2
 

@@ -95,40 +95,42 @@ pacman -S --noconfirm \
     lazygit \
     ripgrep \
     fd \
-    gptfdisk
+    gptfdisk \
+    bc
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
 
 ################################################
-##### Swap
+##### zram (swap)
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/swap#Swap_file
+# https://wiki.archlinux.org/title/Zram#Using_zram-generator
 # https://wiki.archlinux.org/title/swap#Swappiness
 # https://wiki.archlinux.org/title/Improving_performance#zram_or_zswap
 # https://wiki.gentoo.org/wiki/Zram
-# https://www.dwarmstrong.org/zram-swap/
 # https://www.reddit.com/r/Fedora/comments/mzun99/new_zram_tuning_benchmarks/
+# https://github.com/systemd/zram-generator
 
-# Create swap file
-dd if=/dev/zero of=/swapfile bs=1M count=8k status=progress
+# Install zram generator
+pacman -S --noconfirm zram-generator
 
-# Set swapfile permissions
-chmod 0600 /swapfile
-
-# Format swapfile to swap
-mkswap -U clear /swapfile
-
-# Activate swap file
-swapon /swapfile
-
-# Add swapfile to fstab configuration
-tee -a /etc/fstab << EOF
-# swapfile
-/swapfile none swap defaults 0 0
+# Configure zram generator
+tee /etc/systemd/zram-generator.conf << EOF
+[zram0]
+zram-size = ram / 4
+compression-algorithm = zstd
 EOF
+
+# Daemon reload
+systemctl daemon-reload
+
+# Enable zram on boot
+systemctl start /dev/zram0
+
+# Set page cluster
+echo 'vm.page-cluster=0' > /etc/sysctl.d/99-page-cluster.conf
 
 # Set swappiness
 echo 'vm.swappiness=10' > /etc/sysctl.d/99-swappiness.conf
@@ -143,18 +145,37 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
 # https://wiki.cachyos.org/general_info/general_system_tweaks/
+# https://gitlab.com/cscs/maxperfwiz/-/blob/master/maxperfwiz?ref_type=heads
 
 # Enable trim operations
 systemctl enable fstrim.timer
 
-# Split Lock Mitigate - default: 1
-echo 'kernel.split_lock_mitigate=0' > /etc/sysctl.d/99-splitlock.conf
+# Sysctl tweaks
+COMPUTER_MEMORY = $(echo $(vmstat -sS M | head -n1 | awk '{print $1;}'))
+MEMORY_BY_CORE = $(echo $(( $(vmstat -s | head -n1 | awk '{print $1;}')/$(nproc) )))
+BEST_KEEP_FREE = $(echo "scale=0; "$MEMORY_BY_CORE"*0.058" | bc | awk '{printf "%.0f\n", $1}')
 
-# Compaction Proactiveness - default: 20
-echo 'vm.compaction_proactiveness=0' > /etc/sysctl.d/99-compaction_proactiveness.conf
+tee /etc/sysctl.d/99-performance-tweaks.conf << EOF
+kernel.nmi_watchdog=0
+kernel.split_lock_mitigate=0
+vm.compaction_proactiveness=0
+vm.page_lock_unfairness=1
+$(if [[ ${COMPUTER_MEMORY} > 13900 ]]; then echo "vm.dirty_bytes=419430400"; fi)
+$(if [[ ${COMPUTER_MEMORY} > 13900 ]]; then echo "vm.dirty_background_bytes=209715200"; fi)
+$(if [[ $(cat /sys/block/*/queue/rotational) == 0 ]]; then echo "vm.dirty_expire_centisecs=500"; else echo "vm.dirty_expire_centisecs=3000"; fi)
+$(if [[ $(cat /sys/block/*/queue/rotational) == 0 ]]; then echo "vm.dirty_writeback_centisecs=250"; else echo "vm.dirty_writeback_centisecs=1500"; fi)
+$(echo "vm.min_free_kbytes=${BEST_KEEP_FREE}")
+EOF
 
-# Page Lock Unfairness - default: 5
-echo 'vm.page_lock_unfairness=1' > /etc/sysctl.d/99-page_lock_unfairness.conf
+# Udev tweaks
+tee /etc/udev/rules.d/99-performance-tweaks.rules << 'EOF'
+ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}' '"none"
+ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}' '"mq-deadline"
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}' '"bfq"
+EOF
+
+udevadm control --reload-rules
+udevadm trigger
 
 # Hugepage Defragmentation - default: 1
 # Transparent Hugepages - default: always
@@ -370,7 +391,7 @@ title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux.img
-options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.enabled=0 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 tee /boot/loader/entries/arch-lts.conf << EOF
@@ -378,7 +399,7 @@ title   Arch Linux LTS
 linux   /vmlinuz-linux-lts
 initrd  /${CPU_MICROCODE}.img
 initrd  /initramfs-linux-lts.img
-options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.compressor=zstd zswap.max_pool_percent=10 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
+options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system zswap.enabled=0 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
 EOF
 
 ################################################
@@ -830,9 +851,6 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 
     # Enable wifi (iwlwifi) power saving features
     echo 'options iwlwifi power_save=1' > /etc/modprobe.d/iwlwifi.conf
-
-    # Reduce VM writeback time
-    echo 'vm.dirty_writeback_centisecs=6000' > /etc/sysctl.d/99-vm-writeback-time.conf
 
     # Rebuild initramfs
     mkinitcpio -P
