@@ -107,7 +107,7 @@ elif [ ${RAID0} = "yes" ]; then
     sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n2
 
     # Build RAID array
-    mdadm --create --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 /dev/md/ArchArray /dev/nvme0n1 /dev/nvme0n2
+    mdadm --create --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/md/ArchArray /dev/nvme0n1 /dev/nvme0n2
 
     # Update mdadm configuration file
     mdadm --detail --scan >> /etc/mdadm.conf
@@ -171,16 +171,16 @@ EOF
 # Synchronize package databases
 pacman -Syy
 
-# Update mdadm configuration file
-if [ ${RAID0} = "yes" ]; then
-    mdadm --detail --scan >> /mnt/etc/mdadm.conf
-fi
-
 # Install system
 pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs mdadm ${CPU_MICROCODE}
 
 # Generate filesystem tab
 genfstab -U /mnt >> /mnt/etc/fstab
+
+# Update mdadm configuration file
+if [ ${RAID0} = "yes" ]; then
+    mdadm --detail --scan >> /mnt/etc/mdadm.conf
+fi
 
 # Configure system
 mkdir -p /mnt/install-arch
