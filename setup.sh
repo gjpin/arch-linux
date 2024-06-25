@@ -851,7 +851,6 @@ sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handle
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
 # Temporarily open firefox to create profile folder
-sysctl kernel.unprivileged_userns_clone=1
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
