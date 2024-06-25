@@ -1,6 +1,22 @@
 #!/usr/bin/bash
 
 ################################################
+##### Logs
+################################################
+
+# Define the log file
+LOGFILE="gaming.log"
+
+# Start logging all output to the log file
+exec > >(tee -a "$LOGFILE") 2>&1
+
+# Log each command before executing it
+log_command() {
+    echo "\$ $BASH_COMMAND" >> "$LOGFILE"
+}
+trap log_command DEBUG
+
+################################################
 ##### Utilities
 ################################################
 
