@@ -868,7 +868,8 @@ sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.des
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
-# Temporarily open firefox to create profile folder
+# Temporarily open firefox to create profile 
+sysctl -w kernel.unprivileged_userns_clone=1
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
@@ -880,6 +881,7 @@ curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-lat
 curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
 curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/4307919/steam_database.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/firefox-extension@steamdb.info.xpi
 
 # Import Firefox configs
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
