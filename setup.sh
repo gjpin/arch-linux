@@ -151,9 +151,9 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 systemctl enable fstrim.timer
 
 # Sysctl tweaks
-COMPUTER_MEMORY = $(echo $(vmstat -sS M | head -n1 | awk '{print $1;}'))
-MEMORY_BY_CORE = $(echo $(( $(vmstat -s | head -n1 | awk '{print $1;}')/$(nproc) )))
-BEST_KEEP_FREE = $(echo "scale=0; "$MEMORY_BY_CORE"*0.058" | bc | awk '{printf "%.0f\n", $1}')
+COMPUTER_MEMORY=$(echo $(vmstat -sS M | head -n1 | awk '{print $1;}'))
+MEMORY_BY_CORE=$(echo $(( $(vmstat -s | head -n1 | awk '{print $1;}')/$(nproc) )))
+BEST_KEEP_FREE=$(echo "scale=0; "$MEMORY_BY_CORE"*0.058" | bc | awk '{printf "%.0f\n", $1}')
 
 tee /etc/sysctl.d/99-performance-tweaks.conf << EOF
 kernel.nmi_watchdog=0
@@ -169,9 +169,9 @@ EOF
 
 # Udev tweaks
 tee /etc/udev/rules.d/99-performance-tweaks.rules << 'EOF'
-ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}' '"none"
-ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}' '"mq-deadline"
-ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}' '"bfq"
+ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler} "mq-deadline"
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler} "bfq"
 EOF
 
 udevadm control --reload-rules
