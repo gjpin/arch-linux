@@ -31,7 +31,7 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme0n2 (if usin
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
 8. Reboot and enable secure boot
-9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2`
+9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2 OR /dev/md/ArchArray (if RAID0)`
 10. Copy wireguard config to /etc/wireguard/wg0.conf
 11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
@@ -52,8 +52,8 @@ arch-chroot /mnt
 ### How to re-enroll keys in TPM2
 
 ```bash
-sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2
-sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2 OR /dev/md/ArchArray
+sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2 OR /dev/md/ArchArray
 ```
 
 ### How to show systemd-boot menu
