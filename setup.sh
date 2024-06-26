@@ -144,7 +144,7 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
-# https://wiki.cachyos.org/general_info/general_system_tweaks/
+# https://wiki.cachyos.org/configuration/general_system_tweaks/
 # https://gitlab.com/cscs/maxperfwiz/-/blob/master/maxperfwiz?ref_type=heads
 
 # Enable trim operations
@@ -869,7 +869,6 @@ sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handle
 sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
 # Temporarily open firefox to create profile 
-sysctl -w kernel.unprivileged_userns_clone=1
 sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
