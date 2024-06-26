@@ -109,7 +109,7 @@ fi
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
 ################################################
-##### ALVR (native)
+##### ALVR (flatpak)
 ################################################
 
 # References:
