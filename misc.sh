@@ -724,6 +724,9 @@ EOF
 # Install Podman desktop
 flatpak install -y flathub io.podman_desktop.PodmanDesktop
 
+# Install Pods
+flatpak install -y flathub com.github.marhkb.Pods
+
 ################################################
 ##### Gnome - Qt theming
 ################################################
