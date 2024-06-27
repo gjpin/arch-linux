@@ -686,17 +686,43 @@ EOF
 ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/code-flags.conf
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker
-pacman -S --noconfirm docker docker-compose
+# Install Podman and dependencies
+pacman -S --noconfirm podman passt netavark aardvark-dns
 
-# Enable Docker service
-systemctl enable docker.service
+# Install Buildah
+pacman -S --noconfirm buildah
+
+# Enable kernel.unprivileged_userns_clone
+echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/99-unprivileged-userns-clone.conf
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee /home/${NEW_USER}/.zshrc.d/podman << EOF
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf.d/00-unqualified-search-registries.conf << EOF
+unqualified-search-registries = ["docker.io"]
+EOF
+
+tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
+[[registry]]
+location = "docker.io"
+EOF
+
+# Install Podman desktop
+flatpak install -y flathub io.podman_desktop.PodmanDesktop
 
 ################################################
 ##### Gnome - Qt theming
