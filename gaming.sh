@@ -21,7 +21,7 @@ flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 flatpak install -y flathub com.valvesoftware.Steam
 
 # Create directory for Steam games
-mkdir -p /home/${NEW_USER}/games/steam
+mkdir -p /home/${NEW_USER}/Games/Steam
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.valvesoftware.Steam
@@ -57,7 +57,10 @@ EOF
 flatpak install -y flathub com.heroicgameslauncher.hgl
 
 # Create directory for Heroic games
-mkdir -p /home/${NEW_USER}/games/heroic/{epic,gog}
+mkdir -p /home/${NEW_USER}/Games/Heroic/{Epic,GOG}
+
+# Create directory for Heroic Prefixes
+mkdir -p /home/${NEW_USER}/Games/Heroic/Prefixes/{Epic,GOG}
 
 # Import Flatpak overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl
@@ -86,6 +89,7 @@ EOF
 # References:
 # https://github.com/LizardByte/Sunshine
 # https://docs.lizardbyte.dev/projects/sunshine/en/latest/
+# https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
 
 # Install sunshine
 sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
@@ -108,6 +112,12 @@ fi
 # Enable KMS display capture
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
+# Allow Sunshine in firewall (commented since connection to Sunshine is done via Wireguard)
+# firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP"'
+# firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
+# firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="47999" protocol="udp" accept log prefix="Sunshine - Control"'
+# firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="48000" protocol="udp" accept log prefix="Sunshine - Audio"'
+
 ################################################
 ##### ALVR (flatpak)
 ################################################
@@ -115,6 +125,7 @@ setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 # References:
 # https://github.com/alvr-org/ALVR/blob/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
+# https://github.com/alvr-org/ALVR/tree/master/alvr/xtask/firewall
 
 # Download ALVR
 curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
@@ -143,8 +154,10 @@ StartupWMClass=ALVR
 EOF
 
 # Allow ALVR in firewall
-firewall-cmd --permanent --add-port=9943/udp
-firewall-cmd --permanent --add-port=9944/udp
+firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="9943" protocol="udp" accept log prefix="ALVR - discovery"'
+firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="9944" protocol="udp" accept log prefix="ALVR - SteamVR"'
+firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="9943" protocol="tcp" accept log prefix="ALVR - discovery"'
+firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="9944" protocol="tcp" accept log prefix="ALVR - SteamVR"'
 
 # Create ALVR dashboard alias
 tee /home/${NEW_USER}/.zshrc.d/alvr << 'EOF'

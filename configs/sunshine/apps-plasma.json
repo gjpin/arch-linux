@@ -4,7 +4,7 @@
     },
     "apps": [
         {
-            "name": "Steam - 1280x800",
+            "name": "Steam 800p",
             "image-path": "",
             "cmd": "mangohud steam-runtime -gamepadui",
             "prep-cmd": [
@@ -20,7 +20,7 @@
             "exclude-global-prep-cmd": "false"
         },
         {
-            "name": "Steam - 1920x1080",
+            "name": "Steam 1080p",
             "image-path": "",
             "cmd": "mangohud steam-runtime -gamepadui",
             "prep-cmd": [
@@ -36,7 +36,37 @@
             "exclude-global-prep-cmd": "false"
         },
         {
-            "name": "Desktop - 1280x800",
+            "name": "Steam 1440p",
+            "image-path": "",
+            "cmd": "mangohud steam-runtime -gamepadui",
+            "prep-cmd": [
+                {
+                    "do": "killall -q -HUP steam || /bin/true",
+                    "undo": ""
+                },
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.2560x1440@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "exclude-global-prep-cmd": "false"
+        },
+        {
+            "name": "Desktop",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.%SUNSHINE_CLIENT_WIDTH%x%SUNSHINE_CLIENT_HEIGHT%@%SUNSHINE_CLIENT_FPS%",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "image-path": ""
+        },
+        {
+            "name": "Desktop 800p",
             "output": "",
             "cmd": "",
             "exclude-global-prep-cmd": "false",
@@ -50,7 +80,7 @@
             "image-path": ""
         },
         {
-            "name": "Desktop - 1920x1080",
+            "name": "Desktop 1080p",
             "output": "",
             "cmd": "",
             "exclude-global-prep-cmd": "false",
@@ -58,6 +88,20 @@
             "prep-cmd": [
                 {
                     "do": "kscreen-doctor output.DP-1.mode.1920x1080@60",
+                    "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
+                }
+            ],
+            "image-path": ""
+        },
+        {
+            "name": "Desktop 1440p",
+            "output": "",
+            "cmd": "",
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "prep-cmd": [
+                {
+                    "do": "kscreen-doctor output.DP-1.mode.2560x1440@60",
                     "undo": "kscreen-doctor output.DP-1.mode.3440x1440@144"
                 }
             ],

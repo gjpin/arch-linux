@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home/Games/Heroic:create;home/.var/app/com.valvesoftware.Steam/data/Steam;home/games/heroic;
+filesystems=home/.var/app/com.valvesoftware.Steam/data/Steam;home/Games/Heroic;
