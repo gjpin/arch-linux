@@ -6,7 +6,7 @@
         {
             "name": "Steam 800p",
             "image-path": "",
-            "cmd": "mangohud steam-runtime -gamepadui",
+            "cmd": "flatpak run com.valvesoftware.Steam -gamepadui",
             "prep-cmd": [
                 {
                     "do": "killall -q -HUP steam || /bin/true",
@@ -22,7 +22,7 @@
         {
             "name": "Steam 1080p",
             "image-path": "",
-            "cmd": "mangohud steam-runtime -gamepadui",
+            "cmd": "flatpak run com.valvesoftware.Steam -gamepadui",
             "prep-cmd": [
                 {
                     "do": "killall -q -HUP steam || /bin/true",
@@ -38,7 +38,7 @@
         {
             "name": "Steam 1440p",
             "image-path": "",
-            "cmd": "mangohud steam-runtime -gamepadui",
+            "cmd": "flatpak run com.valvesoftware.Steam -gamepadui",
             "prep-cmd": [
                 {
                     "do": "killall -q -HUP steam || /bin/true",
