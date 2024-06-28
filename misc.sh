@@ -1,6 +1,14 @@
 #!/usr/bin/bash
 
 ################################################
+##### Development (languages, LSP, neovim)
+################################################
+
+# Install rust with rustup
+pacman -S --noconfirm rustup
+sudo -u ${NEW_USER} rustup default stable
+
+################################################
 ##### Swapfile
 ################################################
 
@@ -367,35 +375,14 @@ sudo -u ${NEW_USER} nvm install --lts
 sudo -u ${NEW_USER} nvm install-latest-npm
 
 ################################################
-##### ALVR (Flatpak)
+##### ALVR (aur)
 ################################################
 
 # References:
-# https://github.com/alvr-org/ALVR/wiki/Flatpak
-
-# Download ALVR
-curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
+# https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
 # Install ALVR
-flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
-
-# Remove ALVR flatpak
-rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
-
-# Allow ALVR in firewall
-firewall-cmd --zone=block --add-service=alvr
-firewall-cmd --zone=trusted --add-service=alvr
-
-firewall-cmd --permanent --zone=block --add-service=alvr
-firewall-cmd --permanent --zone=trusted --add-service=alvr
-
-# Create ALVR dashboard alias
-tee /home/${NEW_USER}/.zshrc.d/alvr << 'EOF'
-alias alvr="flatpak run --command=alvr_dashboard com.valvesoftware.Steam"
-EOF
-
-# Create ALVR desktop shortcut
-curl https://raw.githubusercontent.com/alvr-org/ALVR/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop -o /home/${NEW_USER}/.local/share/applications/com.valvesoftware.Steam.Utility.alvr.desktop
+sudo -u ${NEW_USER} paru -S --noconfirm alvr-bin
 
 ################################################
 ##### ALVR (native)

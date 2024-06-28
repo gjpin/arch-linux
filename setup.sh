@@ -753,8 +753,7 @@ pacman -S --noconfirm terraform vault
 pacman -S --noconfirm llvm clang lld mold scons
 
 # Install rust
-pacman -S --noconfirm rustup
-sudo -u ${NEW_USER} rustup default stable
+pacman -S --noconfirm rust
 
 ################################################
 ##### Neovim

@@ -126,6 +126,7 @@ setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 # https://github.com/alvr-org/ALVR/blob/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
 # https://github.com/alvr-org/ALVR/tree/master/alvr/xtask/firewall
+# https://github.com/alvr-org/ALVR/wiki/Flatpak
 
 # Download ALVR
 curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
@@ -135,6 +136,10 @@ flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
 
 # Remove ALVR flatpak
 rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
+
+# Automatic Audio & Microphone setup
+curl https://raw.githubusercontent.com/alvr-org/ALVR/master/alvr/xtask/flatpak/audio-flatpak-setup.sh -o /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/audio-flatpak-setup.sh
+chmod +x /home/${NEW_USER}/.var/app/com.valvesoftware.Steam/audio-flatpak-setup.sh
 
 # Create ALVR shortcut
 tee /home/${NEW_USER}/.local/share/applications/alvr.desktop << EOF

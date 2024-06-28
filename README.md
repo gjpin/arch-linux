@@ -36,9 +36,23 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme0n2 (if usin
 11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 13. Re-configure p10k: `p10k configure`
-14. Install SteamVR, run `sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher` and then launch and close SteamVR
 
 ## Misc guides
+### ALVR (native)
+1. Install SteamVR, launch it once and close it
+
+### ALVR (Flatpak)
+1. Install SteamVR
+2. Run:
+```bash
+sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher
+```
+3. Launch and close SteamVR
+4. Open ALVR
+5. In the ALVR Dashboard under All Settings (Advanced) > Audio, enable Game Audio and Microphone
+6. In the same place under Microphone, click Expand and set Devices to custom. Enter `default` for the name for both Sink and Source
+7. In the ALVR Dashboard, under All Settings (Advanced) > Connection, set the On connect script and On disconnect script to the absolute path of the script (relative to the Flatpak environment), i.e. `/home/$USER/.var/app/com.valvesoftware.Steam/audio-flatpak-setup.sh`
+8. Restart Steam and ALVR
 
 ### How to chroot
 
