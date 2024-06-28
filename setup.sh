@@ -174,9 +174,6 @@ ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0
 ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler} "bfq"
 EOF
 
-udevadm control --reload-rules
-udevadm trigger
-
 # Hugepage Defragmentation - default: 1
 # Transparent Hugepages - default: always
 # Shared Memory in Transparent Hugepages - default: never
