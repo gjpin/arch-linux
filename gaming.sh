@@ -112,7 +112,7 @@ fi
 # Enable KMS display capture
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
-# Allow Sunshine in firewall (commented since connection to Sunshine is done via Wireguard)
+# Allow Sunshine in firewall (commented since connection to Sunshine is done via Wireguard, which is a trusted zone)
 # firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP"'
 # firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
 # firewall-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" port port="47999" protocol="udp" accept log prefix="Sunshine - Control"'
