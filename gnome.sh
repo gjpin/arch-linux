@@ -136,22 +136,22 @@ rm -f shell-extension.zip
 
 # Install Firefox Gnome theme
 sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
-mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
-echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
-echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
+# mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
+# ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+# echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
+# echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
 
 # Gnome specific configurations
-tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
+# tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
 
-// Firefox Gnome theme
-user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
-user_pref("browser.uidensity", 0);
-user_pref("svg.context-properties.content.enabled", true);
-user_pref("browser.theme.dark-private-windows", false);
-user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
-user_pref("gnomeTheme.activeTabContrast", true);
-EOF
+# // Firefox Gnome theme
+# user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+# user_pref("browser.uidensity", 0);
+# user_pref("svg.context-properties.content.enabled", true);
+# user_pref("browser.theme.dark-private-windows", false);
+# user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+# user_pref("gnomeTheme.activeTabContrast", true);
+# EOF
 
 ################################################
 ##### GTK theme

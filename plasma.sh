@@ -163,14 +163,14 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/xset
 ##### Firefox
 ################################################
 
-# KDE specific configurations
-tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
+# Plasma specific configurations
+# tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
 
-// KDE integration
-// https://wiki.archlinux.org/title/firefox#KDE_integration
-user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
-user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-EOF
+# // Plasma integration
+# // https://wiki.archlinux.org/title/firefox#KDE_integration
+# user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
+# user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+# EOF
 
 ################################################
 ##### SSH

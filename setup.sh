@@ -594,7 +594,7 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
 
 # Bubblewrap workaround (Temporary - reverted at cleanup)
-chmod u+s /usr/bin/bwrap
+# chmod u+s /usr/bin/bwrap
 
 # Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -707,8 +707,6 @@ EOF
 ################################################
 
 # Install user applications
-flatpak install -y flathub com.usebruno.Bruno
-flatpak install -y flathub com.spotify.Client
 flatpak install -y flathub org.keepassxc.KeePassXC
 flatpak install -y flathub com.bitwarden.desktop
 flatpak install -y flathub org.libreoffice.LibreOffice
@@ -978,4 +976,4 @@ sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
 pacman -Rs --noconfirm xorg-server-xvfb
 
 # Revert temporary bubblewrap workaround
-chmod u-s /usr/bin/bwrap
+# chmod u-s /usr/bin/bwrap

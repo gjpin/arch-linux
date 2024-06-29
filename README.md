@@ -36,6 +36,43 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme0n2 (if usin
 11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 13. Re-configure p10k: `p10k configure`
+14. Install and configure flatpaks:
+```bash
+# Install not working via arch-chroot
+sudo flatpak install -y flathub com.usebruno.Bruno
+sudo flatpak install -y flathub com.spotify.Client
+
+# Not able to open Firefox via arch-chroot
+export FIREFOX_PROFILE_PATH=$(find /home/${USER}/.var/app/org.mozilla.firefox/.mozilla/firefox -type d -name "*.default-release")
+sudo mv /extensions/* ${FIREFOX_PROFILE_PATH}/extensions
+sudo rm -rf /extensions
+sudo mv /user.js ${FIREFOX_PROFILE_PATH}
+
+# If Gnome
+mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
+ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
+echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
+tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
+
+// Firefox Gnome theme
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("browser.uidensity", 0);
+user_pref("svg.context-properties.content.enabled", true);
+user_pref("browser.theme.dark-private-windows", false);
+user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+user_pref("gnomeTheme.activeTabContrast", true);
+EOF
+
+# If Plasma
+tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
+
+// Plasma integration
+// https://wiki.archlinux.org/title/firefox#KDE_integration
+user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
+user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+EOF
+```
 
 ## Misc guides
 ### ALVR (native)
@@ -53,6 +90,12 @@ sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steam
 6. In the same place under Microphone, click Expand and set Devices to custom. Enter `default` for the name for both Sink and Source
 7. In the ALVR Dashboard, under All Settings (Advanced) > Connection, set the On connect script and On disconnect script to the absolute path of the script (relative to the Flatpak environment), i.e. `/home/$USER/.var/app/com.valvesoftware.Steam/audio-flatpak-setup.sh`
 8. Restart Steam and ALVR
+
+### Sunshine - Steam flatpak
+1. If using Steam flatpak, then in Sunshine's app.json use the following instead:
+```
+flatpak run com.valvesoftware.Steam -gamepadui
+```
 
 ### How to chroot
 
