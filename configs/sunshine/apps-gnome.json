@@ -13,8 +13,8 @@
                     "undo": ""
                 },
                 {
-                    "do": "gnome-randr --output DP-1 --mode 1280x800 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 1280x800 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "exclude-global-prep-cmd": "false"
@@ -29,8 +29,8 @@
                     "undo": ""
                 },
                 {
-                    "do": "gnome-randr --output DP-1 --mode 1920x1080 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 1920x1080 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "exclude-global-prep-cmd": "false"
@@ -45,8 +45,8 @@
                     "undo": ""
                 },
                 {
-                    "do": "gnome-randr --output DP-1 --mode 2560x1440 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 2560x1440 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "exclude-global-prep-cmd": "false"
@@ -59,8 +59,8 @@
             "elevated": "false",
             "prep-cmd": [
                 {
-                    "do": "gnome-randr --output DP-1 --mode %SUNSHINE_CLIENT_WIDTH%x%SUNSHINE_CLIENT_HEIGHT% --rate %SUNSHINE_CLIENT_FPS%",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode %SUNSHINE_CLIENT_WIDTH%x%SUNSHINE_CLIENT_HEIGHT% --rate %SUNSHINE_CLIENT_FPS%",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "image-path": ""
@@ -73,8 +73,8 @@
             "elevated": "false",
             "prep-cmd": [
                 {
-                    "do": "gnome-randr --output DP-1 --mode 1280x800 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 1280x800 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "image-path": ""
@@ -87,8 +87,8 @@
             "elevated": "false",
             "prep-cmd": [
                 {
-                    "do": "gnome-randr --output DP-1 --mode 1920x1080 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 1920x1080 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "image-path": ""
@@ -101,8 +101,8 @@
             "elevated": "false",
             "prep-cmd": [
                 {
-                    "do": "gnome-randr --output DP-1 --mode 2560x1440 --rate 60",
-                    "undo": "gnome-randr --output DP-1 --mode 3440x1440 --rate 144"
+                    "do": "gnome-randr --output DP-2 --mode 2560x1440 --rate 60",
+                    "undo": "gnome-randr --output DP-2 --mode 3440x1440 --rate 144"
                 }
             ],
             "image-path": ""
