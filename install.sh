@@ -44,6 +44,9 @@ export DESKTOP_ENVIRONMENT
 read -p "Gaming (yes / no): " GAMING
 export GAMING
 
+read -p "Steam (native / flatpak): " STEAM_VERSION
+export STEAM_VERSION
+
 # CPU vendor
 if cat /proc/cpuinfo | grep "vendor" | grep "GenuineIntel" > /dev/null; then
     export CPU_MICROCODE="intel-ucode"

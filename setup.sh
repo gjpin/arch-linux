@@ -48,8 +48,13 @@ EOF
 # References:
 # https://wiki.archlinux.org/title/Pacman/Package_signing#Initializing_the_keyring
 
+if [ ${STEAM_VERSION} = "native" ]; then
+    # Enable multilib repository
+    sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
+fi
+
 # Force pacman to refresh the package lists
-pacman -Syy
+pacman -Syyu
 
 # Initialize Pacman's keyring
 pacman-key --init
@@ -318,6 +323,8 @@ EOF
 # Install and configure firewalld
 pacman -S --noconfirm firewalld
 systemctl enable firewalld.service
+
+# Set default zone to block
 firewall-offline-cmd --set-default-zone=block
 
 # Disable firewall-applet
@@ -476,6 +483,17 @@ pacman -S --noconfirm ffmpeg
 
 # Install GPU drivers related packages
 pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
+
+# Install 32-bit packages
+if [ ${STEAM_VERSION} = "native" ]; then
+    pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
+
+    if lspci | grep "VGA" | grep "Intel" > /dev/null; then
+        pacman -S --noconfirm lib32-vulkan-intel
+    elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
+        pacman -S --noconfirm lib32-vulkan-radeon lib32-libva-mesa-driver
+    fi
+fi
 
 # Override VA-API driver via environment variable
 tee -a /etc/environment << EOF
