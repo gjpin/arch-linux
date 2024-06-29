@@ -75,9 +75,14 @@ fi
 # https://wiki.archlinux.org/title/RAID#Installation
 
 if [ ${RAID0} = "no" ]; then
-    # Delete old partition layout and re-read partition table
+    # Read partition table
+    partprobe /dev/nvme0n1
+
+    # Delete old partition layout
     wipefs -af /dev/nvme0n1
     sgdisk --zap-all --clear /dev/nvme0n1
+
+    # Read partition table
     partprobe /dev/nvme0n1
 
     # Partition disk and re-read partition table
@@ -88,14 +93,19 @@ elif [ ${RAID0} = "yes" ]; then
     # Install mdadm
     pacman -S --noconfirm mdadm
 
-    # Delete old partition layout and re-read partition table
+    # Read partition tables
+    partprobe /dev/nvme0n1
+    partprobe /dev/nvme1n1
+
+    # Delete old partition layouts
     wipefs -af /dev/nvme0n1
     wipefs -af /dev/nvme1n1
 
-    # Partition disk and re-read partition table
+    # Partition disks
     sgdisk --zap-all --clear /dev/nvme0n1
     sgdisk --zap-all --clear /dev/nvme1n1
 
+    # Read partition tables
     partprobe /dev/nvme0n1
     partprobe /dev/nvme1n1
 
@@ -103,11 +113,15 @@ elif [ ${RAID0} = "yes" ]; then
     mdadm --misc --zero-superblock /dev/nvme0n1
     mdadm --misc --zero-superblock /dev/nvme1n1
 
-    # Partition disk and re-read partition table
+    # Partition disks
     sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
     sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n1
     sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFIDUMMY /dev/nvme1n1
     sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme1n1
+
+    # Read partition tables
+    partprobe /dev/nvme0n1
+    partprobe /dev/nvme1n1
 
     # Build RAID array
     mdadm --create /dev/md/ArchArray --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/nvme0n1p2 /dev/nvme1n1p2
