@@ -90,27 +90,27 @@ elif [ ${RAID0} = "yes" ]; then
 
     # Delete old partition layout and re-read partition table
     wipefs -af /dev/nvme0n1
-    wipefs -af /dev/nvme0n2
+    wipefs -af /dev/nvme1n1
 
     # Partition disk and re-read partition table
     sgdisk --zap-all --clear /dev/nvme0n1
-    sgdisk --zap-all --clear /dev/nvme0n2
+    sgdisk --zap-all --clear /dev/nvme1n1
 
     partprobe /dev/nvme0n1
-    partprobe /dev/nvme0n2
+    partprobe /dev/nvme1n1
 
     # Erase old RAID configuration information
     mdadm --misc --zero-superblock /dev/nvme0n1
-    mdadm --misc --zero-superblock /dev/nvme0n2
+    mdadm --misc --zero-superblock /dev/nvme1n1
 
     # Partition disk and re-read partition table
     sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
     sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n1
-    sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFIDUMMY /dev/nvme0n2
-    sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme0n2
+    sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFIDUMMY /dev/nvme1n1
+    sgdisk -n 2:0:0 -t 2:fd00 -c 2:RAID /dev/nvme1n1
 
     # Build RAID array
-    mdadm --create /dev/md/ArchArray --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/nvme0n1p2 /dev/nvme0n2p2
+    mdadm --create /dev/md/ArchArray --level=0 --metadata=1.2 --chunk=512 --raid-devices=2 --force /dev/nvme0n1p2 /dev/nvme1n1p2
 
     # Update mdadm configuration file
     mdadm --detail --scan >> /etc/mdadm.conf
@@ -140,7 +140,7 @@ if [ ${RAID0} = "no" ]; then
     mount --mkdir /dev/nvme0n1p1 /mnt/boot
 elif [ ${RAID0} = "yes" ]; then
     # Mount RAID partition
-    mdadm --assemble /dev/md/ArchArray /dev/nvme0n1p2 /dev/nvme0n2p2
+    mdadm --assemble /dev/md/ArchArray /dev/nvme0n1p2 /dev/nvme1n1p2
 
     # Encrypt and open LUKS partition
     echo ${LUKS_PASSWORD} | cryptsetup --type luks2 --hash sha512 --use-random luksFormat /dev/md/ArchArray
