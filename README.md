@@ -37,6 +37,7 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 13. Re-configure p10k: `p10k configure`
 14. Install and configure flatpaks:
+
 ```bash
 # Install not working via arch-chroot
 sudo flatpak install -y flathub com.usebruno.Bruno
@@ -77,15 +78,26 @@ EOF
 ```
 
 ## Misc guides
+
 ### ALVR (native)
+
+0. See more tips [in the official ALVR wiki](https://github.com/alvr-org/ALVR/wiki/Linux-Troubleshooting)
 1. Install SteamVR, launch it once and close it
+2. Add the following commandline option of SteamVR (SteamVR -> Manage/Right Click -> Properties -> General -> Launch Options):
+
+```
+~/.local/share/Steam/steamapps/common/SteamVR/bin/vrmonitor.sh %command%
+```
 
 ### ALVR (Flatpak)
+
 1. Install SteamVR
 2. Run:
+
 ```bash
 sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher
 ```
+
 3. Launch and close SteamVR
 4. Open ALVR
 5. In the ALVR Dashboard under All Settings (Advanced) > Audio, enable Game Audio and Microphone
@@ -94,7 +106,9 @@ sudo setcap CAP_SYS_NICE+eip ~/.var/app/com.valvesoftware.Steam/data/Steam/steam
 8. Restart Steam and ALVR
 
 ### Sunshine - Steam flatpak
+
 1. If using Steam flatpak, then in Sunshine's app.json use the following instead:
+
 ```
 flatpak run com.valvesoftware.Steam -gamepadui
 ```
@@ -259,7 +273,9 @@ sudo -u ${NEW_USER} flatpak run --command=gradience-cli com.github.GradienceTeam
 ```
 
 ## References
+
 ### sysctl
+
 ```bash
 # References:
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
