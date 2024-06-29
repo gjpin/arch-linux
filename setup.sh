@@ -53,6 +53,10 @@ if [ ${STEAM_VERSION} = "native" ]; then
     sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
 fi
 
+# Always ignore amdvlk packages
+# sed -i '/^#IgnorePkg/s/^#//' /etc/pacman.conf
+# sed -i '/^IgnorePkg/s/$/ amdvlk lib32-amdvlk/' /etc/pacman.conf
+
 # Force pacman to refresh the package lists
 pacman -Syyu
 
@@ -582,11 +586,15 @@ sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 
 # References
 # https://wiki.archlinux.org/title/Flatpak
+# https://github.com/containers/bubblewrap/issues/324
 
 # Install Flatpak and applications
 pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
+
+# Bubblewrap workaround (Temporary - reverted at cleanup)
+chmod u+s /usr/bin/bwrap
 
 # Add Flathub repositories
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -968,3 +976,6 @@ sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
 
 # Remove Virtual framebuffer X server
 pacman -Rs --noconfirm xorg-server-xvfb
+
+# Revert temporary bubblewrap workaround
+chmod u-s /usr/bin/bwrap

@@ -12,14 +12,14 @@
 sudo -u ${NEW_USER} paru -S --noconfirm wivrn-server
 
 # Allow WiVRn in firewall
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="tcp" accept log prefix="WiVRn TCP"'
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="udp" accept log prefix="WiVRn UDP"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="tcp" accept log prefix="WiVRn TCP"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="udp" accept log prefix="WiVRn UDP"'
 
 # Install Avahi
 pacman -S --noconfirm avahi nss-mdns
 
 # Allow Avahi in firewall
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="5353" protocol="udp" accept log prefix="Avahi"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="5353" protocol="udp" accept log prefix="Avahi"'
 
 ################################################
 ##### Development (languages, LSP, neovim)
@@ -306,10 +306,10 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
 fi
 
 # Allow Sunshine in firewall
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP TCP"'
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="udp" accept log prefix="Sunshine - RTSP UDP"'
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
-firewall-offline-cmd --permanent --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48000" protocol="udp" accept log prefix="Sunshine - Audio"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP TCP"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="udp" accept log prefix="Sunshine - RTSP UDP"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
+firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48000" protocol="udp" accept log prefix="Sunshine - Audio"'
 
 ################################################
 ##### AppArmor
@@ -455,8 +455,8 @@ EOF
 firewall-offline-cmd --zone=block --add-service=alvr
 firewall-offline-cmd --zone=trusted --add-service=alvr
 
-firewall-offline-cmd --permanent --zone=block --add-service=alvr
-firewall-offline-cmd --permanent --zone=trusted --add-service=alvr
+firewall-offline-cmd --zone=block --add-service=alvr
+firewall-offline-cmd --zone=trusted --add-service=alvr
 
 ################################################
 ##### homed
