@@ -47,6 +47,8 @@ export FIREFOX_PROFILE_PATH=$(find /home/${USER}/.var/app/org.mozilla.firefox/.m
 sudo mv /extensions/* ${FIREFOX_PROFILE_PATH}/extensions
 sudo rm -rf /extensions
 sudo mv /user.js ${FIREFOX_PROFILE_PATH}
+sudo chown ${USER}:${USER} ${FIREFOX_PROFILE_PATH}/user.js
+sudo chown -R ${USER}:${USER} ${FIREFOX_PROFILE_PATH}/extensions
 
 # If Gnome
 mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
