@@ -88,6 +88,8 @@ if [ ${RAID0} = "no" ]; then
     # Partition disk and re-read partition table
     sgdisk -n 1:0:+1G -t 1:ef00 -c 1:EFI /dev/nvme0n1
     sgdisk -n 2:0:0 -t 2:8309 -c 2:LUKS /dev/nvme0n1
+
+    # Read partition table
     partprobe /dev/nvme0n1
 elif [ ${RAID0} = "yes" ]; then
     # Install mdadm
@@ -100,8 +102,6 @@ elif [ ${RAID0} = "yes" ]; then
     # Delete old partition layouts
     wipefs -af /dev/nvme0n1
     wipefs -af /dev/nvme1n1
-
-    # Partition disks
     sgdisk --zap-all --clear /dev/nvme0n1
     sgdisk --zap-all --clear /dev/nvme1n1
 
