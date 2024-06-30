@@ -110,10 +110,10 @@ fi
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
 # Allow Sunshine in firewall
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP TCP"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="udp" accept log prefix="Sunshine - RTSP UDP"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48000" protocol="udp" accept log prefix="Sunshine - Audio"'
+firewall-offline-cmd --zone=trusted --add-port=48010/tcp --permanent
+firewall-offline-cmd --zone=trusted --add-port=48010/udp --permanent
+firewall-offline-cmd --zone=trusted --add-port=47998/udp --permanent
+firewall-offline-cmd --zone=trusted --add-port=48000/udp --permanent
 
 ################################################
 ##### ALVR
@@ -151,7 +151,7 @@ elif [ ${STEAM_VERSION} = "flatpak" ]; then
 fi
 
 # Allow ALVR in firewall
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9943" protocol="udp" accept log prefix="ALVR - discovery UDP"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9944" protocol="udp" accept log prefix="ALVR - SteamVR UDP"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9943" protocol="tcp" accept log prefix="ALVR - discovery TCP"'
-firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9944" protocol="tcp" accept log prefix="ALVR - SteamVR TCP"'
+firewall-offline-cmd --zone=trusted --add-port=9943/tcp --permanent
+firewall-offline-cmd --zone=trusted --add-port=9943/udp --permanent
+firewall-offline-cmd --zone=trusted --add-port=9944/tcp --permanent
+firewall-offline-cmd --zone=trusted --add-port=9944/udp --permanent

@@ -199,6 +199,9 @@ EOF
 # Konsole shortcut
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group org.kde.konsole.desktop --key "_launch" "Meta+Return,none,Konsole"
 
+# Toggle overview shortcut
+sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Overview" "Meta+Tab\tMeta+W,Meta+W,Toggle Overview"
+
 # Close windows shortcut
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Shift+Q,none,Close Window"
 

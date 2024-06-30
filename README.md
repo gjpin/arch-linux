@@ -36,7 +36,8 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 11. Import wireguard connection to networkmanager: `sudo nmcli con import type wireguard file /etc/wireguard/wg0.conf`
 12. Set wg0's firewalld zone: `sudo firewall-cmd --permanent --zone=trusted --add-interface=wg0`
 13. Re-configure p10k: `p10k configure`
-14. Install and configure flatpaks:
+14. Change network zone to 'trusted' (if applicable)
+15. Install and configure flatpaks:
 
 ```bash
 # Install not working via arch-chroot
@@ -87,6 +88,35 @@ EOF
 
 ```
 ~/.local/share/Steam/steamapps/common/SteamVR/bin/vrmonitor.sh %command%
+```
+
+3. Change settings:
+
+```
+Presets:
+- Preferred framerate: 90hz
+- Encoder preset: quality
+- Game audio: pipewire
+- Microphone: pipewire
+
+Video:
+- Transcoding view resolution: absolute
+   - Width: 2064
+   - Height: 2208
+- Emulated headset view resolution: absolute
+   - Width: 2064
+   - Height: 2208
+- Preferred FPS: 90hz
+- Bitrate: constant
+   - 200mbps
+- Preferred codec: AV1
+- Foveated encoding: on
+   - Center region width: 0.790 (increased 75% from default)
+   - Center region height: 0.700 (increased 75% from default)
+
+Headset:
+- Controllers: on
+   - Emulation mode: Quest 3 Touch Plus
 ```
 
 ### ALVR (Flatpak)
