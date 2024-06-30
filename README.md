@@ -90,7 +90,17 @@ EOF
 ~/.local/share/Steam/steamapps/common/SteamVR/bin/vrmonitor.sh %command%
 ```
 
-3. Change settings:
+3. Add workaround for non closable SteamVR window:
+
+```bash
+# References:
+# https://github.com/ValveSoftware/SteamVR-for-Linux/issues/577#issuecomment-1872400869
+
+sed -ri 's/("preload".*)true/\1false/g' ~/.steam/steam/steamapps/common/SteamVR/drivers/lighthouse/resources/webhelperoverlays.json
+sed -ri 's/("preload".*)true/\1false/g' ~/.steam/steam/steamapps/common/SteamVR/resources/webhelperoverlays.json
+```
+
+4. Change settings:
 
 ```
 Presets:
