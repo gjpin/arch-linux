@@ -287,8 +287,8 @@ sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
 # If WoL has been enabled and the computer does not shutdown
 
 # Add kernel boot parameters to enable quirks
-sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch.conf
-sed -i "s|=system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch-lts.conf
+sudo sed -i "s|/system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch.conf
+sudo sed -i "s|/system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch-lts.conf
 ```
 
 ### Download and apply GTK themes with Gradience
@@ -336,4 +336,28 @@ vm.dirty_expire_centisecs=3000
 
 # The kernel flusher threads will periodically wake up and write 'old' data out to disk.  This tunable expresses the interval between those wakeups, in 100'ths of a second.
 vm.dirty_writeback_centisecs=1500
+```
+
+### AMD P-State EPP
+
+```bash
+# References:
+# https://www.phoronix.com/review/amd-pstate-epp-ryzen-mobile
+# https://www.phoronix.com/review/linux-63-amd-epyc-epp
+# https://www.reddit.com/r/linux/comments/15p4bfs/amd_pstate_and_amd_pstate_epp_scaling_driver/
+
+# Check scaling driver in use
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_driver
+
+# Check EPP in use
+cat /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference
+
+# Check available EPP
+cat /sys/devices/system/cpu/cpu0/cpufreq/energy_performance_available_preferences
+
+# Check scaling governor
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+# Check available scaling governors
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
 ```

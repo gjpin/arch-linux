@@ -52,6 +52,7 @@ if cat /proc/cpuinfo | grep "vendor" | grep "GenuineIntel" > /dev/null; then
     export CPU_MICROCODE="intel-ucode"
 elif cat /proc/cpuinfo | grep "vendor" | grep "AuthenticAMD" > /dev/null; then
     export CPU_MICROCODE="amd-ucode"
+    export AMD_SCALING_DRIVER="amd_pstate=active"
 fi
 
 # GPU vendor
