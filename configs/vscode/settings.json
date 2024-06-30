@@ -33,5 +33,6 @@
         "[Default Dark Modern]": {
             "editor.background": "#181818"
         }
-    }
+    },
+    "git.useIntegratedAskPass": false
 }
