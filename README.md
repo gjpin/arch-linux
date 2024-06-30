@@ -82,7 +82,7 @@ EOF
 
 ### ALVR (native)
 
-0. See more tips [in the official ALVR wiki](https://github.com/alvr-org/ALVR/wiki/Linux-Troubleshooting)
+0. See more tips in the official ALVR wiki: [troubleshooting](https://github.com/alvr-org/ALVR/wiki/Linux-Troubleshooting) and [tweaks](https://github.com/alvr-org/ALVR/wiki/Settings-tutorial)
 1. Install SteamVR, launch it once and close it
 2. Add the following commandline option of SteamVR (SteamVR -> Manage/Right Click -> Properties -> General -> Launch Options):
 
