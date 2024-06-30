@@ -111,8 +111,8 @@ Video:
    - 200mbps
 - Preferred codec: AV1
 - Foveated encoding: on
-   - Center region width: 0.790 (increased 75% from default)
-   - Center region height: 0.700 (increased 75% from default)
+   - Center region width: 0.680 (increased 50% from default)
+   - Center region height: 0.600 (increased 50% from default)
 
 Headset:
 - Controllers: on
