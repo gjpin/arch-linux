@@ -117,6 +117,7 @@ Video:
    - Width: 2064
    - Height: 2208
 - Preferred FPS: 90hz
+- Maximum buffering: 2.20 frames
 - Bitrate: constant
    - 200mbps
 - Preferred codec: AV1
