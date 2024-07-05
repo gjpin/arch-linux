@@ -144,12 +144,6 @@ systemctl enable sddm.service
 # Install GTK themes
 flatpak install -y flathub org.gtk.Gtk3theme.Breeze org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
 
-# Install Gradience
-flatpak install -y flathub com.github.GradienceTeam.Gradience
-
-# Import Gradience Flatpak overrides
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.GradienceTeam.Gradience -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.github.GradienceTeam.Gradience
-
 # Apply Breeze Dark theme to GTK applications
 mkdir -p /home/${NEW_USER}/.config/{gtk-3.0,gtk-4.0}
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/gtk.css -o /home/${NEW_USER}/.config/gtk-3.0/gtk.css

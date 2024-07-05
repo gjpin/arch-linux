@@ -1,6 +1,16 @@
 #!/usr/bin/bash
 
 ################################################
+##### GTK theming
+################################################
+
+# Install Gradience
+flatpak install -y flathub com.github.GradienceTeam.Gradience
+
+# Import Gradience Flatpak overrides
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.GradienceTeam.Gradience -o /home/${NEW_USER}/.local/share/flatpak/overrides/com.github.GradienceTeam.Gradience
+
+################################################
 ##### WiVRn
 ################################################
 
