@@ -100,12 +100,20 @@ sed -ri 's/("preload".*)true/\1false/g' ~/.steam/steam/steamapps/common/SteamVR/
 sed -ri 's/("preload".*)true/\1false/g' ~/.steam/steam/steamapps/common/SteamVR/resources/webhelperoverlays.json
 ```
 
-4. Change settings:
+4. Apply SteamVR patches (optional):
 
+```bash
+curl -s https://raw.githubusercontent.com/alvr-org/ALVR-Distrobox-Linux-Guide/main/patch_bindings_spam.sh | sh -s /home/zero/.steam/steam/steamapps/common/SteamVR
 ```
+
+5. Change ALVR settings:
+
+```bash
+# References:
+# https://github.com/alvr-org/ALVR/wiki/ALVR-in-distrobox
+
 Presets:
 - Preferred framerate: 90hz
-- Encoder preset: quality
 - Game audio: pipewire
 - Microphone: pipewire
 
@@ -117,17 +125,31 @@ Video:
    - Width: 2064
    - Height: 2208
 - Preferred FPS: 90hz
-- Maximum buffering: 2.20 frames
+- Maximum buffering: 1.50 frames
 - Bitrate: constant
    - 200mbps
 - Preferred codec: AV1
 - Foveated encoding: on
    - Center region width: 0.680 (increased 50% from default)
    - Center region height: 0.600 (increased 50% from default)
+- Color correction: on
+   - Sharpening: 1.00
 
 Headset:
 - Controllers: on
    - Emulation mode: Quest 3 Touch Plus
+
+Connection:
+- Stream protocol: TCP
+```
+
+6. Change SteamVR settings:
+
+```bash
+- Disable SteamVR Home
+- Render Resolution: Custom - 100%
+- Disable Advanced Supersample Filtering
+- Set steamvr as openxr runtime
 ```
 
 ### ALVR (Flatpak)
