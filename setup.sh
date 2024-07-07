@@ -840,6 +840,7 @@ fi
 # References:
 # https://wiki.archlinux.org/title/Power_management
 # https://wiki.archlinux.org/title/CPU_frequency_scaling#cpupower
+# https://gitlab.com/corectrl/corectrl/-/wikis/Setup
 
 # If device is a laptop, apply more power saving configurations
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
@@ -853,10 +854,26 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
     mkinitcpio -P
 else
     # Change governor to Performance
-    echo governor='performance' >> /etc/default/cpupower
+    # echo governor='performance' >> /etc/default/cpupower
 
     # Enable cpupower systemd service
-    systemctl enable cpupower.service
+    # systemctl enable cpupower.service
+
+    if lspci | grep "VGA" | grep "AMD" > /dev/null; then
+        # Install corectrl
+        pacman -S --noconfirm corectrl
+
+        # Launch CoreCtrl on session startup
+        cp /usr/share/applications/org.corectrl.CoreCtrl.desktop /home/${NEW_USER}/.config/autostart/org.corectrl.CoreCtrl.desktop
+
+        # Don't ask for user password
+        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/90-corectrl.rules -o /etc/polkit-1/rules.d/90-corectrl.rules
+        sed -i "s/your-user-group/${NEW_USER}/" /etc/polkit-1/rules.d/90-corectrl.rules
+
+        # Full AMD GPU controls
+        sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch.conf
+        sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch-lts.conf
+    fi
 fi
 
 ################################################
