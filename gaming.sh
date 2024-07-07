@@ -126,6 +126,9 @@ firewall-offline-cmd --zone=trusted --add-port=48000/udp --permanent
 # https://github.com/alvr-org/ALVR/wiki/Flatpak
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
+# Install OpenXR
+pacman -S --noconfirm openxr
+
 # Install Sidequest
 sudo -u ${NEW_USER} paru -S --noconfirm sidequest-bin
 

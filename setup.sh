@@ -105,7 +105,8 @@ pacman -S --noconfirm \
     ripgrep \
     fd \
     gptfdisk \
-    bc
+    bc \
+    cpupower
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
@@ -833,11 +834,12 @@ if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]; then
 fi
 
 ################################################
-##### Power saving
+##### Power preferences
 ################################################
 
 # References:
 # https://wiki.archlinux.org/title/Power_management
+# https://wiki.archlinux.org/title/CPU_frequency_scaling#cpupower
 
 # If device is a laptop, apply more power saving configurations
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
@@ -849,6 +851,12 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 
     # Rebuild initramfs
     mkinitcpio -P
+else
+    # Change governor to Performance
+    echo governor='performance' >> /etc/default/cpupower
+
+    # Enable cpupower systemd service
+    systemctl enable cpupower.service
 fi
 
 ################################################
