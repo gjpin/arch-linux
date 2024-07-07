@@ -114,18 +114,8 @@ curl -s https://raw.githubusercontent.com/alvr-org/ALVR-Distrobox-Linux-Guide/ma
 
 Presets:
 - Preferred framerate: 90hz
-- Game audio: pipewire
-- Microphone: pipewire
 
 Video:
-- Transcoding view resolution: absolute
-   - Width: 2064
-   - Height: 2208
-- Emulated headset view resolution: absolute
-   - Width: 2064
-   - Height: 2208
-- Preferred FPS: 90hz
-- Maximum buffering: 1.50 frames
 - Bitrate: constant
    - 200mbps
 - Preferred codec: AV1
@@ -134,6 +124,15 @@ Video:
    - Center region height: 0.600 (increased 50% from default)
 - Color correction: on
    - Sharpening: 1.00
+- Maximum buffering: 1.50 frames
+- Optimize game render latench: off
+- Transcoding view resolution: absolute
+   - Width: 2064
+   - Height: 2208
+- Emulated headset view resolution: absolute
+   - Width: 2064
+   - Height: 2208
+- Preferred FPS: 90hz
 
 Headset:
 - Controllers: on

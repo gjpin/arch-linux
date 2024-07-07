@@ -116,7 +116,7 @@ firewall-offline-cmd --zone=trusted --add-port=47998/udp --permanent
 firewall-offline-cmd --zone=trusted --add-port=48000/udp --permanent
 
 ################################################
-##### ALVR
+##### VR
 ################################################
 
 # References:
@@ -125,6 +125,9 @@ firewall-offline-cmd --zone=trusted --add-port=48000/udp --permanent
 # https://github.com/alvr-org/ALVR/tree/master/alvr/xtask/firewall
 # https://github.com/alvr-org/ALVR/wiki/Flatpak
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
+
+# Install Sidequest
+sudo -u ${NEW_USER} paru -S --noconfirm sidequest-bin
 
 if [ ${STEAM_VERSION} = "native" ]; then
     # Install ALVR
