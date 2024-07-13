@@ -16,7 +16,6 @@
 # https://archlinux.org/groups/x86_64/gnome/
 pacman -S --noconfirm \
     baobab \
-	eog \
     evince \
     file-roller \
     gnome-backgrounds \
@@ -49,7 +48,8 @@ pacman -S --noconfirm \
 # Additional Gnome/GTK packages
 pacman -S --noconfirm \
     gitg \
-    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gtk \
+    webp-pixbuf-loader
 
 # Install and enable GDM
 pacman -S --noconfirm gdm
@@ -73,9 +73,6 @@ interpolation
 tscale=oversample
 hwdec=auto
 EOF
-
-# Enable support for WEBP images in eog
-pacman -S --noconfirm webp-pixbuf-loader
 
 # Configure  Gnome's default file associations (based on shared-mime-info-gnome)
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/gnome-mimeapps.list -o /usr/share/applications/gnome-mimeapps.list
@@ -107,6 +104,7 @@ sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd
 flatpak install -y flathub com.mattjakeman.ExtensionManager
 flatpak install -y flathub com.github.marhkb.Pods
 flatpak install -y flathub com.github.tchx84.Flatseal
+flatpak install -y flathub io.bassi.Amberol
 
 ################################################
 ##### Gnome Shell extensions
