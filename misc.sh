@@ -1,6 +1,39 @@
 #!/usr/bin/bash
 
 ################################################
+##### Power preferences
+################################################
+
+# Change CPU governor to Performance
+echo governor='performance' >> /etc/default/cpupower
+
+# Enable cpupower systemd service
+systemctl enable cpupower.service
+
+# Corectrl
+if lspci | grep "VGA" | grep "AMD" > /dev/null; then
+    # Install corectrl
+    pacman -S --noconfirm corectrl
+
+    # Launch CoreCtrl on session startup
+    cp /usr/share/applications/org.corectrl.CoreCtrl.desktop /home/${NEW_USER}/.config/autostart/org.corectrl.CoreCtrl.desktop
+
+    # Don't ask for user password
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/90-corectrl.rules -o /etc/polkit-1/rules.d/90-corectrl.rules
+    sed -i "s/your-user-group/${NEW_USER}/" /etc/polkit-1/rules.d/90-corectrl.rules
+
+    # Full AMD GPU controls
+    sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch.conf
+    sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch-lts.conf
+
+    # Import corectrl configs and profiles
+    mkdir -p /home/${NEW_USER}/.config/corectrl/profiles
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/corectrl.ini -o /home/${NEW_USER}/.config/corectrl/corectrl.ini
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/_global_.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/_global_.ccpro
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/alvr_dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/alvr_dashboard.ccpro
+fi
+
+################################################
 ##### GTK theming
 ################################################
 
