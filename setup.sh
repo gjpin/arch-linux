@@ -633,17 +633,37 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker and plugins
-pacman -S --noconfirm docker docker-compose docker-buildx
+# Install Podman and dependencies
+pacman -S --noconfirm podman passt netavark aardvark-dns
 
-# Enable Docker service
-systemctl enable docker.socket
+# Install Buildah
+pacman -S --noconfirm buildah
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee /home/${NEW_USER}/.zshrc.d/podman << EOF
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf.d/10-unqualified-search-registries.conf << EOF
+unqualified-search-registries = ['docker.io']
+EOF
+
+tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
+[[registry]]
+location = "docker.io"
+EOF
 
 ################################################
 ##### Virtualization
@@ -834,7 +854,7 @@ if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]; then
 fi
 
 ################################################
-##### Power preferences
+##### Power management
 ################################################
 
 # References:
@@ -859,6 +879,10 @@ else
         echo 'SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="high"' > /etc/udev/rules.d/30-amdgpu-high-power.rules
     fi
 fi
+
+# Install and enable power profiles daemon
+pacman -S --noconfirm power-profiles-daemon
+systemctl enable power-profiles-daemon.service
 
 ################################################
 ##### Firefox (Flatpak)
@@ -913,7 +937,7 @@ mkdir -p /home/${NEW_USER}/.config/Code/User
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/settings.json -o /home/${NEW_USER}/.config/Code/User/settings.json
 
 ################################################
-##### Desktop Environment
+##### Fonts
 ################################################
 
 # Install fonts
@@ -924,6 +948,7 @@ pacman -S --noconfirm \
     noto-fonts-extra \
     ttf-liberation \
     otf-cascadia-code \
+    otf-commit-mono-nerd \
     ttf-firacode-nerd \
     ttf-hack-nerd \
  	ttf-noto-nerd \
@@ -935,9 +960,16 @@ pacman -S --noconfirm \
     cantarell-fonts \
     otf-font-awesome
 
-# Install and enable power profiles daemon
-pacman -S --noconfirm power-profiles-daemon
-systemctl enable power-profiles-daemon.service
+# Enable stem darkening on all fonts
+tee -a /etc/environment << EOF
+
+# Enable stem darkening on all fonts
+FREETYPE_PROPERTIES="cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"
+EOF
+
+################################################
+##### Desktop Environment
+################################################
 
 # Enable bluetooth
 systemctl enable bluetooth.service

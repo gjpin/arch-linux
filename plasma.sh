@@ -154,6 +154,13 @@ mkdir -p /home/${NEW_USER}/.config/xsettingsd
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/xsettingsd/xsettingsd.conf -o /home/${NEW_USER}/.config/xsettingsd/xsettingsd.conf
 
 ################################################
+##### Flatpak
+################################################
+
+# Install applications
+flatpak install -y flathub io.podman_desktop.PodmanDesktop
+
+################################################
 ##### Firefox
 ################################################
 

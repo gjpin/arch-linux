@@ -105,6 +105,7 @@ sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd
 
 # Install applications
 flatpak install -y flathub com.mattjakeman.ExtensionManager
+flatpak install -y flathub com.github.marhkb.Pods
 
 ################################################
 ##### Gnome Shell extensions
