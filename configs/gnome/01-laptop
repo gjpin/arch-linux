@@ -1,0 +1,6 @@
+[org/gnome/desktop/peripherals/touchpad]
+tap-to-click=true
+disable-while-typing=false
+
+[org/gnome/desktop/interface]
+show-battery-percentage=true

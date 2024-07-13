@@ -77,8 +77,8 @@ EOF
 # Enable support for WEBP images in eog
 pacman -S --noconfirm webp-pixbuf-loader
 
-# Install Gnome's default file associations
-sudo -u ${NEW_USER} paru -S --noconfirm shared-mime-info-gnome
+# Configure  Gnome's default file associations (based on shared-mime-info-gnome)
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/gnome-mimeapps.list -o /usr/share/applications/gnome-mimeapps.list
 
 ################################################
 ##### Disable unneeded packages and services
@@ -106,6 +106,7 @@ sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd
 # Install applications
 flatpak install -y flathub com.mattjakeman.ExtensionManager
 flatpak install -y flathub com.github.marhkb.Pods
+flatpak install -y flathub com.github.tchx84.Flatseal
 
 ################################################
 ##### Gnome Shell extensions
@@ -115,7 +116,7 @@ flatpak install -y flathub com.github.marhkb.Pods
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
 # Grand Theft Focus
-# # https://extensions.gnome.org/extension/5410/grand-theft-focus
+# https://extensions.gnome.org/extension/5410/grand-theft-focus
 curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v6.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
@@ -126,6 +127,13 @@ rm -f shell-extension.zip
 curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v8.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
+rm -f shell-extension.zip
+
+# Tiling Shell
+# https://extensions.gnome.org/extension/7065/tiling-shell/
+curl -sSL https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v18.shell-extension.zip -o shell-extension.zip
+mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
+unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
 rm -f shell-extension.zip
 
 ################################################
@@ -189,149 +197,11 @@ EOF
 
 # Import Gnome configurations
 mkdir -p /etc/dconf/db/local.d
-tee /etc/dconf/db/local.d/01-custom << EOF
-[org/gnome/desktop/interface]
-gtk-theme='adw-gtk3'
-color-scheme='default'
-
-[org/gnome/desktop/wm/keybindings]
-close=['<Shift><Super>q']
-switch-applications=@as []
-switch-applications-backward=@as []
-switch-windows=['<Alt>Tab']
-switch-windows-backward=['<Shift><Alt>Tab']
-switch-to-workspace-1=['<Super>1']
-switch-to-workspace-2=['<Super>2']
-switch-to-workspace-3=['<Super>3']
-switch-to-workspace-4=['<Super>4']
-move-to-workspace-1=['<Shift><Super>exclam']
-move-to-workspace-2=['<Shift><Super>at']
-move-to-workspace-3=['<Shift><Super>numbersign']
-move-to-workspace-4=['<Shift><Super>dollar']
-
-[org/gnome/shell/keybindings]
-show-screenshot-ui=['<Shift><Super>s']
-switch-to-application-1=@as []
-switch-to-application-2=@as []
-switch-to-application-3=@as []
-switch-to-application-4=@as []
-
-[org/gnome/desktop/sound]
-allow-volume-above-100-percent=true
-
-[org/gnome/desktop/calendar]
-show-weekdate=true
-
-[org/gtk/settings/file-chooser]
-sort-directories-first=true
-
-[org/gnome/nautilus/icon-view]
-default-zoom-level='small-plus'
-
-[org/gnome/desktop/interface]
-font-name='Noto Sans 10'
-document-font-name='Noto Sans 10'
-monospace-font-name='NotoSansM Nerd Font Mono 10'
-
-[org/gnome/desktop/wm/preferences]
-titlebar-font='NotoSansM Nerd Font Mono Medium 10'
-
-[org/gnome/shell]
-disable-user-extensions=false
-
-[org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
-
-[org/gnome/shell]
-enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
-
-[org/gnome/terminal/legacy]
-theme-variant='dark'
-
-[org/gnome/terminal/legacy/keybindings]
-next-tab='<Primary>Tab'
-
-[org/gnome/settings-daemon/plugins/media-keys]
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
-binding='<Super>Return'
-command='kgx'
-name='Gnome Console'
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
-binding='<Super>E'
-command='nautilus'
-name='Nautilus'
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
-binding='<Shift><Control>Escape'
-command='gnome-system-monitor'
-name='Gnome System Monitor'
-
-[org/gnome/desktop/app-folders]
-folder-children=['Office', 'Dev', 'Media', 'System', 'Gaming', 'Emulators']
-
-[org/gnome/desktop/app-folders/folders/Office]
-name='Office'
-apps=['com.github.flxzt.rnote.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.clocks.desktop', 'md.obsidian.Obsidian.desktop', 'org.libreoffice.LibreOffice.base.desktop', 'org.libreoffice.LibreOffice.calc.desktop', 'org.libreoffice.LibreOffice.draw.desktop', 'org.libreoffice.LibreOffice.impress.desktop', 'org.libreoffice.LibreOffice.math.desktop', 'org.libreoffice.LibreOffice.writer.desktop', 'org.libreoffice.LibreOffice.desktop']
-
-[org/gnome/desktop/app-folders/folders/Dev]
-name='Dev'
-apps=['code.desktop', 'rest.insomnia.Insomnia.desktop', 'com.github.marhkb.Pods.desktop', 'org.gaphor.Gaphor.desktop', 'org.gnome.gitg.desktop', 'org.gnome.Boxes.desktop']
-
-[org/gnome/desktop/app-folders/folders/Media]
-name='Media'
-apps=['io.github.celluloid_player.Celluloid.desktop', 'io.github.seadve.Kooha.desktop', 'com.spotify.Client.desktop', 'org.blender.Blender.desktop', 'org.gimp.GIMP.desktop', 'org.gnome.eog.desktop']
-
-[org/gnome/desktop/app-folders/folders/System]
-name='System'
-apps=['org.gnome.baobab.desktop', 'firewall-config.desktop', 'com.mattjakeman.ExtensionManager.desktop', 'org.gnome.Settings.desktop', 'gnome-system-monitor.desktop', 'org.gnome.Characters.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Logs.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop', 'kvantummanager.desktop']
-
-[org/gnome/desktop/app-folders/folders/Gaming]
-name='Gaming'
-apps=['com.valvesoftware.Steam.desktop', 'com.heroicgameslauncher.hgl.desktop', 'net.lutris.Lutris.desktop']
-
-[org/gnome/desktop/app-folders/folders/Emulators]
-name='Emulators'
-apps=['org.duckstation.DuckStation.desktop', 'net.pcsx2.PCSX2.desktop', 'org.ppsspp.PPSSPP.desktop', 'org.DolphinEmu.dolphin-emu.desktop', 'org.yuzu_emu.yuzu.desktop', 'org.citra_emu.citra.desktop', 'org.flycast.Flycast.desktop', 'app.xemu.xemu.desktop', 'com.snes9x.Snes9x.desktop', 'net.kuribo64.melonDS.desktop', 'net.rpcs3.RPCS3.desktop']
-
-[org/gnome/shell]
-app-picker-layout=[{'Dev': <{'position': <0>}>, 'Emulators': <{'position': <1>}>, 'Gaming': <{'position': <2>}>, 'Media': <{'position': <3>}>, 'Office': <{'position': <4>}>}]
-
-[org/gnome/desktop/background]
-picture-uri='file:///usr/share/backgrounds/gnome/blobs-l.svg'
-picture-uri-dark='file:///usr/share/backgrounds/gnome/blobs-d.svg'
-primary-color='#241f31'
-
-[org/gnome/desktop/screensaver]
-picture-uri='file:///usr/share/backgrounds/gnome/blobs-l.svg'
-primary-color='#241f31'
-
-[org/gnome/shell]
-disable-extension-version-validation=true
-
-[org/gnome/desktop/interface]
-font-antialiasing='rgba'
-
-[org/gnome/desktop/search-provers]
-disable-external=true
-
-[org/freedesktop/Tracker3/Miner/Files]
-index-single-directories="@as []"
-index-recursive-directories="@as []"
-EOF
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/01-custom -o /etc/dconf/db/local.d/01-custom
 
 # Laptop specific Gnome configurations
 if cat /sys/class/dmi/id/chassis_type | grep 10 > /dev/null; then
-tee /etc/dconf/db/local.d/01-laptop << EOF
-[org/gnome/desktop/peripherals/touchpad]
-tap-to-click=true
-disable-while-typing=false
-
-[org/gnome/desktop/interface]
-show-battery-percentage=true
-EOF
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/01-laptop -o /etc/dconf/db/local.d/01-laptop
 fi
 
 # Update Gnome system databases
