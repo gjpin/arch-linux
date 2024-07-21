@@ -851,16 +851,6 @@ return {
 EOF
 
 ################################################
-##### thermald
-################################################
-
-# Install and enable thermald if CPU is Intel
-if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]; then
-    pacman -S --noconfirm thermald
-    systemctl enable thermald.service
-fi
-
-################################################
 ##### Power management
 ################################################
 
@@ -870,7 +860,7 @@ fi
 # https://gitlab.com/corectrl/corectrl/-/wikis/Setup
 # https://wiki.archlinux.org/title/AMDGPU#Performance_levels
 
-# If device is a laptop, apply more power saving configurations
+# Apply power managament configurations according to device type
 if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
     # Enable audio power saving features
     echo 'options snd_hda_intel power_save=1' > /etc/modprobe.d/audio_powersave.conf
@@ -885,6 +875,12 @@ else
         # Set AMD GPU performance level to High
         echo 'SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="high"' > /etc/udev/rules.d/30-amdgpu-high-power.rules
     fi
+fi
+
+# Install and enable thermald if CPU is Intel
+if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]; then
+    pacman -S --noconfirm thermald
+    systemctl enable thermald.service
 fi
 
 # Install and enable power profiles daemon

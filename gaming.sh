@@ -14,9 +14,6 @@ flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
 flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 
 if [ ${STEAM_VERSION} = "native" ]; then
-    # Install Gamemode
-    pacman -S --noconfirm gamemode lib32-gamemode
-
     # Install Gamescope
     pacman -S --noconfirm gamescope
 
