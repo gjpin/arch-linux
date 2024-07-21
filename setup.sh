@@ -450,6 +450,33 @@ sbctl sign -s /boot/vmlinuz-linux
 sbctl sign -s /boot/vmlinuz-linux-lts
 
 ################################################
+##### AppArmor
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/AppArmor
+# https://wiki.archlinux.org/title/Audit_framework
+# https://github.com/roddhjav/apparmor.d
+
+# Install AppArmor
+pacman -S --noconfirm apparmor
+
+# Enable AppArmor service
+systemctl enable apparmor.service
+
+# Enable AppArmor as default security model
+sed -i "s|/system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch.conf
+sed -i "s|/system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch-lts.conf
+
+# Enable caching AppArmor profiles
+sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
+sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
+
+# Install and enable Audit Framework
+pacman -S --noconfirm audit
+systemctl enable auditd.service
+
+################################################
 ##### Paru
 ################################################
 
@@ -633,37 +660,17 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Podman
+##### Docker
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/Podman
-# https://wiki.archlinux.org/title/Buildah
-# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+# https://wiki.archlinux.org/title/docker
 
-# Install Podman and dependencies
-pacman -S --noconfirm podman passt netavark aardvark-dns
+# Install Docker and plugins
+pacman -S --noconfirm docker docker-compose docker-buildx
 
-# Install Buildah
-pacman -S --noconfirm buildah
-
-# Enable unprivileged ping
-echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
-
-# Create docker/podman alias
-tee /home/${NEW_USER}/.zshrc.d/podman << EOF
-alias docker=podman
-EOF
-
-# Re-enable unqualified search registries
-tee -a /etc/containers/registries.conf.d/10-unqualified-search-registries.conf << EOF
-unqualified-search-registries = ['docker.io']
-EOF
-
-tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
-[[registry]]
-location = "docker.io"
-EOF
+# Enable Docker service
+systemctl enable docker.socket
 
 ################################################
 ##### Virtualization
@@ -691,7 +698,7 @@ systemctl enable libvirtd.service
 # sed -i "s|^#group = \"libvirt-qemu\"|group = \"${NEW_USER}\"|g" /etc/libvirt/qemu.conf
 
 ################################################
-##### Kubernetes
+##### Kubernetes / Cloud
 ################################################
 
 # References:
@@ -723,6 +730,9 @@ autoload -Uz compinit
 compinit
 source <(kubectl completion zsh)
 EOF
+
+# Install OpenTofu
+pacman -S --noconfirm opentofu
 
 ################################################
 ##### User applications
@@ -788,9 +798,6 @@ pacman -S --noconfirm \
     vscode-html-languageserver \
     vscode-json-languageserver \
     yaml-language-server
-
-# Install Terraform
-pacman -S --noconfirm terraform vault
 
 # Install C++ development related packages
 pacman -S --noconfirm llvm clang lld mold scons
@@ -959,13 +966,6 @@ pacman -S --noconfirm \
     inter-font \
     cantarell-fonts \
     otf-font-awesome
-
-# Enable stem darkening on all fonts
-tee -a /etc/environment << EOF
-
-# Enable stem darkening on all fonts
-FREETYPE_PROPERTIES="cff:no-stem-darkening=0 autofitter:no-stem-darkening=0"
-EOF
 
 ################################################
 ##### Desktop Environment
