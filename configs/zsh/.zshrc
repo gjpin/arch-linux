@@ -77,6 +77,12 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
+# Enable bash-style globbing
+setopt NO_NOMATCH          # Do not raise an error if a glob does not match any files
+setopt GLOB_SUBST          # Perform substitutions in globs
+setopt NO_GLOB_DOTS        # Do not match leading dots with wildcards
+unsetopt EXTENDED_GLOB     # Disable extended globbing
+
 # Aliases
 alias ls='ls --color'
 
