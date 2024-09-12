@@ -51,7 +51,8 @@ pacman -S --noconfirm \
 pacman -S --noconfirm \
     gitg \
     xdg-desktop-portal-gtk \
-    webp-pixbuf-loader
+    webp-pixbuf-loader \
+    seahorse
 
 # Install and enable GDM
 pacman -S --noconfirm gdm
