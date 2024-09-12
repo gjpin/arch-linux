@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;home/Sync/joplin;
+filesystems=!home;!host;home/Sync/joplin;

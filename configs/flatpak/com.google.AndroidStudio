@@ -1,0 +1,2 @@
+[Context]
+filesystems=!home;!host;home/Android;home/.gradle;home/.m2;home/.java;home/.android;xdg-config/Google;xdg-cache/Google;xdg-data/Google;home/src;host-etc:ro;home/.gitconfig:ro;home/.ssh:ro

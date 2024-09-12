@@ -97,16 +97,6 @@ systemctl mask geoclue.service
 sed -i "s|^# DisableAutoSpawn|DisableAutoSpawn|g" /etc/speech-dispatcher/speechd.conf
 
 ################################################
-##### Flatpak
-################################################
-
-# Install applications
-flatpak install -y flathub com.mattjakeman.ExtensionManager
-flatpak install -y flathub com.github.marhkb.Pods
-flatpak install -y flathub com.github.tchx84.Flatseal
-flatpak install -y flathub io.bassi.Amberol
-
-################################################
 ##### Gnome Shell extensions
 ################################################
 
@@ -129,36 +119,10 @@ rm -f shell-extension.zip
 
 # Tiling Shell
 # https://extensions.gnome.org/extension/7065/tiling-shell/
-curl -sSL https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v18.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v27.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
 rm -f shell-extension.zip
-
-################################################
-##### Firefox
-################################################
-
-# References:
-# https://github.com/rafaelmardojai/firefox-gnome-theme
-
-# Install Firefox Gnome theme
-sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
-# mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-# ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
-# echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
-# echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
-
-# Gnome specific configurations
-# tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
-
-# // Firefox Gnome theme
-# user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
-# user_pref("browser.uidensity", 0);
-# user_pref("svg.context-properties.content.enabled", true);
-# user_pref("browser.theme.dark-private-windows", false);
-# user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
-# user_pref("gnomeTheme.activeTabContrast", true);
-# EOF
 
 ################################################
 ##### GTK theme
@@ -166,10 +130,6 @@ sudo -u ${NEW_USER} paru -S --noconfirm firefox-gnome-theme
 
 # References:
 # https://github.com/lassekongo83/adw-gtk3
-
-# Install adw-gtk3 flatpak
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3
-flatpak install -y flathub org.gtk.Gtk3theme.adw-gtk3-dark
 
 # Install adw-gtk3
 sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3

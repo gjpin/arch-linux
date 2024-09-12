@@ -1,0 +1,8 @@
+[Context]
+filesystems=!home;!host;home/src;home/.devtools/android:ro;
+
+[Session Bus Policy]
+org.freedesktop.Flatpak=talk
+
+[Environment]
+FLATPAK_ENABLE_SDK_EXT=openjdk17

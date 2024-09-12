@@ -488,10 +488,10 @@ EOF
 
 # Allow ALVR in firewall
 firewall-offline-cmd --zone=block --add-service=alvr
-firewall-offline-cmd --zone=trusted --add-service=alvr
+firewall-offline-cmd --zone=home --add-service=alvr
 
 firewall-offline-cmd --zone=block --add-service=alvr
-firewall-offline-cmd --zone=trusted --add-service=alvr
+firewall-offline-cmd --zone=home --add-service=alvr
 
 ################################################
 ##### homed

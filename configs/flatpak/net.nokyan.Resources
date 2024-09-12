@@ -1,0 +1,2 @@
+[Context]
+filesystems=host:ro;/var/lib/flatpak/app:ro;/var/lib/flatpak/exports/share:ro;xdg-data/flatpak/app:ro;xdg-data/flatpak/exports/share:ro;

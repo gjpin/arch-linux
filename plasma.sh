@@ -101,7 +101,6 @@ pacman -S --noconfirm \
     kompare \
     konsole \
     kwalletmanager \
-    okular \
     partitionmanager \
     plasma-systemmonitor \
     spectacle
@@ -141,9 +140,6 @@ systemctl enable sddm.service
 ##### GTK theming
 ################################################
 
-# Install GTK themes
-flatpak install -y flathub org.gtk.Gtk3theme.Breeze org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
-
 # Apply Breeze Dark theme to GTK applications
 mkdir -p /home/${NEW_USER}/.config/{gtk-3.0,gtk-4.0}
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/gtk.css -o /home/${NEW_USER}/.config/gtk-3.0/gtk.css
@@ -152,26 +148,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/gtk.css
 # Select GTK theme
 mkdir -p /home/${NEW_USER}/.config/xsettingsd
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/xsettingsd/xsettingsd.conf -o /home/${NEW_USER}/.config/xsettingsd/xsettingsd.conf
-
-################################################
-##### Flatpak
-################################################
-
-# Install applications
-flatpak install -y flathub io.podman_desktop.PodmanDesktop
-
-################################################
-##### Firefox
-################################################
-
-# Plasma specific configurations
-# tee -a ${FIREFOX_PROFILE_PATH}/user.js << 'EOF'
-
-# // Plasma integration
-# // https://wiki.archlinux.org/title/firefox#KDE_integration
-# user_pref("widget.use-xdg-desktop-portal.mime-handler", 1);
-# user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-# EOF
 
 ################################################
 ##### SSH

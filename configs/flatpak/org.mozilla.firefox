@@ -1,0 +1,4 @@
+[Context]
+filesystems=!home;!host;xdg-documents;
+x11=false;
+fallback-x11=false;

@@ -1,2 +1,2 @@
 [Context]
-filesystems=home/.minikube;home/.kube/config;
+filesystems=!home;!host;home/.minikube;home/.kube/config;

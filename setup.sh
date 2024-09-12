@@ -97,7 +97,6 @@ pacman -S --noconfirm \
     man-pages \
     e2fsprogs \
     util-linux \
-    wireguard-tools \
     rsync \
     jq \
     yq \
@@ -106,10 +105,43 @@ pacman -S --noconfirm \
     fd \
     gptfdisk \
     bc \
-    cpupower
+    cpupower \
+    procps-ng \
+    gawk \
+    fzf \
+    findutils
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
+
+# Updater helper
+tee /usr/local/bin/update-all << EOF
+#!/usr/bin/bash
+
+################################################
+##### System and firmware
+################################################
+
+# Update keyring
+sudo pacman -Sy --noconfirm archlinux-keyring
+
+# Update all packages
+paru -Syyu
+
+# Update firmware
+sudo fwupdmgr refresh
+sudo fwupdmgr update
+
+################################################
+##### Flatpaks
+################################################
+
+# Update Flatpak apps
+flatpak update -y
+flatpak uninstall -y --unused
+EOF
+
+chmod +x /usr/local/bin/update-all
 
 ################################################
 ##### zram (swap)
@@ -156,6 +188,12 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 # https://github.com/CryoByte33/steam-deck-utilities/blob/main/docs/tweak-explanation.md
 # https://wiki.cachyos.org/configuration/general_system_tweaks/
 # https://gitlab.com/cscs/maxperfwiz/-/blob/master/maxperfwiz?ref_type=heads
+
+# Set reverse path filtering to strict mode
+tee /etc/sysctl.d/99-reverse-path-filtering.conf << EOF
+net.ipv4.conf.default.rp_filter=1
+net.ipv4.conf.all.rp_filter=1
+EOF
 
 # Enable trim operations
 systemctl enable fstrim.timer
@@ -240,7 +278,7 @@ systemctl enable disable-broadcast-messages.service
 # https://wiki.archlinux.org/title/XDG_Base_Directory
 
 # Install ZSH and dependencies
-pacman -S --noconfirm zsh fzf
+pacman -S --noconfirm zsh
 
 # Set root password and shell
 echo "root:${NEW_USER_PASSWORD}" | chpasswd
@@ -280,41 +318,11 @@ EOF
 # Create zsh configs directory
 mkdir -p /home/${NEW_USER}/.zshrc.d
 
-# Updater helper
-tee /home/${NEW_USER}/.zshrc.d/update-all << EOF
-update-all() {
-    # Update keyring
-    sudo pacman -Sy --noconfirm archlinux-keyring
-
-    # Update all packages
-    paru -Syyu
-
-    # Update firmware
-    sudo fwupdmgr refresh
-    sudo fwupdmgr update
-    
-    # Update Flatpak apps
-    flatpak update -y
-}
-EOF
-
 # Configure ZSH
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc -o /home/${NEW_USER}/.zshrc
 
 # Configure powerlevel10k zsh theme
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
-
-# Add ~/.local/bin to the path
-mkdir -p /home/${NEW_USER}/.local/bin
-
-tee /home/${NEW_USER}/.zshrc.d/local-bin << 'EOF'
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH
-EOF
 
 ################################################
 ##### Networking
@@ -329,8 +337,8 @@ EOF
 pacman -S --noconfirm firewalld
 systemctl enable firewalld.service
 
-# Set default zone to block
-firewall-offline-cmd --set-default-zone=block
+# Set default zone to home
+firewall-offline-cmd --set-default-zone=home
 
 # Disable firewall-applet
 sed -i '/^Exec/d' /etc/xdg/autostart/firewall-applet.desktop
@@ -441,7 +449,7 @@ pacman -S --noconfirm sbctl
 sbctl create-keys
 
 # Enroll keys to EFI
-sbctl enroll-keys --microsoft --firmware-builtin
+sbctl enroll-keys --yes-this-might-brick-my-machine
 
 # Sign files with secure boot keys
 sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
@@ -457,6 +465,7 @@ sbctl sign -s /boot/vmlinuz-linux-lts
 # https://wiki.archlinux.org/title/AppArmor
 # https://wiki.archlinux.org/title/Audit_framework
 # https://github.com/roddhjav/apparmor.d
+# https://apparmor.pujol.io/
 
 # Install AppArmor
 pacman -S --noconfirm apparmor
@@ -610,42 +619,6 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 
 ################################################
-##### Flatpak
-################################################
-
-# References
-# https://wiki.archlinux.org/title/Flatpak
-# https://github.com/containers/bubblewrap/issues/324
-
-# Install Flatpak and applications
-pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
-chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
-sudo -u ${NEW_USER} systemctl --user enable xdg-desktop-portal.service
-
-# Bubblewrap workaround (Temporary - reverted at cleanup)
-# chmod u+s /usr/bin/bwrap
-
-# Add Flathub repositories
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak update
-
-# Import global Flatpak overrides
-mkdir -p /home/${NEW_USER}/.local/share/flatpak/overrides
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/global -o /home/${NEW_USER}/.local/share/flatpak/overrides/global
-
-# Install Flatpak runtimes
-flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full/x86_64/23.08
-flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
-flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
-flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.08
-flatpak install -y flathub org.freedesktop.Platform.GL.default//23.08-extra
-flatpak install -y flathub org.freedesktop.Platform.GL32.default//23.08-extra
-
-if lspci | grep VGA | grep "Intel" > /dev/null; then
-  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel/x86_64/23.08
-fi
-
-################################################
 ##### Syncthing
 ################################################
 
@@ -669,8 +642,22 @@ sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 # Install Docker and plugins
 pacman -S --noconfirm docker docker-compose docker-buildx
 
-# Enable Docker service
+# Enable Docker socket
 systemctl enable docker.socket
+
+################################################
+##### Tailscale
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Tailscale
+# https://tailscale.com/download/linux/arch
+
+# Install Tailscale
+pacman -S --noconfirm tailscale
+
+# Enable Tailscale service
+systemctl enable tailscaled.service
 
 ################################################
 ##### Virtualization
@@ -716,7 +703,7 @@ tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 EOF
 
 # Install k8s applications
-pacman -S --noconfirm kubectl helm k9s kubectx
+pacman -S --noconfirm kubectl helm k9s kubectx cilium-cli
 
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
@@ -733,21 +720,6 @@ EOF
 
 # Install OpenTofu
 pacman -S --noconfirm opentofu
-
-################################################
-##### User applications
-################################################
-
-# Install user applications
-flatpak install -y flathub org.keepassxc.KeePassXC
-flatpak install -y flathub com.bitwarden.desktop
-flatpak install -y flathub org.libreoffice.LibreOffice
-flatpak install -y flathub com.brave.Browser
-flatpak install -y flathub com.belmoussaoui.Authenticator
-
-# Install Joplin
-flatpak install -y flathub net.cozic.joplin_desktop
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/net.cozic.joplin_desktop -o /home/${NEW_USER}/.local/share/flatpak/overrides/net.cozic.joplin_desktop
 
 ################################################
 ##### Development (languages, LSP, neovim)
@@ -888,35 +860,6 @@ pacman -S --noconfirm power-profiles-daemon
 systemctl enable power-profiles-daemon.service
 
 ################################################
-##### Firefox (Flatpak)
-################################################
-
-# Install Firefox
-flatpak install -y flathub org.mozilla.firefox
-
-# Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser org.mozilla.firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
-
-# Temporarily open firefox to create profile 
-sudo -u ${NEW_USER} timeout 5 flatpak run org.mozilla.firefox --headless
-
-# Set Firefox profile path
-export FIREFOX_PROFILE_PATH=$(find /home/${NEW_USER}/.var/app/org.mozilla.firefox/.mozilla/firefox -type d -name "*.default-release")
-
-# Import extensions
-mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
-curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/4307919/steam_database.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/firefox-extension@steamdb.info.xpi
-
-# Import Firefox configs
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
-
-################################################
 ##### VSCode
 ################################################
 
@@ -930,7 +873,6 @@ pacman -S --noconfirm xorg-server-xvfb
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
 sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
-sudo -u ${NEW_USER} xvfb-run code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
 sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
 sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
@@ -1012,6 +954,3 @@ sed -i "/${NEW_USER} ALL=NOPASSWD:\/usr\/bin\/pacman/d" /etc/sudoers
 
 # Remove Virtual framebuffer X server
 pacman -Rs --noconfirm xorg-server-xvfb
-
-# Revert temporary bubblewrap workaround
-# chmod u-s /usr/bin/bwrap
