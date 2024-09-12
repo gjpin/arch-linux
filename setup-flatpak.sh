@@ -16,8 +16,8 @@ sudo pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
 systemctl --user enable --now xdg-desktop-portal.service
 
 # Add Flathub repositories
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak update
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak update
 
 # Import global Flatpak overrides
 mkdir -p ${HOME}/.local/share/flatpak/overrides
@@ -28,71 +28,71 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/glo
 ################################################
 
 # Install Flatpak runtimes
-sudo flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full//23.08
-sudo flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi//23.08
-sudo flatpak install -y flathub org.freedesktop.Platform.GL.default//23.08-extra
-sudo flatpak install -y flathub org.freedesktop.Platform.GL32.default//23.08-extra
-sudo flatpak install -y flathub org.freedesktop.Sdk//23.08
+flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full//23.08
+flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi//23.08
+flatpak install -y flathub org.freedesktop.Platform.GL.default//23.08-extra
+flatpak install -y flathub org.freedesktop.Platform.GL32.default//23.08-extra
+flatpak install -y flathub org.freedesktop.Sdk//23.08
 
 if lspci | grep VGA | grep "Intel" > /dev/null; then
-  sudo flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel//23.08
+  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel//23.08
 fi
 
 # Install applications (Gnome only)
 if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-    sudo flatpak install -y flathub com.mattjakeman.ExtensionManager
-    sudo flatpak install -y flathub com.github.tchx84.Flatseal
-    sudo flatpak install -y flathub io.bassi.Amberol
+    flatpak install -y flathub com.mattjakeman.ExtensionManager
+    flatpak install -y flathub com.github.tchx84.Flatseal
+    flatpak install -y flathub io.bassi.Amberol
 
     # Install Gaphor
-    sudo flatpak install -y flathub org.gaphor.Gaphor
+    flatpak install -y flathub org.gaphor.Gaphor
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gaphor.Gaphor -o ${HOME}/.local/share/flatpak/overrides/org.gaphor.Gaphor
 
     # Install Rnote
-    sudo flatpak install -y flathub com.github.flxzt.rnote
+    flatpak install -y flathub com.github.flxzt.rnote
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.flxzt.rnote -o ${HOME}/.local/share/flatpak/overrides/com.github.flxzt.rnote
 fi
 
 # Install applications (KDE Plasma only)
 if [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
     # Install Okular
-    sudo flatpak install -y flathub org.kde.okular
+    flatpak install -y flathub org.kde.okular
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.kde.okular -o ${HOME}/.local/share/flatpak/overrides/org.kde.okular
     xdg-mime default org.kde.okular.desktop application/pdf
 fi
 
 # Install applications
-sudo flatpak install -y flathub com.bitwarden.desktop
+flatpak install -y flathub com.bitwarden.desktop
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.bitwarden.desktop -o ${HOME}/.local/share/flatpak/overrides/com.bitwarden.desktop
 
-sudo flatpak install -y flathub com.belmoussaoui.Authenticator
+flatpak install -y flathub com.belmoussaoui.Authenticator
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.belmoussaoui.Authenticator -o ${HOME}/.local/share/flatpak/overrides/com.belmoussaoui.Authenticator
 
-sudo flatpak install -y flathub org.keepassxc.KeePassXC
+flatpak install -y flathub org.keepassxc.KeePassXC
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.keepassxc.KeePassXC -o ${HOME}/.local/share/flatpak/overrides/org.keepassxc.KeePassXC
 
-sudo flatpak install -y flathub com.spotify.Client
+flatpak install -y flathub com.spotify.Client
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.spotify.Client -o ${HOME}/.local/share/flatpak/overrides/com.spotify.Client
 
-sudo flatpak install -y flathub org.gimp.GIMP
+flatpak install -y flathub org.gimp.GIMP
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gimp.GIMP -o ${HOME}/.local/share/flatpak/overrides/org.gimp.GIMP
 
-sudo flatpak install -y flathub org.blender.Blender
+flatpak install -y flathub org.blender.Blender
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.blender.Blender -o ${HOME}/.local/share/flatpak/overrides/org.blender.Blender
 
-sudo flatpak install -y flathub com.brave.Browser
+flatpak install -y flathub com.brave.Browser
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.brave.Browser -o ${HOME}/.local/share/flatpak/overrides/com.brave.Browser
 
-sudo flatpak install -y flathub md.obsidian.Obsidian
+flatpak install -y flathub md.obsidian.Obsidian
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o ${HOME}/.local/share/flatpak/overrides/md.obsidian.Obsidian
 
-sudo flatpak install -y flathub com.usebruno.Bruno
+flatpak install -y flathub com.usebruno.Bruno
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebruno.Bruno -o ${HOME}/.local/share/flatpak/overrides/com.usebruno.Bruno
 
-sudo flatpak install -y flathub io.kinvolk.Headlamp
+flatpak install -y flathub io.kinvolk.Headlamp
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.kinvolk.Headlamp -o ${HOME}/.local/share/flatpak/overrides/io.kinvolk.Headlamp
 
-sudo flatpak install -y flathub org.libreoffice.LibreOffice
+flatpak install -y flathub org.libreoffice.LibreOffice
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.libreoffice.LibreOffice -o ${HOME}/.local/share/flatpak/overrides/org.libreoffice.LibreOffice
 
 ################################################
@@ -103,7 +103,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org
 # https://github.com/rafaelmardojai/firefox-gnome-theme
 
 # Install Firefox
-sudo flatpak install -y flathub org.mozilla.firefox
+flatpak install -y flathub org.mozilla.firefox
 
 # Set Firefox as default browser and handler for http/s
 xdg-settings set default-web-browser org.mozilla.firefox.desktop
@@ -148,9 +148,9 @@ fi
 
 # Install GTK themes
 if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-    sudo flatpak install -y org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
+    flatpak install -y org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
 elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
-    sudo flatpak install -y flathub org.gtk.Gtk3theme.Breeze org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
+    flatpak install -y flathub org.gtk.Gtk3theme.Breeze org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
 fi
 
 ################################################
@@ -162,10 +162,10 @@ fi
 
 if [ ${GAMING} = "yes" ]; then
     # Install MangoHud
-    sudo flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
 
     # Install Gamescope
-    sudo flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
 fi
 
 ################################################
@@ -175,7 +175,7 @@ fi
 if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/steam" ]; then
         # Install Steam
-        sudo flatpak install -y flathub com.valvesoftware.Steam
+        flatpak install -y flathub com.valvesoftware.Steam
 
         # Import Steam Flatpak overrides
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o ${HOME}/.local/share/flatpak/overrides/com.valvesoftware.Steam
@@ -196,7 +196,7 @@ fi
 
 if [ ${GAMING} = "yes" ]; then
     # Install Heroic Games Launcher
-    sudo flatpak install -y flathub com.heroicgameslauncher.hgl
+    flatpak install -y flathub com.heroicgameslauncher.hgl
 
     # Create directory for Heroic games
     mkdir -p ${HOME}/Games/Heroic/{Epic,GOG}
@@ -222,14 +222,14 @@ fi
 if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/alvr_dashboard" ]; then
         # Install dependencies
-        sudo flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
-        sudo flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.0
+        flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
+        flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.0
 
         # Download ALVR flatpak
         curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
 
         # Install ALVR
-        sudo flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+        flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
 
         # Remove ALVR flatpak
         rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
