@@ -125,7 +125,7 @@ rm -f shell-extension.zip
 # https://github.com/lassekongo83/adw-gtk3
 
 # Install adw-gtk3
-sudo -u ${NEW_USER} paru -S --noconfirm adw-gtk3
+pacman -S --noconfirm adw-gtk-theme
 
 ################################################
 ##### Utilities

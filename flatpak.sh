@@ -110,9 +110,11 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org
 
 # References:
 # https://github.com/rafaelmardojai/firefox-gnome-theme
+# Theme is manually installed and not from AUR, since Firefox flatpak cannot access it
 
 # Install Firefox
 flatpak install -y flathub org.mozilla.firefox
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.mozilla.firefox -o ${HOME}/.local/share/flatpak/overrides/org.mozilla.firefox
 
 # Set Firefox as default browser and handler for http/s
 xdg-settings set default-web-browser org.mozilla.firefox.desktop
@@ -142,10 +144,22 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
 
     # Firefox Gnome theme integration
     mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
-    ln -s /usr/lib/firefox-gnome-theme ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+    git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
     echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
     echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/gnome.js >> ${FIREFOX_PROFILE_PATH}/user.js
+
+    # Firefox theme updater
+    sudo tee -a /usr/local/bin/update-all << 'EOF'
+
+################################################
+##### Firefox
+################################################
+
+# Update Firefox theme
+FIREFOX_PROFILE_PATH=$(realpath ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
+git -C ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme pull
+EOF
 elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
     # Better KDE Plasma integration
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/plasma.js >> ${FIREFOX_PROFILE_PATH}/user.js
@@ -232,13 +246,13 @@ if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/alvr_dashboard" ]; then
         # Install dependencies
         flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
-        flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.0
+        flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.08
 
         # Download ALVR flatpak
         curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
 
         # Install ALVR
-        flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+        sudo flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
 
         # Remove ALVR flatpak
         rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
