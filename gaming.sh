@@ -65,10 +65,10 @@ fi
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
 # Allow Sunshine in firewall
-firewall-offline-cmd --zone=home --add-port=48010/tcp --permanent
-firewall-offline-cmd --zone=home --add-port=48010/udp --permanent
-firewall-offline-cmd --zone=home --add-port=47998/udp --permanent
-firewall-offline-cmd --zone=home --add-port=48000/udp --permanent
+firewall-offline-cmd --zone=home --add-port=48010/tcp
+firewall-offline-cmd --zone=home --add-port=48010/udp
+firewall-offline-cmd --zone=home --add-port=47998/udp
+firewall-offline-cmd --zone=home --add-port=48000/udp
 
 ################################################
 ##### VR
@@ -90,7 +90,7 @@ if [ ${STEAM_NATIVE} = "yes" ]; then
 fi
 
 # Allow ALVR in firewall
-firewall-offline-cmd --zone=home --add-port=9943/tcp --permanent
-firewall-offline-cmd --zone=home --add-port=9943/udp --permanent
-firewall-offline-cmd --zone=home --add-port=9944/tcp --permanent
-firewall-offline-cmd --zone=home --add-port=9944/udp --permanent
+firewall-offline-cmd --zone=home --add-port=9943/tcp
+firewall-offline-cmd --zone=home --add-port=9943/udp
+firewall-offline-cmd --zone=home --add-port=9944/tcp
+firewall-offline-cmd --zone=home --add-port=9944/udp
