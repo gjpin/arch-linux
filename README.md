@@ -35,10 +35,10 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 10. Re-configure p10k: `p10k configure`
 11. Install Flatpak and applications:
 ```
-curl -LO https://raw.githubusercontent.com/gjpin/arch-linux/main/setup-flatpak.sh
-chmod +x setup-flatpak.sh
-./setup-flatpak.sh
-rm -f setup-flatpak.sh
+curl -LO https://raw.githubusercontent.com/gjpin/arch-linux/main/flatpak.sh
+chmod +x flatpak.sh
+./flatpak.sh
+rm -f flatpak.sh
 ```
 
 ## Guides
