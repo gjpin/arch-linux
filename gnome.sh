@@ -16,7 +16,6 @@
 # https://archlinux.org/groups/x86_64/gnome/
 pacman -S --noconfirm \
     baobab \
-    evince \
     file-roller \
     gnome-backgrounds \
     gnome-calculator \
@@ -28,6 +27,7 @@ pacman -S --noconfirm \
     gnome-font-viewer \
     gnome-keyring \
     gnome-logs \
+    gnome-music \
     gnome-session \
     gnome-settings-daemon \
     gnome-shell \
@@ -115,13 +115,6 @@ rm -f shell-extension.zip
 curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v8.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
-rm -f shell-extension.zip
-
-# Tiling Shell
-# https://extensions.gnome.org/extension/7065/tiling-shell/
-curl -sSL https://extensions.gnome.org/extension-data/tilingshellferrarodomenico.com.v27.shell-extension.zip -o shell-extension.zip
-mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
-unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
 rm -f shell-extension.zip
 
 ################################################
