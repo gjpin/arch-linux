@@ -4,7 +4,7 @@
 ##### Utilities
 ################################################
 
-if [ ${STEAM_VERSION} = "native" ]; then
+if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install Gamescope
     pacman -S --noconfirm gamescope
 
@@ -20,7 +20,7 @@ fi
 ##### Steam
 ################################################
 
-if [ ${STEAM_VERSION} = "native" ]; then
+if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install Steam
     pacman -S --noconfirm steam
 
@@ -84,7 +84,7 @@ firewall-offline-cmd --zone=home --add-port=48000/udp --permanent
 # Install OpenXR
 pacman -S --noconfirm openxr
 
-if [ ${STEAM_VERSION} = "native" ]; then
+if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install ALVR
     sudo -u ${NEW_USER} paru -S --noconfirm alvr-bin
 fi

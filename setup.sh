@@ -48,7 +48,7 @@ EOF
 # References:
 # https://wiki.archlinux.org/title/Pacman/Package_signing#Initializing_the_keyring
 
-if [ ${STEAM_VERSION} = "native" ]; then
+if [ ${STEAM_NATIVE} = "yes" ]; then
     # Enable multilib repository
     sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
 fi
@@ -544,7 +544,7 @@ pacman -S --noconfirm ffmpeg
 pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Install 32-bit packages
-if [ ${STEAM_VERSION} = "native" ]; then
+if [ ${STEAM_NATIVE} = "yes" ]; then
     pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
 
     if lspci | grep "VGA" | grep "Intel" > /dev/null; then

@@ -44,8 +44,8 @@ export DESKTOP_ENVIRONMENT
 read -p "Gaming (yes / no): " GAMING
 export GAMING
 
-read -p "Steam (native / flatpak): " STEAM_VERSION
-export STEAM_VERSION
+read -p "Steam native (yes / no): " STEAM_NATIVE
+export STEAM_NATIVE
 
 # CPU vendor
 if cat /proc/cpuinfo | grep "vendor" | grep "GenuineIntel" > /dev/null; then
