@@ -40,8 +40,6 @@ chmod +x setup-flatpak.sh
 ./setup-flatpak.sh
 rm -f setup-flatpak.sh
 ```
-12. Set tailscale's firewalld zone: `sudo firewall-cmd --permanent --zone=home --add-interface=tailscale0`
-
 
 ## Guides
 See [HERE](https://github.com/gjpin/arch-linux/blob/main/GUIDES.md)

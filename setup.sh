@@ -355,6 +355,23 @@ pacman -S --noconfirm bind
 pacman -S --noconfirm iptables-nft --ask 4
 
 ################################################
+##### Tailscale
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Tailscale
+# https://tailscale.com/download/linux/arch
+
+# Install Tailscale
+pacman -S --noconfirm tailscale
+
+# Enable Tailscale service
+systemctl enable --now tailscaled.service
+
+# Set Tailscale's network zone
+firewall-offline-cmd --zone=home --add-interface=tailscale0
+
+################################################
 ##### initramfs
 ################################################
 
@@ -644,20 +661,6 @@ pacman -S --noconfirm docker docker-compose docker-buildx
 
 # Enable Docker socket
 systemctl enable docker.socket
-
-################################################
-##### Tailscale
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Tailscale
-# https://tailscale.com/download/linux/arch
-
-# Install Tailscale
-pacman -S --noconfirm tailscale
-
-# Enable Tailscale service
-systemctl enable tailscaled.service
 
 ################################################
 ##### Virtualization
