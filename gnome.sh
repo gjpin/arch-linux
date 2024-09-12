@@ -14,6 +14,8 @@
 
 # Install Gnome core applications
 # https://archlinux.org/groups/x86_64/gnome/
+# https://wiki.archlinux.org/title/GNOME/Keyring
+
 pacman -S --noconfirm \
     baobab \
     file-roller \
@@ -54,6 +56,9 @@ pacman -S --noconfirm \
 # Install and enable GDM
 pacman -S --noconfirm gdm
 systemctl enable gdm.service
+
+# Enable SSH wrapper
+sudo -u ${NEW_USER} systemctl --user enable gcr-ssh-agent.socket
 
 # Install and configure MPV / Celluloid
 pacman -S --noconfirm \
