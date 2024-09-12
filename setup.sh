@@ -909,6 +909,17 @@ pacman -S --noconfirm \
     otf-font-awesome
 
 ################################################
+##### Electron
+################################################
+
+# Enable Wayland for electron apps and improve font rendering
+tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
+--disable-font-subpixel-positioning
+--enable-features=WaylandWindowDecorations
+--ozone-platform-hint=auto
+EOF
+
+################################################
 ##### Desktop Environment
 ################################################
 
