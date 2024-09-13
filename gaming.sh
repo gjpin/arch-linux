@@ -62,9 +62,11 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
 fi
 
 # Allow Sunshine in firewall
+firewall-offline-cmd --zone=home --add-port=47984/tcp
+firewall-offline-cmd --zone=home --add-port=47989/tcp
 firewall-offline-cmd --zone=home --add-port=48010/tcp
-firewall-offline-cmd --zone=home --add-port=48010/udp
 firewall-offline-cmd --zone=home --add-port=47998/udp
+firewall-offline-cmd --zone=home --add-port=47999/udp
 firewall-offline-cmd --zone=home --add-port=48000/udp
 
 ################################################
