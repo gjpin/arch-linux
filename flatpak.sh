@@ -142,9 +142,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/use
 
 # Desktop environment specific configurations
 if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-    # Install Firefox Gnome theme
-    paru -S --noconfirm firefox-gnome-theme
-
     # Firefox Gnome theme integration
     mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
     git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme

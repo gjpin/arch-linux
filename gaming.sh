@@ -35,7 +35,7 @@ fi
 mkdir -p /home/${NEW_USER}/Games/Steam
 
 ################################################
-##### Sunshine (native)
+##### Sunshine (native - to build)
 ################################################
 
 # References:
@@ -44,7 +44,7 @@ mkdir -p /home/${NEW_USER}/Games/Steam
 # https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
 
 # Install sunshine
-sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
+sudo -u ${NEW_USER} paru -S --noconfirm sunshine
 
 # Enable sunshine service
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
@@ -60,9 +60,6 @@ if [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
 elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.config/sunshine/apps.json
 fi
-
-# Enable KMS display capture
-setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
 # Allow Sunshine in firewall
 firewall-offline-cmd --zone=home --add-port=48010/tcp
