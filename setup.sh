@@ -109,7 +109,8 @@ pacman -S --noconfirm \
     procps-ng \
     gawk \
     fzf \
-    findutils
+    findutils \
+    net-tools
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
