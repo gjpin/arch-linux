@@ -218,8 +218,8 @@ EOF
 # Udev tweaks
 tee /etc/udev/rules.d/99-performance-tweaks.rules << 'EOF'
 ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
-ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler} "mq-deadline"
-ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler} "bfq"
+ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
 EOF
 
 # Hugepage Defragmentation - default: 1
@@ -959,6 +959,10 @@ fi
 ################################################
 ##### Cleanup
 ################################################
+
+# Make sure all udev rules have been reload and applied
+udevadm control --reload-rules
+udevadm trigger
 
 # Make sure that all /home/$NEW_USER actually belongs to $NEW_USER 
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
