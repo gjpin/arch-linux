@@ -1,4 +1,7 @@
 {
+    "env":{ 
+		"PATH":"$(PATH):$(HOME)/.local/bin"
+	},
     "apps": [
         {
             "name": "Steam 800p",
