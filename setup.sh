@@ -848,7 +848,10 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 else
     if lspci | grep "VGA" | grep "AMD" > /dev/null; then
         # Set AMD GPU performance level to High
-        echo 'SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="high"' > /etc/udev/rules.d/30-amdgpu-high-power.rules
+        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/apps/amdgpu-power-level -o /usr/local/bin/amdgpu-power-level
+        chmod +x /usr/local/bin/amdgpu-power-level
+        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/systemd/amdgpu-power-level.service -o /etc/systemd/system/amdgpu-power-level.service
+        systemctl enable amdgpu-power-level.service
     fi
 fi
 
@@ -959,10 +962,6 @@ fi
 ################################################
 ##### Cleanup
 ################################################
-
-# Make sure all udev rules have been reload and applied
-udevadm control --reload-rules
-udevadm trigger
 
 # Make sure that all /home/$NEW_USER actually belongs to $NEW_USER 
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}

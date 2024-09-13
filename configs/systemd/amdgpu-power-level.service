@@ -1,0 +1,10 @@
+[Unit]
+Description=Apply AMDGPU Power DPM setting
+After=default.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/amdgpu-power-level
+
+[Install]
+WantedBy=multi-user.target
