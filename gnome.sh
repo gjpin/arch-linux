@@ -123,6 +123,15 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautos
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
 
+# AppIndicator and KStatusNotifierItem Support
+# https://extensions.gnome.org/extension/615/appindicator-support/
+# https://src.fedoraproject.org/rpms/gnome-shell-extension-appindicator/blob/rawhide/f/gnome-shell-extension-appindicator.spec
+pacman -S --noconfirm libappindicator-gtk3
+
+curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v59.shell-extension.zip -O
+gnome-extensions install *.shell-extension.zip
+rm -f *.shell-extension.zip
+
 ################################################
 ##### GTK theme
 ################################################

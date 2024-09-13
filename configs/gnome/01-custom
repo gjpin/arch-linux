@@ -54,7 +54,7 @@ disable-user-extensions=false
 favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
-enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com']
+enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com']
 
 [org/gnome/terminal/legacy]
 theme-variant='dark'
