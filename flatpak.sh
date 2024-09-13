@@ -71,6 +71,9 @@ elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
 fi
 
 # Install applications
+flatpak install -y com.usebottles.bottles
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebottles.bottles -o ${HOME}/.local/share/flatpak/overrides/com.usebottles.bottles
+
 flatpak install -y flathub com.bitwarden.desktop
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.bitwarden.desktop -o ${HOME}/.local/share/flatpak/overrides/com.bitwarden.desktop
 
@@ -199,8 +202,6 @@ if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/steam" ]; then
         # Install Steam
         flatpak install -y flathub com.valvesoftware.Steam
-
-        # Import Steam Flatpak overrides
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o ${HOME}/.local/share/flatpak/overrides/com.valvesoftware.Steam
 
         # Steam controllers udev rules
@@ -210,6 +211,11 @@ if [ ${GAMING} = "yes" ]; then
         # Configure MangoHud for Steam
         mkdir -p ${HOME}/.var/app/com.valvesoftware.Steam/config/MangoHud
         curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/mangohud/MangoHud.conf -o ${HOME}/.var/app/com.valvesoftware.Steam/config/MangoHud/MangoHud.conf
+
+        if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+            flatpak install -y flathub io.github.Foldex.AdwSteamGtk
+            curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.github.Foldex.AdwSteamGtk -o ${HOME}/.local/share/flatpak/overrides/io.github.Foldex.AdwSteamGtk
+        fi
     fi
 fi
 

@@ -1,0 +1,2 @@
+[Context]
+filesystems=!home;!host;home/.var/app/com.valvesoftware.Steam/.steam/steam;home/.steam/steam;
