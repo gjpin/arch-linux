@@ -49,7 +49,6 @@ pacman -S --noconfirm \
 
 # Additional Gnome/GTK packages
 pacman -S --noconfirm \
-    gitg \
     xdg-desktop-portal-gtk \
     webp-pixbuf-loader \
     seahorse

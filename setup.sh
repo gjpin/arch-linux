@@ -304,7 +304,7 @@ mkdir -p \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/systemd/user \
   /home/${NEW_USER}/.icons \
-  /home/${NEW_USER}/src
+  /home/${NEW_USER}/Projects
 
 # Create SSH directory and config file
 mkdir -p /home/${NEW_USER}/.ssh
@@ -476,6 +476,24 @@ sbctl sign -s /boot/vmlinuz-linux
 sbctl sign -s /boot/vmlinuz-linux-lts
 
 ################################################
+##### Paru
+################################################
+
+# References:
+# https://github.com/Morganamilo/paru
+
+# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
+echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
+
+# Install paru
+git clone https://aur.archlinux.org/paru-bin.git
+chown -R ${NEW_USER}:${NEW_USER} paru-bin
+cd paru-bin
+sudo -u ${NEW_USER} makepkg -si --noconfirm
+cd ..
+rm -rf paru-bin
+
+################################################
 ##### AppArmor
 ################################################
 
@@ -503,23 +521,16 @@ sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parse
 pacman -S --noconfirm audit
 systemctl enable auditd.service
 
-################################################
-##### Paru
-################################################
+# Install AppArmor.d profiles
+sudo -u ${NEW_USER} paru -S apparmor.d-git
 
-# References:
-# https://github.com/Morganamilo/paru
+# Configure AppArmor.d
+mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
 
-# (Temporary - reverted at cleanup) Allow $NEW_USER to run pacman without password
-echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
-
-# Install paru
-git clone https://aur.archlinux.org/paru-bin.git
-chown -R ${NEW_USER}:${NEW_USER} paru-bin
-cd paru-bin
-sudo -u ${NEW_USER} makepkg -si --noconfirm
-cd ..
-rm -rf paru-bin
+tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
+@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
+@{XDG_GAMES_DIR}+="Games"
+EOF
 
 ################################################
 ##### ffmpeg

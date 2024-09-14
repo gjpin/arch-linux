@@ -1,5 +1,5 @@
 [Context]
-filesystems=!home;!host;;home/src;home/.ssh:ro;home/.gitconfig:ro;host-etc:ro;xdg-run/podman;
+filesystems=!home;!host;;home/Projects;home/.ssh:ro;home/.gitconfig:ro;host-etc:ro;xdg-run/podman;
 
 [Environment]
 FLATPAK_ENABLE_SDK_EXT=golang,node20,typescript,llvm18,rust-stable,openjdk21

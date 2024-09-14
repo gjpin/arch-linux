@@ -60,6 +60,10 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     flatpak install -y flathub dev.skynomads.Seabird
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.skynomads.Seabird -o ${HOME}/.local/share/flatpak/overrides/dev.skynomads.Seabird
 
+    # Install gitg
+    flatpak install -y flathub org.gnome.gitg
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gnome.gitg -o ${HOME}/.local/share/flatpak/overrides/org.gnome.gitg
+
     # Install Eyedropper
     flatpak install -y flathub com.github.finefindus.eyedropper
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.finefindus.eyedropper -o ${HOME}/.local/share/flatpak/overrides/com.github.finefindus.eyedropper

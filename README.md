@@ -40,6 +40,7 @@ chmod +x flatpak.sh
 ./flatpak.sh
 rm -f flatpak.sh
 ```
+12. AppArmor.d profiles are installed in complain mode, by default. See [Enforce Mode](https://apparmor.pujol.io/enforce/)
 
 ## Guides
 See [HERE](https://github.com/gjpin/arch-linux/blob/main/GUIDES.md)

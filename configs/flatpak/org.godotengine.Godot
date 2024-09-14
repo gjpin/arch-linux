@@ -1,5 +1,5 @@
 [Context]
-filesystems=!home;!host;home/src;home/.devtools/android:ro;
+filesystems=!home;!host;home/Projects;home/.devtools/android:ro;
 
 [Session Bus Policy]
 org.freedesktop.Flatpak=talk

@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;!host;home/src;
+filesystems=!home;!host;home/Projects;
