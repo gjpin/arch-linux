@@ -562,17 +562,23 @@ tee -a /etc/environment << EOF
 ${LIBVA_ENV_VAR}
 EOF
 
-# If GPU is AMD, use RADV's Vulkan driver
+# Set env vars for AMDGPU
 if lspci | grep "VGA" | grep "AMD" > /dev/null; then
 tee -a /etc/environment << EOF
 
 # Vulkan
 AMD_VULKAN_ICD=RADV
+
+# VDPAU
+VDPAU_DRIVER=radeonsi
 EOF
 fi
 
 # Install VA-API tools
 pacman -S --noconfirm libva-utils
+
+# Install VDPAU tools
+pacman -S --noconfirm vdpauinfo
 
 # Install Vulkan tools
 pacman -S --noconfirm vulkan-tools
