@@ -562,7 +562,7 @@ if [ ${STEAM_NATIVE} = "yes" ]; then
     if lspci | grep "VGA" | grep "Intel" > /dev/null; then
         pacman -S --noconfirm lib32-vulkan-intel
     elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-        pacman -S --noconfirm lib32-vulkan-radeon lib32-libva-mesa-driver
+        pacman -S --noconfirm lib32-vulkan-radeon lib32-libva
     fi
 fi
 
