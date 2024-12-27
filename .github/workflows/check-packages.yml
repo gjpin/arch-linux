@@ -21,32 +21,33 @@ jobs:
         sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
 
         # Update pacman database and install essential tools
-        pacman -Syu --noconfirm
+        pacman -Syyu
         pacman -S --noconfirm grep sed coreutils
 
-    - name: Check Packages
+    - name: Extract and validate packages
       run: |
-        # Flag to track errors
-        error_flag=0
-
-        # Flatten multiline pacman commands and extract packages
-        grep -rhE "pacman -S --noconfirm" . | \
-        sed -E ':a;N;$!ba;s/\\\n/ /g' | \
-        sed -E 's/pacman -S --noconfirm[[:space:]]+//' | \
-        tr -s ' ' '\n' | grep -v '^$' | sort -u | while read -r package; do
-          if [[ -n "$package" ]]; then
-            echo "Checking package: $package"
-            if ! pacman -Si "$package" &>/dev/null; then
-              echo "::error::Package '$package' does not exist in the Arch Linux repositories."
-              error_flag=1
-            else
-              echo "Package '$package' exists."
-            fi
+        # Find all .sh files in root directory
+        for file in *.sh; do
+          if [ -f "$file" ]; then
+            echo "Checking packages in $file..."
+            
+            # Extract package names from different pacman installation formats
+            # Format 1: pacman -S --noconfirm \ package1 \ package2
+            # Format 2: pacman -S --noconfirm package1 package2
+            packages=$(grep -E "pacman -S.*--noconfirm" "$file" | 
+                      sed 's/pacman -S --noconfirm//' | 
+                      tr '\\' ' ' | 
+                      tr -s ' ' '\n' | 
+                      grep -v '^$')
+            
+            # Check each package
+            for package in $packages; do
+              if pacman -Ss "^${package}$" > /dev/null 2>&1; then
+                echo "✅ Package exists: $package"
+              else
+                echo "❌ Package not found: $package"
+                exit 1
+              fi
+            done
           fi
         done
-
-        # Fail the workflow if any package is missing
-        if [[ $error_flag -ne 0 ]]; then
-          echo "One or more packages do not exist. Failing the workflow."
-          exit 1
-        fi
