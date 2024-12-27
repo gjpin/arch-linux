@@ -6,29 +6,47 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  check-packages:
+  checkout-repository:
     runs-on: ubuntu-latest
     container:
       image: archlinux:multilib-devel
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+  update-pacman:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:multilib-devel
+    needs: checkout-repository  # Ensures this job runs after checkout-repository
+    steps:
     - name: Update Pacman and install base packages
       run: |
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils
 
+  extract-gpu-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:multilib-devel
+    needs: update-pacman  # Ensures this job runs after update-pacman
+    steps:
     - name: Extract GPU packages from install.sh
       run: |
         # Extract all GPU_PACKAGES values from install.sh
         ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
                           sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
                           tr '\n' ' ')
-        echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
+        echo "GPU_PACKAGES=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
+        echo "GPU_PACKAGES: $ALL_GPU_PACKAGES"
 
+  validate-main-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:multilib-devel
+    needs: extract-gpu-packages  # Ensures this job runs after extract-gpu-packages
+    steps:
     - name: Extract and validate packages
       run: |
         # Array to store failed packages
@@ -49,7 +67,15 @@ jobs:
             echo "✅ Package exists: $package"
           fi
         }
-        
+
+        # Validate GPU packages if the variable is set
+        if [[ -n "$GPU_PACKAGES" ]]; then
+          echo "📦 Checking GPU packages: $GPU_PACKAGES"
+          for pkg in $GPU_PACKAGES; do
+            validate_package "$pkg"
+          done
+        fi
+
         # Process each .sh file
         for file in *.sh; do
           if [[ -f "$file" ]]; then
@@ -100,4 +126,3 @@ jobs:
           printf '%s\n' "${failed_packages[@]}"
           echo "Total failed packages: ${#failed_packages[@]}"
           exit 1
-        fi
