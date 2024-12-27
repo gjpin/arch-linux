@@ -1,148 +1,131 @@
-name: Verify Arch Linux Packages
-
-on:
-  schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
-  workflow_dispatch: # Allows manual triggering
+name: Validate Arch Linux Packages
+on: [push, pull_request]
 
 jobs:
-  check-packages:
+  validate-packages:
     runs-on: ubuntu-latest
-    container:
-      image: archlinux:multilib-devel
-
+    container: archlinux:multilib-devel
+    
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      
+      - name: Update package database
+        run: |
+          pacman -Sy --noconfirm
 
-    - name: Update Pacman and Install Base Packages
-      run: |
-        # Update pacman database and install essential tools
-        pacman -Syyu --noconfirm
-        pacman -S --noconfirm grep sed coreutils
-
-    - name: Extract GPU packages from install.sh
-      run: |
-        # Extract all GPU_PACKAGES values from install.sh
-        ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
-                          sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
-                          tr '\n' ' ')
-        echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
-
-    - name: Extract and validate packages
-      run: |
-        set -x  # Enable trace mode to debug the script
-
-        declare -a failed_packages
+      - name: Extract GPU packages from install.sh
+        run: |
+          # Extract all GPU_PACKAGES values from install.sh
+          ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
+                            sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
+                            tr '\n' ' ')
+          echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
         
-        # Define known variable expansions using extracted values
-        declare -A known_variables
-        known_variables[GPU_PACKAGES]="${gpu_packages}"
-        
-        validate_package() {
-          local package="$1"
-          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
-            return 0
-          fi
+      - name: Extract and validate packages
+        run: |
+          declare -a failed_packages
+
+          # Define known variable expansions using extracted values
+          declare -A known_variables
+          known_variables[GPU_PACKAGES]="${gpu_packages}"
           
-          # Log which package is being validated
-          echo "Validating package: $package"
+          validate_package() {
+            local package="$1"
+            if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
+              return 0
+            fi
+            
+            if ! pacman -Ss "^${package}$" > /dev/null 2>&1; then
+              failed_packages+=("$package")
+              echo "❌ Package not found: $package"
+            else
+              echo "✅ Package exists: $package"
+            fi
+          }
           
-          if ! pacman -Ss "^${package}$" > /dev/null 2>&1; then
-            failed_packages+=("$package")
-            echo "❌ Package not found: $package"
-          else
-            echo "✅ Package exists: $package"
-          fi
-        }
-        
-        expand_variables() {
-          local word="$1"
-          # Check if word is a variable reference like ${GPU_PACKAGES}
-          if [[ "$word" =~ ^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$ ]]; then
-            local var_name="${BASH_REMATCH[1]}"
-            if [[ -n "${known_variables[$var_name]}" ]]; then
-              echo "${known_variables[$var_name]}"
+          expand_variables() {
+            local word="$1"
+            # Check if word is a variable reference like ${GPU_PACKAGES}
+            if [[ "$word" =~ ^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$ ]]; then
+              local var_name="${BASH_REMATCH[1]}"
+              if [[ -n "${known_variables[$var_name]}" ]]; then
+                echo "${known_variables[$var_name]}"
+              else
+                echo "$word"
+              fi
             else
               echo "$word"
             fi
-          else
-            echo "$word"
-          fi
-        }
-        
-        process_line() {
-          local line="$1"
-          local words=($line)
-          local i=0
-          local skip_next=0
+          }
           
-          # Skip until we find --noconfirm
-          while [[ $i -lt ${#words[@]} ]] && [[ "${words[i]}" != "--noconfirm" ]]; do
-            ((i++))
-          done
-          ((i++))  # Move past --noconfirm
-          
-          # Process remaining words
-          while [[ $i -lt ${#words[@]} ]]; do
-            if [[ ${skip_next} -eq 1 ]]; then
-              skip_next=0
-              ((i++))
-              continue
-            fi
+          process_line() {
+            local line="$1"
+            local words=($line)
+            local i=0
+            local skip_next=0
             
-            if [[ "${words[i]}" == "--ask" ]] || \
-                [[ "${words[i]}" == "--needed" ]] || \
-                [[ "${words[i]}" == "--overwrite" ]]; then
-              skip_next=1
-            elif [[ "${words[i]}" != -* ]]; then
-              # Remove any trailing backslash
-              local word="${words[i]%\\}"
+            # Skip until we find --noconfirm
+            while [[ $i -lt ${#words[@]} ]] && [[ "${words[i]}" != "--noconfirm" ]]; do
+              ((i++))
+            done
+            ((i++))  # Move past --noconfirm
+            
+            # Process remaining words
+            while [[ $i -lt ${#words[@]} ]]; do
+              if [[ ${skip_next} -eq 1 ]]; then
+                skip_next=0
+                ((i++))
+                continue
+              fi
               
-              # Expand variables if present
-              local expanded=$(expand_variables "$word")
-              
-              # Process each package in the expanded result
-              for package in $expanded; do
-                validate_package "$package"
-              done
-            fi
-            ((i++))
-          done
-        }
-        
-        # Check if the required files exist before processing
-        for file in *.sh; do
-          if [[ ! -f "$file" ]]; then
-            echo "⚠️ $file not found. Skipping."
-            continue
-          fi
-
-          echo "📄 Checking packages in $file..."
-
-          while IFS= read -r line || [[ -n "$line" ]]; do
-            if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
-              process_line "$line"
+              if [[ "${words[i]}" == "--ask" ]] || \
+                 [[ "${words[i]}" == "--needed" ]] || \
+                 [[ "${words[i]}" == "--overwrite" ]]; then
+                skip_next=1
+              elif [[ "${words[i]}" != -* ]]; then
+                # Remove any trailing backslash
+                local word="${words[i]%\\}"
                 
-              if [[ "$line" =~ \\[[:space:]]*$ ]]; then
-                while IFS= read -r line || [[ -n "$line" ]]; do
-                  if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
-                    break
-                  fi
-                  process_line "$line"
+                # Expand variables if present
+                local expanded=$(expand_variables "$word")
+                
+                # Process each package in the expanded result
+                for package in $expanded; do
+                  validate_package "$package"
                 done
               fi
+              ((i++))
+            done
+          }
+          
+          for file in *.sh; do
+            if [[ -f "$file" ]]; then
+              echo "📄 Checking packages in $file..."
+              
+              while IFS= read -r line || [[ -n "$line" ]]; do
+                if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
+                  process_line "$line"
+                  
+                  if [[ "$line" =~ \\[[:space:]]*$ ]]; then
+                    while IFS= read -r line || [[ -n "$line" ]]; do
+                      if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
+                        break
+                      fi
+                      process_line "$line"
+                    done
+                  fi
+                fi
+              done < "$file"
             fi
-          done < "$file"
-        done
-        
-        echo "=== Summary ==="
-        if [ ${#failed_packages[@]} -eq 0 ]; then
-          echo "✅ All packages validated successfully!"
-          exit 0
-        else
-          echo "❌ Failed packages:"
-          printf '%s\n' "${failed_packages[@]}"
-          echo "Total failed packages: ${#failed_packages[@]}"
-          exit 1
-        fi
+          done
+          
+          echo "=== Summary ==="
+          if [ ${#failed_packages[@]} -eq 0 ]; then
+            echo "✅ All packages validated successfully!"
+            exit 0
+          else
+            echo "❌ Failed packages:"
+            printf '%s\n' "${failed_packages[@]}"
+            echo "Total failed packages: ${#failed_packages[@]}"
+            exit 1
+          fi
