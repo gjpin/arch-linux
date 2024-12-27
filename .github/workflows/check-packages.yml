@@ -76,6 +76,7 @@ jobs:
             while IFS= read -r line || [[ -n "$line" ]]; do
               # Check if line contains pacman install command
               if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
+                # Process the current line
                 process_packages "$line"
                 
                 # If line ends with \, process continuation lines
