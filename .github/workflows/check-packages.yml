@@ -26,12 +26,14 @@ jobs:
 
     - name: Extract and validate packages
       run: |
-        failed_packages=()
+        # Array to store failed packages
+        declare -a failed_packages
         
+        # Function to validate a single package
         validate_package() {
-          local package=$1
-          # Skip if empty, starts with #, or starts with --
-          if [ -z "$package" ] || [[ "$package" == \#* ]] || [[ "$package" == --* ]]; then
+          local package="$1"
+          # Skip empty, comments, or argument flags
+          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
             return 0
           fi
           
@@ -43,40 +45,53 @@ jobs:
           fi
         }
         
-        # Find all .sh files in root directory
+        # Process each .sh file
         for file in *.sh; do
-          if [ -f "$file" ]; then
+          if [[ -f "$file" ]]; then
             echo "📄 Checking packages in $file..."
             
-            # Extract multi-line package installations
-            while IFS= read -r line; do
-              if [[ "$line" =~ ^pacman\ -S\ --noconfirm ]]; then
-                # Start capturing packages
-                in_package_list=1
-                # Extract packages from the first line, skipping pacman command and known arguments
-                packages=$(echo "$line" | sed 's/pacman -S --noconfirm//g' | sed 's/--ask [0-9]//g' | tr '\\' ' ')
-                for pkg in $packages; do
+            # Read file line by line
+            while IFS= read -r line || [[ -n "$line" ]]; do
+              # Check if line contains pacman install command
+              if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
+                # Remove the pacman command and any arguments like --ask N
+                cleaned_line=$(echo "$line" | \
+                  sed 's/pacman -S --noconfirm//g' | \
+                  sed 's/--ask [0-9]*//g' | \
+                  sed 's/--needed//g' | \
+                  tr '\\' ' ')
+                  
+                # Process packages on this line
+                for pkg in $cleaned_line; do
                   validate_package "$pkg"
                 done
-              elif [ "$in_package_list" = "1" ] && [[ "$line" =~ ^[[:space:]]*[^[:space:]].*\\ *$ ]]; then
-                # Continue capturing packages from continuation lines
-                packages=$(echo "$line" | sed 's/\\//g')
-                for pkg in $packages; do
-                  validate_package "$pkg"
-                done
-              else
-                in_package_list=0
+                
+                # If line ends with \, process continuation lines
+                if [[ "$line" =~ \\[[:space:]]*$ ]]; then
+                  while IFS= read -r line || [[ -n "$line" ]]; do
+                    # Stop if we hit a line that doesn't end with \ and isn't part of package list
+                    if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
+                      break
+                    fi
+                    # Clean and process the continuation line
+                    cleaned_line=$(echo "$line" | sed 's/\\//g')
+                    for pkg in $cleaned_line; do
+                      validate_package "$pkg"
+                    done
+                  done
+                fi
               fi
             done < "$file"
           fi
         done
         
-        # Print summary of failed packages
+        # Print summary
+        echo "=== Summary ==="
         if [ ${#failed_packages[@]} -eq 0 ]; then
           echo "✅ All packages validated successfully!"
           exit 0
         else
-          echo "❌ The following packages were not found:"
+          echo "❌ Failed packages:"
           printf '%s\n' "${failed_packages[@]}"
           echo "Total failed packages: ${#failed_packages[@]}"
           exit 1
