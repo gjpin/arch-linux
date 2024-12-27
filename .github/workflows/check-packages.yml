@@ -28,9 +28,11 @@ jobs:
                           sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
                           tr '\n' ' ')
         echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
-      
+
     - name: Extract and validate packages
       run: |
+        set -x  # Enable trace mode to debug the script
+
         declare -a failed_packages
         
         # Define known variable expansions using extracted values
@@ -42,6 +44,9 @@ jobs:
           if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
             return 0
           fi
+          
+          # Log which package is being validated
+          echo "Validating package: $package"
           
           if ! pacman -Ss "^${package}$" > /dev/null 2>&1; then
             failed_packages+=("$package")
@@ -106,25 +111,29 @@ jobs:
           done
         }
         
+        # Check if the required files exist before processing
         for file in *.sh; do
-          if [[ -f "$file" ]]; then
-            echo "📄 Checking packages in $file..."
-            
-            while IFS= read -r line || [[ -n "$line" ]]; do
-              if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
-                process_line "$line"
-                
-                if [[ "$line" =~ \\[[:space:]]*$ ]]; then
-                  while IFS= read -r line || [[ -n "$line" ]]; do
-                    if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
-                      break
-                    fi
-                    process_line "$line"
-                  done
-                fi
-              fi
-            done < "$file"
+          if [[ ! -f "$file" ]]; then
+            echo "⚠️ $file not found. Skipping."
+            continue
           fi
+
+          echo "📄 Checking packages in $file..."
+
+          while IFS= read -r line || [[ -n "$line" ]]; do
+            if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
+              process_line "$line"
+                
+              if [[ "$line" =~ \\[[:space:]]*$ ]]; then
+                while IFS= read -r line || [[ -n "$line" ]]; do
+                  if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
+                    break
+                  fi
+                  process_line "$line"
+                done
+              fi
+            fi
+          done < "$file"
         done
         
         echo "=== Summary ==="
