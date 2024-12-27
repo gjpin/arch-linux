@@ -19,7 +19,7 @@ jobs:
       run: |
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
-        pacman -S --noconfirm grep sed coreutils
+        pacman -S --noconfirm grep sed coreutils git
 
     - name: Extract GPU packages from install.sh
       run: |
@@ -30,15 +30,22 @@ jobs:
                           xargs -n1 | sort -u | xargs)
         echo "GPU_PACKAGES=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
 
-    - name: Install paru
+    - name: Create non-root user
       run: |
-        # Install paru
-        git clone https://aur.archlinux.org/paru-bin.git
-        chown -R ${NEW_USER}:${NEW_USER} paru-bin
-        cd paru-bin
-        sudo -u ${NEW_USER} makepkg -si --noconfirm
-        cd ..
-        rm -rf paru-bin
+        # Create a non-root user
+        useradd -m -s /bin/bash standarduser
+        echo "standarduser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+    - name: Install paru as non-root user
+      run: |
+        # Install paru as the non-root user
+        sudo -u standarduser bash -c '
+          git clone https://aur.archlinux.org/paru-bin.git /home/standarduser/paru-bin
+          cd /home/standarduser/paru-bin
+          makepkg -si --noconfirm
+          cd ..
+          rm -rf paru-bin
+        '
 
     - name: Extract and validate packages
       run: |
@@ -56,8 +63,8 @@ jobs:
           # Check package in pacman
           if pacman -Ss "^${package}$" > /dev/null 2>&1; then
             echo "✅ Package exists in pacman: $package"
-          # Check package in paru (AUR)
-          elif paru -Ss "^${package}$" > /dev/null 2>&1; then
+          # Check package in paru (AUR) as the non-root user
+          elif sudo -u standarduser paru -Ss "^${package}$" > /dev/null 2>&1; then
             echo "✅ Package exists in AUR: $package"
           else
             failed_packages+=("$package")
