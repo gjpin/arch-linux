@@ -58,7 +58,7 @@ fi
 # sed -i '/^IgnorePkg/s/$/ amdvlk lib32-amdvlk/' /etc/pacman.conf
 
 # Force pacman to refresh the package lists
-pacman -Syyu
+pacman -Syyu --noconfirm
 
 # Initialize Pacman's keyring
 pacman-key --init

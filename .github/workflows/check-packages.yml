@@ -21,7 +21,7 @@ jobs:
         sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
 
         # Update pacman database and install essential tools
-        pacman -Syyu
+        pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils
 
     - name: Extract and validate packages
@@ -31,22 +31,27 @@ jobs:
           if [ -f "$file" ]; then
             echo "Checking packages in $file..."
             
-            # Extract package names from different pacman installation formats
-            # Format 1: pacman -S --noconfirm \ package1 \ package2
-            # Format 2: pacman -S --noconfirm package1 package2
-            packages=$(grep -E "pacman -S.*--noconfirm" "$file" | 
-                      sed 's/pacman -S --noconfirm//' | 
-                      tr '\\' ' ' | 
-                      tr -s ' ' '\n' | 
-                      grep -v '^$')
+            # Extract package names from pacman commands
+            # Matches packages after "pacman -S --noconfirm \" until the next command
+            packages=$(awk '/pacman -S --noconfirm/{p=1;next} /^[a-z]/{p=0} p{if($1!="\\") print $1}' "$file" | 
+                      grep -v '^$' | 
+                      tr -d '\\')
+            
+            # Also catch single-line package installations
+            single_line_packages=$(grep -E "^pacman -S --noconfirm [^\\]" "$file" | 
+                                  sed 's/pacman -S --noconfirm //')
+            
+            all_packages="$packages $single_line_packages"
             
             # Check each package
-            for package in $packages; do
-              if pacman -Ss "^${package}$" > /dev/null 2>&1; then
-                echo "✅ Package exists: $package"
-              else
-                echo "❌ Package not found: $package"
-                exit 1
+            echo "$all_packages" | tr ' ' '\n' | while read -r package; do
+              if [ ! -z "$package" ]; then
+                if pacman -Ss "^${package}$" > /dev/null 2>&1; then
+                  echo "✅ Package exists: $package"
+                else
+                  echo "❌ Package not found: $package"
+                  exit 1
+                fi
               fi
             done
           fi
