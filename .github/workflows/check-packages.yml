@@ -30,6 +30,16 @@ jobs:
                           xargs -n1 | sort -u | xargs)
         echo "GPU_PACKAGES=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
 
+    - name: Install paru
+      run: |
+        # Install paru
+        git clone https://aur.archlinux.org/paru-bin.git
+        chown -R ${NEW_USER}:${NEW_USER} paru-bin
+        cd paru-bin
+        sudo -u ${NEW_USER} makepkg -si --noconfirm
+        cd ..
+        rm -rf paru-bin
+
     - name: Extract and validate packages
       run: |
         # Array to store failed packages
@@ -43,20 +53,25 @@ jobs:
             return 0
           fi
           
-          if ! pacman -Ss "^${package}$" > /dev/null 2>&1; then
+          # Check package in pacman
+          if pacman -Ss "^${package}$" > /dev/null 2>&1; then
+            echo "✅ Package exists in pacman: $package"
+          # Check package in paru (AUR)
+          elif paru -Ss "^${package}$" > /dev/null 2>&1; then
+            echo "✅ Package exists in AUR: $package"
+          else
             failed_packages+=("$package")
             echo "❌ Package not found: $package"
-          else
-            echo "✅ Package exists: $package"
           fi
         }
         
         # Function to clean and process a line of packages
         process_packages() {
           local line="$1"
-          # Remove the pacman command and any arguments like --ask N
+          # Remove the command and any arguments like --ask N
           cleaned_line=$(echo "$line" | \
             sed 's/pacman -S --noconfirm//g' | \
+            sed 's/paru -S --noconfirm//g' | \
             sed 's/--ask [0-9]*//g' | \
             sed 's/--needed//g' | \
             tr '\\' ' ')
@@ -74,8 +89,8 @@ jobs:
             
             # Read file line by line
             while IFS= read -r line || [[ -n "$line" ]]; do
-              # Check if line contains pacman install command
-              if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
+              # Check if line contains pacman or paru install command
+              if [[ "$line" == *"pacman -S --noconfirm"* ]] || [[ "$line" == *"paru -S --noconfirm"* ]]; then
                 # Process the current line
                 process_packages "$line"
                 
