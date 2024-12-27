@@ -15,11 +15,19 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Update Pacman and Install Base Packages
+    - name: Update Pacman and install base packages
       run: |
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils
+
+    - name: Extract GPU packages from install.sh
+      run: |
+        # Extract all GPU_PACKAGES values from install.sh
+        ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
+                          sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
+                          tr '\n' ' ')
+        echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
 
     - name: Extract and validate packages
       run: |
@@ -30,7 +38,7 @@ jobs:
         validate_package() {
           local package="$1"
           # Skip empty, comments, or argument flags
-          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
+          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]] || [[ "$package" =~ ^-- ]]; then
             return 0
           fi
           
@@ -57,7 +65,7 @@ jobs:
                   sed 's/--ask [0-9]*//g' | \
                   sed 's/--needed//g' | \
                   tr '\\' ' ')
-                  
+
                 # Process packages on this line
                 for pkg in $cleaned_line; do
                   validate_package "$pkg"
