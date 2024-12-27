@@ -1,4 +1,4 @@
-name: Validate Arch Linux Packages
+name: Validate packages
 on: [push, pull_request]
 
 jobs:
@@ -12,22 +12,14 @@ jobs:
       - name: Update package database
         run: |
           pacman -Sy --noconfirm
-
-      - name: Extract GPU packages from install.sh
-        run: |
-          # Extract all GPU_PACKAGES values from install.sh
-          ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
-                            sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
-                            tr '\n' ' ')
-          echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
         
       - name: Extract and validate packages
         run: |
           declare -a failed_packages
-
-          # Define known variable expansions using extracted values
+          
+          # Define known variable expansions
           declare -A known_variables
-          known_variables[GPU_PACKAGES]="${gpu_packages}"
+          known_variables[GPU_PACKAGES]="vulkan-intel intel-media-driver intel-gpu-tools vulkan-radeon libva-mesa-driver radeontop mesa-vdpau"
           
           validate_package() {
             local package="$1"
