@@ -9,7 +9,7 @@ jobs:
   check-packages:
     runs-on: ubuntu-latest
     container:
-      image: archlinux:latest
+      image: archlinux:multilib-devel
 
     steps:
     - name: Checkout Repository
@@ -17,22 +17,28 @@ jobs:
 
     - name: Update Pacman and Install Base Packages
       run: |
-        # Enable multilib repository
-        sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
-
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils
 
+    - name: Extract GPU packages from install.sh
+      run: |
+        # Extract all GPU_PACKAGES values from install.sh
+        ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
+                          sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
+                          tr '\n' ' ')
+        echo "gpu_packages=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
+      
     - name: Extract and validate packages
       run: |
-        # Array to store failed packages
         declare -a failed_packages
         
-        # Function to validate a single package
+        # Define known variable expansions using extracted values
+        declare -A known_variables
+        known_variables[GPU_PACKAGES]="${gpu_packages}"
+        
         validate_package() {
           local package="$1"
-          # Skip empty, comments, or argument flags
           if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]]; then
             return 0
           fi
@@ -45,39 +51,75 @@ jobs:
           fi
         }
         
-        # Process each .sh file
+        expand_variables() {
+          local word="$1"
+          # Check if word is a variable reference like ${GPU_PACKAGES}
+          if [[ "$word" =~ ^\$\{([A-Za-z_][A-Za-z0-9_]*)\}$ ]]; then
+            local var_name="${BASH_REMATCH[1]}"
+            if [[ -n "${known_variables[$var_name]}" ]]; then
+              echo "${known_variables[$var_name]}"
+            else
+              echo "$word"
+            fi
+          else
+            echo "$word"
+          fi
+        }
+        
+        process_line() {
+          local line="$1"
+          local words=($line)
+          local i=0
+          local skip_next=0
+          
+          # Skip until we find --noconfirm
+          while [[ $i -lt ${#words[@]} ]] && [[ "${words[i]}" != "--noconfirm" ]]; do
+            ((i++))
+          done
+          ((i++))  # Move past --noconfirm
+          
+          # Process remaining words
+          while [[ $i -lt ${#words[@]} ]]; do
+            if [[ ${skip_next} -eq 1 ]]; then
+              skip_next=0
+              ((i++))
+              continue
+            fi
+            
+            if [[ "${words[i]}" == "--ask" ]] || \
+                [[ "${words[i]}" == "--needed" ]] || \
+                [[ "${words[i]}" == "--overwrite" ]]; then
+              skip_next=1
+            elif [[ "${words[i]}" != -* ]]; then
+              # Remove any trailing backslash
+              local word="${words[i]%\\}"
+              
+              # Expand variables if present
+              local expanded=$(expand_variables "$word")
+              
+              # Process each package in the expanded result
+              for package in $expanded; do
+                validate_package "$package"
+              done
+            fi
+            ((i++))
+          done
+        }
+        
         for file in *.sh; do
           if [[ -f "$file" ]]; then
             echo "📄 Checking packages in $file..."
             
-            # Read file line by line
             while IFS= read -r line || [[ -n "$line" ]]; do
-              # Check if line contains pacman install command
               if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
-                # Remove the pacman command and any arguments like --ask N
-                cleaned_line=$(echo "$line" | \
-                  sed 's/pacman -S --noconfirm//g' | \
-                  sed 's/--ask [0-9]*//g' | \
-                  sed 's/--needed//g' | \
-                  tr '\\' ' ')
-                  
-                # Process packages on this line
-                for pkg in $cleaned_line; do
-                  validate_package "$pkg"
-                done
+                process_line "$line"
                 
-                # If line ends with \, process continuation lines
                 if [[ "$line" =~ \\[[:space:]]*$ ]]; then
                   while IFS= read -r line || [[ -n "$line" ]]; do
-                    # Stop if we hit a line that doesn't end with \ and isn't part of package list
                     if [[ ! "$line" =~ \\[[:space:]]*$ ]] && [[ ! "$line" =~ ^[[:space:]]*[a-zA-Z0-9] ]]; then
                       break
                     fi
-                    # Clean and process the continuation line
-                    cleaned_line=$(echo "$line" | sed 's/\\//g')
-                    for pkg in $cleaned_line; do
-                      validate_package "$pkg"
-                    done
+                    process_line "$line"
                   done
                 fi
               fi
@@ -85,7 +127,6 @@ jobs:
           fi
         done
         
-        # Print summary
         echo "=== Summary ==="
         if [ ${#failed_packages[@]} -eq 0 ]; then
           echo "✅ All packages validated successfully!"
