@@ -38,8 +38,8 @@ jobs:
         # Function to validate a single package
         validate_package() {
           local package="$1"
-          # Skip empty, comments, or argument flags
-          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]] || [[ "$package" =~ ^-- ]]; then
+          # Skip empty, comments, argument flags, or variables like $GPU_PACKAGES
+          if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]] || [[ "$package" =~ ^-- ]] || [[ "$package" == *"$"* ]]; then
             return 0
           fi
           
