@@ -7,24 +7,22 @@ on:
 
 jobs:
   check-packages:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Install Dependencies
+    - name: Update Pacman and Install Base Packages
       run: |
-        sudo apt-get update
-        sudo apt-get install -y archlinux-keyring pacman-package-manager
+        # Update pacman database and install essential tools
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm grep sed coreutils
 
     - name: Check Packages
       run: |
-        # Initialize pacman
-        sudo pacman-key --init
-        sudo pacman-key --populate archlinux
-        sudo pacman -Sy
-
         # Flag to track errors
         error_flag=0
 
