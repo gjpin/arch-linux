@@ -356,23 +356,6 @@ pacman -S --noconfirm bind
 pacman -S --noconfirm iptables-nft --ask 4
 
 ################################################
-##### Tailscale
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Tailscale
-# https://tailscale.com/download/linux/arch
-
-# Install Tailscale
-pacman -S --noconfirm tailscale
-
-# Enable Tailscale service
-systemctl enable --now tailscaled.service
-
-# Set Tailscale's network zone
-firewall-offline-cmd --zone=home --add-interface=tailscale0
-
-################################################
 ##### initramfs
 ################################################
 
@@ -674,17 +657,37 @@ chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
 ################################################
-##### Docker
+##### Podman
 ################################################
 
 # References:
-# https://wiki.archlinux.org/title/docker
+# https://wiki.archlinux.org/title/Podman
+# https://wiki.archlinux.org/title/Buildah
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
-# Install Docker and plugins
-pacman -S --noconfirm docker docker-compose docker-buildx
+# Install Podman and dependencies
+pacman -S --noconfirm podman passt netavark aardvark-dns
 
-# Enable Docker socket
-systemctl enable docker.socket
+# Install Buildah
+pacman -S --noconfirm buildah
+
+# Enable unprivileged ping
+echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
+
+# Create docker/podman alias
+tee /home/${NEW_USER}/.zshrc.d/podman << EOF
+alias docker=podman
+EOF
+
+# Re-enable unqualified search registries
+tee -a /etc/containers/registries.conf.d/10-unqualified-search-registries.conf << EOF
+unqualified-search-registries = ['docker.io']
+EOF
+
+tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
+[[registry]]
+location = "docker.io"
+EOF
 
 ################################################
 ##### Virtualization
@@ -730,7 +733,7 @@ tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 EOF
 
 # Install k8s applications
-pacman -S --noconfirm kubectl helm k9s kubectx cilium-cli
+pacman -S --noconfirm kubectl helm k9s kubectx cilium-cli talosctl
 
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
@@ -770,13 +773,13 @@ tee /home/${NEW_USER}/.zshrc.d/npm << 'EOF'
 export PATH=$HOME/.devtools/npm-global/bin:$PATH
 EOF
 
-# Install Python and create alias for python venv
-pacman -S --noconfirm python
-mkdir -p /home/${NEW_USER}/.devtools/python
-chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/.devtools/python
-sudo -u ${NEW_USER} python -m venv /home/${NEW_USER}/.devtools/python/dev
+# Install Python uv
+pacman -S --noconfirm uv
+
 tee /home/${NEW_USER}/.zshrc.d/python << 'EOF'
-alias pydev="source ${HOME}/.devtools/python/dev/bin/activate"
+# uv shell autocompletion
+eval "$(uv generate-shell-completion zsh)"
+eval "$(uvx --generate-shell-completion zsh)"
 EOF
 
 # Install Go

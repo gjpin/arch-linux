@@ -43,11 +43,6 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Flatseal
     flatpak install -y flathub com.github.tchx84.Flatseal
 
-    # Install Evince
-    flatpak install -y flathub org.gnome.Evince
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gnome.Evince -o ${HOME}/.local/share/flatpak/overrides/org.gnome.Evince
-    xdg-mime default org.gnome.Evince.desktop application/pdf
-
     # Install Gaphor
     flatpak install -y flathub org.gaphor.Gaphor
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gaphor.Gaphor -o ${HOME}/.local/share/flatpak/overrides/org.gaphor.Gaphor
@@ -67,11 +62,6 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Eyedropper
     flatpak install -y flathub com.github.finefindus.eyedropper
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.finefindus.eyedropper -o ${HOME}/.local/share/flatpak/overrides/com.github.finefindus.eyedropper
-elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
-    # Install Okular
-    flatpak install -y flathub org.kde.okular
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.kde.okular -o ${HOME}/.local/share/flatpak/overrides/org.kde.okular
-    xdg-mime default org.kde.okular.desktop application/pdf
 fi
 
 # Install applications

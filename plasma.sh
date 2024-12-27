@@ -101,6 +101,7 @@ pacman -S --noconfirm \
     kompare \
     konsole \
     kwalletmanager \
+    okular \
     partitionmanager \
     plasma-systemmonitor \
     spectacle
@@ -244,4 +245,3 @@ sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group FeedbackStyle --key "
 
 # Disable cursor shake
 sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Plugins --key "shakecursorEnabled" --type bool false
-

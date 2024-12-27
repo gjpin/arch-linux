@@ -33,5 +33,6 @@
             "editor.background": "#181818"
         }
     },
-    "git.useIntegratedAskPass": false
+    "git.useIntegratedAskPass": false,
+    "chat.commandCenter.enabled": false
 }

@@ -18,6 +18,7 @@
 
 pacman -S --noconfirm \
     baobab \
+    evince \
     file-roller \
     gnome-backgrounds \
     gnome-calculator \
