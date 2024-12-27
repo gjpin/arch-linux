@@ -6,47 +6,30 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  checkout-repository:
+  check-packages:
     runs-on: ubuntu-latest
     container:
       image: archlinux:multilib-devel
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-  update-pacman:
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:multilib-devel
-    needs: checkout-repository  # Ensures this job runs after checkout-repository
-    steps:
     - name: Update Pacman and install base packages
       run: |
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils
 
-  extract-gpu-packages:
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:multilib-devel
-    needs: update-pacman  # Ensures this job runs after update-pacman
-    steps:
     - name: Extract GPU packages from install.sh
       run: |
         # Extract all GPU_PACKAGES values from install.sh
         ALL_GPU_PACKAGES=$(grep -E 'export GPU_PACKAGES="[^"]*"' install.sh | \
                           sed 's/export GPU_PACKAGES="\([^"]*\)"/\1/' | \
-                          tr '\n' ' ')
+                          tr '\n' ' ' | \
+                          xargs -n1 | sort -u | xargs)
         echo "GPU_PACKAGES=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
-        echo "GPU_PACKAGES: $ALL_GPU_PACKAGES"
 
-  validate-main-packages:
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:multilib-devel
-    needs: extract-gpu-packages  # Ensures this job runs after extract-gpu-packages
-    steps:
     - name: Extract and validate packages
       run: |
         # Array to store failed packages
@@ -67,15 +50,23 @@ jobs:
             echo "✅ Package exists: $package"
           fi
         }
+        
+        # Function to clean and process a line of packages
+        process_packages() {
+          local line="$1"
+          # Remove the pacman command and any arguments like --ask N
+          cleaned_line=$(echo "$line" | \
+            sed 's/pacman -S --noconfirm//g' | \
+            sed 's/--ask [0-9]*//g' | \
+            sed 's/--needed//g' | \
+            tr '\\' ' ')
 
-        # Validate GPU packages if the variable is set
-        if [[ -n "$GPU_PACKAGES" ]]; then
-          echo "📦 Checking GPU packages: $GPU_PACKAGES"
-          for pkg in $GPU_PACKAGES; do
+          # Process packages on this line
+          for pkg in $cleaned_line; do
             validate_package "$pkg"
           done
-        fi
-
+        }
+        
         # Process each .sh file
         for file in *.sh; do
           if [[ -f "$file" ]]; then
@@ -85,17 +76,7 @@ jobs:
             while IFS= read -r line || [[ -n "$line" ]]; do
               # Check if line contains pacman install command
               if [[ "$line" == *"pacman -S --noconfirm"* ]]; then
-                # Remove the pacman command and any arguments like --ask N
-                cleaned_line=$(echo "$line" | \
-                  sed 's/pacman -S --noconfirm//g' | \
-                  sed 's/--ask [0-9]*//g' | \
-                  sed 's/--needed//g' | \
-                  tr '\\' ' ')
-
-                # Process packages on this line
-                for pkg in $cleaned_line; do
-                  validate_package "$pkg"
-                done
+                process_packages "$line"
                 
                 # If line ends with \, process continuation lines
                 if [[ "$line" =~ \\[[:space:]]*$ ]]; then
@@ -105,15 +86,18 @@ jobs:
                       break
                     fi
                     # Clean and process the continuation line
-                    cleaned_line=$(echo "$line" | sed 's/\\//g')
-                    for pkg in $cleaned_line; do
-                      validate_package "$pkg"
-                    done
+                    process_packages "$line"
                   done
                 fi
               fi
             done < "$file"
           fi
+        done
+        
+        # Validate GPU_PACKAGES
+        echo "🔍 Checking GPU_PACKAGES: $GPU_PACKAGES"
+        for pkg in $GPU_PACKAGES; do
+          validate_package "$pkg"
         done
         
         # Print summary
@@ -126,3 +110,4 @@ jobs:
           printf '%s\n' "${failed_packages[@]}"
           echo "Total failed packages: ${#failed_packages[@]}"
           exit 1
+        fi
