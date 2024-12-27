@@ -30,23 +30,6 @@ jobs:
                           xargs -n1 | sort -u | xargs)
         echo "GPU_PACKAGES=$ALL_GPU_PACKAGES" >> $GITHUB_ENV
 
-    - name: Create non-root user
-      run: |
-        # Create a non-root user
-        useradd -m -s /bin/bash standarduser
-        echo "standarduser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-    - name: Install paru as non-root user
-      run: |
-        # Install paru as the non-root user
-        sudo -u standarduser bash -c '
-          git clone https://aur.archlinux.org/paru-bin.git /home/standarduser/paru-bin
-          cd /home/standarduser/paru-bin
-          makepkg -si --noconfirm
-          cd ..
-          rm -rf paru-bin
-        '
-
     - name: Extract and validate packages
       run: |
         # Array to store failed packages
@@ -63,8 +46,8 @@ jobs:
           # Check package in pacman
           if pacman -Ss "^${package}$" > /dev/null 2>&1; then
             echo "✅ Package exists in pacman: $package"
-          # Check package in paru (AUR) as the non-root user
-          elif sudo -u standarduser paru -Ss "^${package}$" > /dev/null 2>&1; then
+          # Check package in AUR using curl (direct AUR API query)
+          elif curl -s "https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=${package}" | grep -q '"resultcount":1'; then
             echo "✅ Package exists in AUR: $package"
           else
             failed_packages+=("$package")
