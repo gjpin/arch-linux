@@ -15,12 +15,11 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Enable multilib repository
-      run: |
-        sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
-
     - name: Update Pacman and Install Base Packages
       run: |
+        # Enable multilib repository
+        sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
+
         # Update pacman database and install essential tools
         pacman -Syu --noconfirm
         pacman -S --noconfirm grep sed coreutils
@@ -30,11 +29,11 @@ jobs:
         # Flag to track errors
         error_flag=0
 
-        # Combine multiline commands into a single line, then parse packages
+        # Flatten multiline pacman commands and extract packages
         grep -rhE "pacman -S --noconfirm" . | \
         sed -E ':a;N;$!ba;s/\\\n/ /g' | \
         sed -E 's/pacman -S --noconfirm[[:space:]]+//' | \
-        tr ' ' '\n' | tr -s '\n' | sort -u | while read -r package; do
+        tr -s ' ' '\n' | grep -v '^$' | sort -u | while read -r package; do
           if [[ -n "$package" ]]; then
             echo "Checking package: $package"
             if ! pacman -Si "$package" &>/dev/null; then
