@@ -583,6 +583,12 @@ AMD_VULKAN_ICD=RADV
 # VDPAU
 VDPAU_DRIVER=radeonsi
 EOF
+elif lspci | grep "VGA" | grep "Intel" > /dev/null; then
+tee -a /etc/environment << EOF
+
+# VDPAU
+VDPAU_DRIVER=va_gl
+EOF
 fi
 
 # Install VA-API tools
