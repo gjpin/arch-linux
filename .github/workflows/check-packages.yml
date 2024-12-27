@@ -1,0 +1,50 @@
+name: Verify Arch Linux Packages
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  check-packages:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y archlinux-keyring pacman-package-manager
+
+    - name: Check Packages
+      run: |
+        # Initialize pacman
+        sudo pacman-key --init
+        sudo pacman-key --populate archlinux
+        sudo pacman -Sy
+
+        # Flag to track errors
+        error_flag=0
+
+        # Find all packages mentioned in .sh files
+        grep -rhEo "pacman -S --noconfirm[[:space:]]+.*" . | \
+        sed -E 's/pacman -S --noconfirm[[:space:]]+//' | \
+        tr '\\' '\n' | tr -s ' ' '\n' | sort -u | while read -r package; do
+          if [[ -n "$package" ]]; then
+            echo "Checking package: $package"
+            if ! pacman -Si "$package" &>/dev/null; then
+              echo "::error::Package '$package' does not exist in the Arch Linux repositories."
+              error_flag=1
+            else
+              echo "Package '$package' exists."
+            fi
+          fi
+        done
+
+        # Fail the workflow if any package is missing
+        if [[ $error_flag -ne 0 ]]; then
+          echo "One or more packages do not exist. Failing the workflow."
+          exit 1
+        fi
