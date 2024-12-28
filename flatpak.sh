@@ -97,14 +97,24 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 flatpak install -y flathub md.obsidian.Obsidian
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o ${HOME}/.local/share/flatpak/overrides/md.obsidian.Obsidian
 
+flatpak install -y flathub org.libreoffice.LibreOffice
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.libreoffice.LibreOffice -o ${HOME}/.local/share/flatpak/overrides/org.libreoffice.LibreOffice
+
+# Install development applications
+flatpak install -y flathub io.podman_desktop.PodmanDesktop
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.podman_desktop.PodmanDesktop -o ${HOME}/.local/share/flatpak/overrides/io.podman_desktop.PodmanDesktop
+
 flatpak install -y flathub com.usebruno.Bruno
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebruno.Bruno -o ${HOME}/.local/share/flatpak/overrides/com.usebruno.Bruno
 
 flatpak install -y flathub io.kinvolk.Headlamp
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.kinvolk.Headlamp -o ${HOME}/.local/share/flatpak/overrides/io.kinvolk.Headlamp
 
-flatpak install -y flathub org.libreoffice.LibreOffice
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.libreoffice.LibreOffice -o ${HOME}/.local/share/flatpak/overrides/org.libreoffice.LibreOffice
+flatpak install -y org.sqlitebrowser.sqlitebrowser
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.sqlitebrowser.sqlitebrowser -o ${HOME}/.local/share/flatpak/overrides/org.sqlitebrowser.sqlitebrowser
+
+flatpak install -y flathub io.beekeeperstudio.Studio
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.beekeeperstudio.Studio -o ${HOME}/.local/share/flatpak/overrides/io.beekeeperstudio.Studio
 
 ################################################
 ##### Firefox

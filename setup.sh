@@ -794,6 +794,9 @@ tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
 location = "docker.io"
 EOF
 
+# Enable Podman socket
+systemctl --user enable podman.socket
+
 ################################################
 ##### Virtualization
 ################################################
@@ -807,7 +810,7 @@ EOF
 pacman -S --noconfirm libvirt qemu-desktop dnsmasq virt-manager
 
 # Add user to libvirt group
-gpasswd -a ${NEW_USER} libvirt
+usermod -a -G libvirt ${NEW_USER}
 
 # Enable libvirtd service
 systemctl enable libvirtd.service
@@ -838,7 +841,7 @@ tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 EOF
 
 # Install k8s applications
-pacman -S --noconfirm kubectl helm k9s kubectx cilium-cli talosctl
+pacman -S --noconfirm kubectl krew helm k9s kubectx cilium-cli talosctl
 
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
@@ -911,6 +914,25 @@ pacman -S --noconfirm llvm clang lld mold scons
 
 # Install rust
 pacman -S --noconfirm rust
+
+# Install JDK
+pacman -S --noconfirm jdk-openjdk
+
+################################################
+##### Android
+################################################
+
+# Install Android tools
+pacman -S --noconfirm android-tools
+
+# Install Android udev rules
+pacman -S --noconfirm android-udev
+
+# Create adbusers group
+groupadd adbusers
+
+# Add user to the adbusers group
+usermod -a -G adbusers ${NEW_USER}
 
 ################################################
 ##### Neovim
@@ -1059,6 +1081,17 @@ tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
 --enable-features=WaylandWindowDecorations
 --ozone-platform-hint=auto
 EOF
+
+################################################
+##### WireGuard
+################################################
+
+# Install wireguard-tools
+pacman -S --noconfirm wireguard-tools
+
+# Create WireGuard folder
+mkdir -p /etc/wireguard
+chmod 700 /etc/wireguard
 
 ################################################
 ##### Desktop Environment

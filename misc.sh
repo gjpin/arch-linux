@@ -1,6 +1,17 @@
 #!/usr/bin/bash
 
 ################################################
+##### Android
+################################################
+
+# Install all Android tools
+sudo -u ${NEW_USER} paru -S --noconfirm \
+    android-sdk \
+    android-sdk-platform-tools \
+    android-emulator \
+    android-sdk-cmdline-tools-latest
+
+################################################
 ##### Tailscale
 ################################################
 
@@ -424,7 +435,7 @@ firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source add
 # Allow user to read audit logs and get desktop notification on DENIED actions
 groupadd -r audit
 
-gpasswd -a ${NEW_USER} audit
+usermod -a -G audit ${NEW_USER}
 
 sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
 
