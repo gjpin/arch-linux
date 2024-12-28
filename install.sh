@@ -58,11 +58,11 @@ fi
 # GPU vendor
 if lspci | grep "VGA" | grep "Intel" > /dev/null; then
     export GPU_PACKAGES="vulkan-intel intel-media-driver intel-gpu-tools"
-    export MKINITCPIO_MODULES=" i915 enable_guc=2 enable_fbc=1"
+    export GPU_MKINITCPIO_MODULES="i915"
     export LIBVA_ENV_VAR="LIBVA_DRIVER_NAME=iHD"
 elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
     export GPU_PACKAGES="vulkan-radeon libva-mesa-driver radeontop mesa-vdpau"
-    export MKINITCPIO_MODULES=" amdgpu"
+    export GPU_MKINITCPIO_MODULES="amdgpu"
     export LIBVA_ENV_VAR="LIBVA_DRIVER_NAME=radeonsi"
 fi
 
@@ -187,7 +187,7 @@ EOF
 pacman -Syy
 
 # Install system
-pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs mdadm ${CPU_MICROCODE}
+pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs mdadm tpm2-tools tpm2-tss ${CPU_MICROCODE}
 
 # Generate filesystem tab
 genfstab -U /mnt >> /mnt/etc/fstab

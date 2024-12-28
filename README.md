@@ -31,7 +31,7 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 6. Clone repo: `git clone https://github.com/gjpin/arch-linux.git`
 7. Run script: `cd arch-linux && ./install.sh`
 8. Reboot and enable secure boot
-9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2 OR /dev/md/ArchArray (if RAID0)`
+9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+7 --tpm2-device=auto /dev/md/ArchArray (if RAID0) OR /dev/nvme0n1p2`
 10. Re-configure p10k: `p10k configure`
 11. Install Flatpak and applications:
 ```

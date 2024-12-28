@@ -16,7 +16,7 @@ sudo pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
 systemctl --user enable --now xdg-desktop-portal.service
 
 # Add Flathub repositories
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak update
 
 # Import global Flatpak overrides
@@ -28,14 +28,14 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/glo
 ################################################
 
 # Install Flatpak runtimes
-flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full//23.08
-flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi//23.08
-flatpak install -y flathub org.freedesktop.Platform.GL.default//23.08-extra
-flatpak install -y flathub org.freedesktop.Platform.GL32.default//23.08-extra
-flatpak install -y flathub org.freedesktop.Sdk//23.08
+flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full//24.08
+flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi//24.08
+flatpak install -y flathub org.freedesktop.Platform.GL.default//24.08-extra
+flatpak install -y flathub org.freedesktop.Platform.GL32.default//24.08-extra
+flatpak install -y flathub org.freedesktop.Sdk//24.08
 
 if lspci | grep VGA | grep "Intel" > /dev/null; then
-  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel//23.08
+  flatpak install -y flathub org.freedesktop.Platform.VAAPI.Intel//24.08
 fi
 
 # Install DE specific applications
@@ -62,6 +62,14 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Eyedropper
     flatpak install -y flathub com.github.finefindus.eyedropper
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.finefindus.eyedropper -o ${HOME}/.local/share/flatpak/overrides/com.github.finefindus.eyedropper
+
+    # Install Authenticator
+    flatpak install -y flathub com.belmoussaoui.Authenticator
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.belmoussaoui.Authenticator -o ${HOME}/.local/share/flatpak/overrides/com.belmoussaoui.Authenticator
+elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
+    # Install Keysmith
+    flatpak install -y flathub org.kde.keysmith
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.kde.keysmith -o ${HOME}/.local/share/flatpak/overrides/org.kde.keysmith
 fi
 
 # Install applications
@@ -70,9 +78,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 
 flatpak install -y flathub com.bitwarden.desktop
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.bitwarden.desktop -o ${HOME}/.local/share/flatpak/overrides/com.bitwarden.desktop
-
-flatpak install -y flathub com.belmoussaoui.Authenticator
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.belmoussaoui.Authenticator -o ${HOME}/.local/share/flatpak/overrides/com.belmoussaoui.Authenticator
 
 flatpak install -y flathub org.keepassxc.KeePassXC
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.keepassxc.KeePassXC -o ${HOME}/.local/share/flatpak/overrides/org.keepassxc.KeePassXC
@@ -179,10 +184,10 @@ fi
 
 if [ ${GAMING} = "yes" ]; then
     # Install MangoHud
-    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//23.08
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
     # Install Gamescope
-    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//23.08
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//24.08
 fi
 
 ################################################
@@ -230,34 +235,4 @@ if [ ${GAMING} = "yes" ]; then
     # Configure MangoHud for Heroic
     mkdir -p ${HOME}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/mangohud/MangoHud.conf -o ${HOME}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud/MangoHud.conf
-fi
-
-################################################
-##### ALVR
-################################################
-
-# References:
-# https://github.com/alvr-org/ALVR/wiki/Installing-ALVR-and-using-SteamVR-on-Linux-through-Flatpak
-
-if [ ${GAMING} = "yes" ]; then
-    if [ ! -e "/usr/bin/alvr_dashboard" ]; then
-        # Install dependencies
-        flatpak install -y flathub org.freedesktop.Sdk.Extension.llvm16//23.08
-        flatpak install -y flathub org.freedesktop.Sdk.Extension.rust-stable//23.08
-
-        # Download ALVR flatpak
-        curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
-
-        # Install ALVR
-        sudo flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
-
-        # Remove ALVR flatpak
-        rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
-
-        # Create ALVR shortcut
-        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/alvr/alvr-flatpak.desktop -o ${HOME}/.local/share/applications/alvr.desktop
-
-        # Create ALVR dashboard alias
-        echo 'alias alvr="flatpak run --command=alvr_dashboard com.valvesoftware.Steam"' | tee ${HOME}/.zshrc.d/alvr
-    fi
 fi
