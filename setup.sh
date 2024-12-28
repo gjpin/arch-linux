@@ -1069,7 +1069,7 @@ pacman -S --noconfirm \
     otf-commit-mono-nerd \
     ttf-firacode-nerd \
     ttf-hack-nerd \
- 	ttf-noto-nerd \
+    ttf-noto-nerd \
     ttf-sourcecodepro-nerd \
     ttf-ubuntu-nerd \
     ttf-ubuntu-mono-nerd \
