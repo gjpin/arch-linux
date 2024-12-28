@@ -104,6 +104,7 @@ sed -i '/^MODULES=\|^HOOKS=/ s/  */ /g' /etc/mkinitcpio.conf
 # https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#8-set-kernel-command-line
 # https://wiki.archlinux.org/title/RAID#RAID0_layout
 # https://wiki.archlinux.org/title/CPU_frequency_scaling#amd_pstate
+# https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
 
 # Create cmdline.d directory for kernel parameters
 mkdir /etc/cmdline.d
@@ -170,6 +171,11 @@ tee /etc/cmdline.d/intelgpu.conf << EOF
 enable_guc=2 enable_fbc=1
 EOF
 fi
+
+# Enable quirks to prevent wake-up after shutdown with WoL enabled
+tee /etc/cmdline.d/wol.conf << EOF
+xhci_hcd.quirks=270336
+EOF
 
 ################################################
 ##### Configure systemd-ukify with measured boot support
@@ -895,6 +901,7 @@ pacman -S --noconfirm go go-tools gopls
 mkdir -p /home/${NEW_USER}/.devtools/go
 tee /home/${NEW_USER}/.zshrc.d/go << 'EOF'
 export GOPATH="$HOME/.devtools/go"
+export PATH="$GOPATH/bin:$PATH"
 EOF
 
 # Install language servers

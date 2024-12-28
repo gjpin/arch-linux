@@ -16,7 +16,6 @@
 - [System Configuration](#system-configuration)
   - [Auto-mount extra drive (drive in use)](#auto-mount-extra-drive-drive-in-use)
   - [Auto-mount extra drive (from scratch)](#auto-mount-extra-drive-from-scratch)
-  - [Wake-on-LAN quirks](#wake-on-lan-quirks)
 - [Customization](#customization)
   - [Download and apply GTK themes with Gradience](#download-and-apply-gtk-themes-with-gradience)
 
@@ -250,20 +249,6 @@ sudo chown -R $USER:$USER /data
 
 # Auto unlock
 sudo systemd-cryptenroll --tpm2-pcrs=0+7 --tpm2-device=auto /dev/nvme1n1p1
-```
-
-## Wake-on-LAN quirks
-
-```bash
-# References:
-# https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
-
-# If WoL has been enabled and the computer does not shutdown
-
-# Add kernel boot parameters to enable quirks
-tee /etc/cmdline.d/wol.conf << EOF
-xhci_hcd.quirks=270336
-EOF
 ```
 
 ## Download and apply GTK themes with Gradience

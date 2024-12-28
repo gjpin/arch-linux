@@ -2,6 +2,23 @@
 
 WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if using RAID0) without confirmation.
 
+## Features
+
+- Unified kernel image (standard + LTS kernels)
+- Measured boot
+- Secure boot with custom keys
+- LUKS automatic unlock with TPM
+- systemd-boot
+- zram
+- Single disk or RAID0 support
+- nftables
+- Paru (AUR helper)
+- AppArmor + AppArmor.d profiles (complain mode by default)
+- ZSH
+- Plasma / Gnome / Sway
+- Steam / Heroic / Bottles
+- And a lot more. Code is documented and somewhat modular
+
 ## Requirements
 
 - UEFI
