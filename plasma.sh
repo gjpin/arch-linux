@@ -57,7 +57,6 @@ pacman -S --noconfirm \
     powerdevil \
     print-manager \
     qqc2-breeze-style \
-    sddm-kcm \
     systemsettings \
     wacomtablet \
     xdg-desktop-portal-kde
