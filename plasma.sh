@@ -170,6 +170,22 @@ SSH_ASKPASS_REQUIRE=prefer
 EOF
 
 ################################################
+##### Autologin
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/SDDM#Autologin
+
+# Enable autologin
+if [ ${AUTOLOGIN} = "yes" ]; then
+tee /etc/sddm.conf.d/autologin.conf << EOF
+[Autologin]
+User=${NEW_USER}
+Session=plasmawayland
+EOF
+fi
+
+################################################
 ##### Plasma shortcuts
 ################################################
 

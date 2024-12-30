@@ -172,3 +172,20 @@ fi
 
 # Update Gnome system databases
 dconf update
+
+################################################
+##### Autologin
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/GDM#Automatic_login
+
+# Enable autologin
+if [ ${AUTOLOGIN} = "yes" ]; then
+tee /etc/gdm/custom.conf << EOF
+# Enable automatic login for user
+[daemon]
+AutomaticLogin=${NEW_USER}
+AutomaticLoginEnable=True
+EOF
+fi

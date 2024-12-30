@@ -47,6 +47,9 @@ export GAMING
 read -p "Steam native (yes / no): " STEAM_NATIVE
 export STEAM_NATIVE
 
+read -p "Autologin (yes / no): " AUTOLOGIN
+export AUTOLOGIN
+
 # CPU vendor
 if cat /proc/cpuinfo | grep "vendor" | grep "GenuineIntel" > /dev/null; then
     export CPU_MICROCODE="intel-ucode"
