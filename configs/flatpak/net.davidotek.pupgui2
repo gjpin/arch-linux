@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;!host;home/Games;
+filesystems=!home;!host;home/Games;home/.steam/steam;
