@@ -328,7 +328,8 @@ pacman -S --noconfirm \
     gawk \
     fzf \
     findutils \
-    net-tools
+    net-tools \
+    zenity
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
