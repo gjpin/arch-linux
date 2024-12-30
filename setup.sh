@@ -586,12 +586,9 @@ pacman -S --noconfirm iptables-nft --ask 4
 echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
 
 # Install paru
-git clone https://aur.archlinux.org/paru-bin.git
-chown -R ${NEW_USER}:${NEW_USER} paru-bin
-cd paru-bin
-sudo -u ${NEW_USER} makepkg -si --noconfirm
-cd ..
-rm -rf paru-bin
+sudo -u ${NEW_USER} git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
+sudo -u ${NEW_USER} makepkg -si --noconfirm --dir /tmp/paru-bin
+rm -rf /tmp/paru-bin
 
 ################################################
 ##### AppArmor
