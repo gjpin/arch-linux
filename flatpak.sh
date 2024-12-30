@@ -198,6 +198,14 @@ if [ ${GAMING} = "yes" ]; then
 
     # Install Gamescope
     flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//24.08
+
+    # Install ProtonUp-Qt
+    flatpak install -y flathub net.davidotek.pupgui2
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/net.davidotek.pupgui2 -o ${HOME}/.local/share/flatpak/overrides/net.davidotek.pupgui2
+
+    # Install Protontricks
+    flatpak install -y flathub com.github.Matoking.protontricks
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.Matoking.protontricks -o ${HOME}/.local/share/flatpak/overrides/com.github.Matoking.protontricks
 fi
 
 ################################################
