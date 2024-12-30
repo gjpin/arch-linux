@@ -83,8 +83,8 @@ firewall-offline-cmd --zone=home --add-port=48000/udp
 # https://github.com/alvr-org/ALVR/wiki/Flatpak
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
-# Install OpenXR
-pacman -S --noconfirm openxr
+# Install OpenXR and OpenVR
+pacman -S --noconfirm openxr openvr
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install ALVR

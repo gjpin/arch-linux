@@ -523,7 +523,8 @@ mkdir -p \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/systemd/user \
   /home/${NEW_USER}/.icons \
-  /home/${NEW_USER}/Projects
+  /home/${NEW_USER}/Projects \
+  /home/${NEW_USER}/Applications
 
 # Create SSH directory and config file
 mkdir -p /home/${NEW_USER}/.ssh
