@@ -20,7 +20,7 @@ sudo -u ${NEW_USER} paru -S --noconfirm \
 # https://tailscale.com/download/linux/arch
 
 # Install Tailscale
-pacman -S --noconfirm tailscale
+pacman -S --noconfirm --needed tailscale
 
 # Enable Tailscale service
 systemctl enable --now tailscaled.service
@@ -86,7 +86,7 @@ systemctl enable cpupower.service
 # Corectrl
 if lspci | grep "VGA" | grep "AMD" > /dev/null; then
     # Install corectrl
-    pacman -S --noconfirm corectrl
+    pacman -S --noconfirm --needed corectrl
 
     # Launch CoreCtrl on session startup
     cp /usr/share/applications/org.corectrl.CoreCtrl.desktop /home/${NEW_USER}/.config/autostart/org.corectrl.CoreCtrl.desktop
@@ -128,7 +128,7 @@ firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source add
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="udp" accept log prefix="WiVRn UDP"'
 
 # Install Avahi
-pacman -S --noconfirm avahi nss-mdns
+pacman -S --noconfirm --needed avahi nss-mdns
 
 # Allow Avahi in firewall
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="5353" protocol="udp" accept log prefix="Avahi"'
@@ -138,7 +138,7 @@ firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source add
 ################################################
 
 # Install rust with rustup
-pacman -S --noconfirm rustup
+pacman -S --noconfirm --needed rustup
 sudo -u ${NEW_USER} rustup default stable
 
 ################################################
@@ -185,12 +185,12 @@ echo 'vm.vfs_cache_pressure=50' > /etc/sysctl.d/99-vfs-cache-pressure.conf
 # https://wiki.archlinux.org/title/FFmpeg#Installation
 
 # Install dependencies
-pacman -S --noconfirm tesseract-data-eng tesseract
+pacman -S --noconfirm --needed tesseract-data-eng tesseract
 
 # Install ffmpeg
 if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-    pacman -S --noconfirm vpl-gpu-rt
-    pacman -S --noconfirm ffmpeg
+    pacman -S --noconfirm --needed vpl-gpu-rt
+    pacman -S --noconfirm --needed ffmpeg
 elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
     sudo -u ${NEW_USER} paru -S --noconfirm ffmpeg-amd-full
 fi
@@ -439,7 +439,7 @@ usermod -a -G audit ${NEW_USER}
 
 sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
 
-pacman -S --noconfirm python-notify2 python-psutil
+pacman -S --noconfirm --needed python-notify2 python-psutil
 
 mkdir -p /home/${NEW_USER}/.config/autostart
 
@@ -608,21 +608,21 @@ EOF
 
 # Install 32-bit packages
 if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-    pacman -S --noconfirm lib32-vulkan-intel
+    pacman -S --noconfirm --needed lib32-vulkan-intel
 elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-    pacman -S --noconfirm lib32-vulkan-radeon
+    pacman -S --noconfirm --needed lib32-vulkan-radeon
 fi
 
-pacman -S --noconfirm lib32-mesa
+pacman -S --noconfirm --needed lib32-mesa
 
 # Install Gamemode
-pacman -S --noconfirm gamemode lib32-gamemode
+pacman -S --noconfirm --needed gamemode lib32-gamemode
 
 # Install Gamescope
-pacman -S --noconfirm gamescope
+pacman -S --noconfirm --needed gamescope
 
 # Install MangoHud
-pacman -S --noconfirm mangohud lib32-mangohud
+pacman -S --noconfirm --needed mangohud lib32-mangohud
 
 # Configure MangoHud
 # https://wiki.archlinux.org/title/MangoHud
@@ -644,7 +644,7 @@ vulkan_driver
 EOF
 
 # Install Steam
-pacman -S --noconfirm steam
+pacman -S --noconfirm --needed steam
 pacman -Rs --noconfirm lib32-amdvlk
 
 # Steam controllers udev rules
@@ -662,7 +662,7 @@ sudo -u ${NEW_USER} paru -S --noconfirm heroic-games-launcher-bin
 # https://github.com/pyllyukko/user.js/blob/master/user.js
 
 # Install Firefox
-pacman -S --noconfirm firefox
+pacman -S --noconfirm --needed firefox
 
 # Set Firefox as default browser and handler for http/s
 sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
@@ -697,7 +697,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/use
 ################################################
 
 # Install OpenSnitch
-pacman -S --noconfirm opensnitch
+pacman -S --noconfirm --needed opensnitch
 
 # Enable OpenSnitch
 systemctl enable opensnitchd.service
@@ -724,7 +724,7 @@ done
 
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
-pacman -S --noconfirm libappindicator-gtk3
+pacman -S --noconfirm --needed libappindicator-gtk3
 curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v56.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/appindicatorsupportrgcjonas.gmail.com
@@ -732,7 +732,7 @@ rm -f shell-extension.zip
 
 # GSConnect
 # https://extensions.gnome.org/extension/1319/gsconnect/
-pacman -S --noconfirm openssl
+pacman -S --noconfirm --needed openssl
 curl -sSL https://extensions.gnome.org/extension-data/gsconnectandyholmes.github.io.v55.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/gsconnect@andyholmes.github.io
@@ -770,7 +770,7 @@ ln -s /home/${NEW_USER}/.config/electron-flags.conf /home/${NEW_USER}/.config/co
 # https://wiki.archlinux.org/title/docker
 
 # Install Docker and plugins
-pacman -S --noconfirm docker docker-compose docker-buildx
+pacman -S --noconfirm --needed docker docker-compose docker-buildx
 
 # Enable Docker socket
 systemctl enable docker.socket
@@ -783,7 +783,7 @@ systemctl enable docker.socket
 # https://github.com/tsujan/Kvantum/blob/master/Kvantum/doc/Theme-Config
 
 # Qt
-pacman -S --noconfirm kvantum
+pacman -S --noconfirm --needed kvantum
 sudo -u ${NEW_USER} paru -S --noconfirm kvantum-theme-libadwaita-git
 mkdir -p /home/${NEW_USER}/Kvantum
 echo 'theme=KvLibadwaita' >> /home/${NEW_USER}/Kvantum/kvantum.kvconfig
@@ -801,7 +801,7 @@ EOF
 ################################################
 
 # Install HashiCorp tools and vscode extensions
-pacman -S --noconfirm terraform packer
+pacman -S --noconfirm --needed terraform packer
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.terraform
 sudo -u ${NEW_USER} xvfb-run code --install-extension HashiCorp.HCL
 

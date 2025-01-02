@@ -97,7 +97,7 @@ if [ ${RAID0} = "no" ]; then
     partprobe /dev/nvme0n1
 elif [ ${RAID0} = "yes" ]; then
     # Install mdadm
-    pacman -S --noconfirm mdadm
+    pacman -S --noconfirm --needed mdadm
 
     # Read partition tables
     partprobe /dev/nvme0n1

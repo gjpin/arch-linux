@@ -12,7 +12,7 @@ export GAMING
 # https://github.com/containers/bubblewrap/issues/324
 
 # Install Flatpak and applications
-sudo pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
+sudo pacman -S --noconfirm --needed flatpak xdg-desktop-portal-gtk
 systemctl --user enable --now xdg-desktop-portal.service
 
 # Add Flathub repositories

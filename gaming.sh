@@ -6,10 +6,10 @@
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install Gamescope
-    pacman -S --noconfirm gamescope
+    pacman -S --noconfirm --needed gamescope
 
     # Install MangoHud
-    pacman -S --noconfirm mangohud lib32-mangohud
+    pacman -S --noconfirm --needed mangohud lib32-mangohud
 
     # Configure MangoHud
     mkdir -p /home/${NEW_USER}/.config/MangoHud
@@ -22,11 +22,11 @@ fi
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install Steam
-    pacman -S --noconfirm steam
+    pacman -S --noconfirm --needed steam
 
     # Make sure correct driver is installed
     if pacman -Qs lib32-amdvlk > /dev/null; then
-        pacman -S --noconfirm lib32-vulkan-radeon
+        pacman -S --noconfirm --needed lib32-vulkan-radeon
         pacman -Rs --noconfirm lib32-amdvlk
     fi
 fi
@@ -84,7 +84,7 @@ firewall-offline-cmd --zone=home --add-port=48000/udp
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
 # Install OpenXR and OpenVR
-pacman -S --noconfirm openxr openvr
+pacman -S --noconfirm --needed openxr openvr
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install ALVR

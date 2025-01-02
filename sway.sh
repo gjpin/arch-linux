@@ -6,7 +6,7 @@
 
 # Install Sway
 # https://wiki.archlinux.org/title/sway
-pacman -S --noconfirm \
+pacman -S --noconfirm --needed \
     sway \
     swaylock \
     swayidle \
@@ -34,21 +34,21 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sway/variab
 # https://wiki.archlinux.org/title/thunar
 
 # Install thunar
-pacman -S --noconfirm thunar
+pacman -S --noconfirm --needed thunar
 
 # Install Thunar Archive Plugin and achiver
-pacman -S --noconfirm \
+pacman -S --noconfirm --needed \
   thunar-archive-plugin \
   xarchiver
 
 # Install Thunar Volume Manager and GVFS
-pacman -S --noconfirm \
+pacman -S --noconfirm --needed \
   thunar-volman \
   gvfs \
   gvfs-mtp
 
 # Install Tumbler (thumbnails)
-pacman -S --noconfirm tumbler ffmpegthumbnailer
+pacman -S --noconfirm --needed tumbler ffmpegthumbnailer
 
 # Disable GVFS network mounts
 # https://wiki.archlinux.org/title/thunar#Solving_problem_with_slow_cold_start
@@ -59,7 +59,7 @@ sed -i "s|^AutoMount=true|AutoMount=false|g" /usr/share/gvfs/mounts/network.moun
 ################################################
 
 # Install ristretto (picture viewer)
-pacman -S --noconfirm ristretto
+pacman -S --noconfirm --needed ristretto
 
 ################################################
 ##### tuigreet (login manager)
@@ -69,7 +69,7 @@ pacman -S --noconfirm ristretto
 # https://github.com/apognu/tuigreet
 
 # Install tuigreet
-pacman -S --noconfirm greetd-tuigreet
+pacman -S --noconfirm --needed greetd-tuigreet
 
 # Enable greetd service
 systemctl enable greetd.service
@@ -89,7 +89,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/greetd-tuig
 # https://wiki.archlinux.org/title/Foot
 
 # Install foot
-pacman -S --noconfirm foot
+pacman -S --noconfirm --needed foot
 
 # Import foot configs
 mkdir -p /home/${NEW_USER}/.config/foot
@@ -119,7 +119,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/yambar/conf
 # https://codeberg.org/dnkl/fuzzel/src/branch/master/doc/fuzzel.ini.5.scd
 
 # Install fuzzel
-pacman -S --noconfirm fuzzel
+pacman -S --noconfirm --needed fuzzel
 
 # Import fuzzel configs
 mkdir -p /home/${NEW_USER}/.config/fuzzel
