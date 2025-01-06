@@ -5,7 +5,7 @@
 ################################################
 
 # Plasma packages
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     bluedevil \
     breeze \
     breeze-gtk \
@@ -62,7 +62,7 @@ pacman -S --noconfirm --needed \
     xdg-desktop-portal-kde
 
 # Non-Plasma packages (add-ons, extensions, ...)
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     baloo-widgets \
     dolphin-plugins \
     ffmpegthumbs \
@@ -80,7 +80,7 @@ pacman -S --noconfirm --needed \
     xwaylandvideobridge
 
 # 3rd-party packages
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     icoutils \
     iio-sensor-proxy \
     switcheroo-control \
@@ -88,7 +88,7 @@ pacman -S --noconfirm --needed \
     xsettingsd
 
 # KDE applications
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     ark \
     dolphin \
     filelight \
@@ -106,13 +106,13 @@ pacman -S --noconfirm --needed \
     spectacle
 
 # Extra Plasma packages
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     sshfs \
     quota-tools \
     kommit
 
 # Install VLC
-pacman -S --noconfirm --needed vlc
+pacman -S --noconfirm vlc
 
 # Use KDE file picker in GTK applications
 tee -a /etc/environment << EOF
@@ -131,7 +131,7 @@ sudo -u ${NEW_USER} balooctl6 purge
 ################################################
 
 # Install SDDM
-pacman -S --noconfirm --needed sddm sddm-kcm
+pacman -S --noconfirm sddm sddm-kcm
 
 # Enable SDDM service
 systemctl enable sddm.service

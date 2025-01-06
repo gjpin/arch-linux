@@ -16,7 +16,7 @@
 # https://archlinux.org/groups/x86_64/gnome/
 # https://wiki.archlinux.org/title/GNOME/Keyring
 
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     baobab \
     evince \
     file-roller \
@@ -49,20 +49,20 @@ pacman -S --noconfirm --needed \
     xdg-user-dirs-gtk
 
 # Additional Gnome/GTK packages
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     xdg-desktop-portal-gtk \
     webp-pixbuf-loader \
     seahorse
 
 # Install and enable GDM
-pacman -S --noconfirm --needed gdm
+pacman -S --noconfirm gdm
 systemctl enable gdm.service
 
 # Enable SSH wrapper
 sudo -u ${NEW_USER} systemctl --user enable gcr-ssh-agent.socket
 
 # Install and configure MPV / Celluloid
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     mpv \
     celluloid
 
@@ -126,7 +126,7 @@ rm -f shell-extension.zip
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 # https://src.fedoraproject.org/rpms/gnome-shell-extension-appindicator/blob/rawhide/f/gnome-shell-extension-appindicator.spec
-pacman -S --noconfirm --needed libappindicator-gtk3
+pacman -S --noconfirm libappindicator-gtk3
 
 curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v59.shell-extension.zip -O
 gnome-extensions install *.shell-extension.zip
@@ -140,7 +140,7 @@ rm -f *.shell-extension.zip
 # https://github.com/lassekongo83/adw-gtk3
 
 # Install adw-gtk3
-pacman -S --noconfirm --needed adw-gtk-theme
+pacman -S --noconfirm adw-gtk-theme
 
 ################################################
 ##### Utilities

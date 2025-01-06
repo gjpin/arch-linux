@@ -19,7 +19,7 @@ jobs:
       run: |
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
-        pacman -S --noconfirm --needed grep sed coreutils git
+        pacman -S --noconfirm grep sed coreutils git
 
     - name: Extract GPU packages from install.sh
       run: |
@@ -60,7 +60,7 @@ jobs:
           local line="$1"
           # Remove the command and any arguments like --ask N
           cleaned_line=$(echo "$line" | \
-            sed 's/pacman -S --noconfirm --needed//g' | \
+            sed 's/pacman -S --noconfirm//g' | \
             sed 's/paru -S --noconfirm//g' | \
             sed 's/--ask [0-9]*//g' | \
             sed 's/--needed//g' | \
@@ -80,7 +80,7 @@ jobs:
             # Read file line by line
             while IFS= read -r line || [[ -n "$line" ]]; do
               # Check if line contains pacman or paru install command
-              if [[ "$line" == *"pacman -S --noconfirm --needed"* ]] || [[ "$line" == *"paru -S --noconfirm"* ]]; then
+              if [[ "$line" == *"pacman -S --noconfirm"* ]] || [[ "$line" == *"paru -S --noconfirm"* ]]; then
                 # Process the current line
                 process_packages "$line"
                 

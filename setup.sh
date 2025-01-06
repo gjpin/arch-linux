@@ -188,7 +188,7 @@ EOF
 # https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#10-configure-systemd-ukify
 
 # Install systemd-ukify and dependencies
-pacman -S --noconfirm --needed systemd-ukify sbsigntools efitools
+pacman -S --noconfirm systemd-ukify sbsigntools efitools
 
 # Create UKI configuration
 tee /etc/kernel/uki.conf << EOF
@@ -277,7 +277,7 @@ EOF
 # https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Using_your_own_keys
 
 # Install sbctl
-pacman -S --noconfirm --needed sbctl
+pacman -S --noconfirm sbctl
 
 # Create secure boot signing keys
 sbctl create-keys
@@ -296,7 +296,7 @@ sbctl sign --save /boot/EFI/systemd/systemd-bootx64.efi
 ################################################
 
 # Install common applications
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     coreutils \
     htop \
     git \
@@ -332,7 +332,7 @@ pacman -S --noconfirm --needed \
     zenity
 
 # Add AppImage support
-pacman -S --noconfirm --needed fuse3
+pacman -S --noconfirm fuse3
 
 # Updater helper
 tee /usr/local/bin/update-all << EOF
@@ -376,7 +376,7 @@ chmod +x /usr/local/bin/update-all
 # https://github.com/systemd/zram-generator
 
 # Install zram generator
-pacman -S --noconfirm --needed zram-generator
+pacman -S --noconfirm zram-generator
 
 # Configure zram generator
 tee /etc/systemd/zram-generator.conf << EOF
@@ -498,7 +498,7 @@ systemctl enable disable-broadcast-messages.service
 # https://wiki.archlinux.org/title/XDG_Base_Directory
 
 # Install ZSH and dependencies
-pacman -S --noconfirm --needed zsh
+pacman -S --noconfirm zsh
 
 # Set root password and shell
 echo "root:${NEW_USER_PASSWORD}" | chpasswd
@@ -510,7 +510,7 @@ echo "${NEW_USER}:${NEW_USER_PASSWORD}" | chpasswd
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 # Create XDG user directories
-pacman -S --noconfirm --needed xdg-user-dirs
+pacman -S --noconfirm xdg-user-dirs
 sudo -u ${NEW_USER} xdg-user-dirs-update
 
 # Create common directories and configure them
@@ -555,7 +555,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.z
 # https://wiki.archlinux.org/title/nftables
 
 # Install and configure firewalld
-pacman -S --noconfirm --needed firewalld
+pacman -S --noconfirm firewalld
 systemctl enable firewalld.service
 
 # Set default zone to home
@@ -566,14 +566,14 @@ sed -i '/^Exec/d' /etc/xdg/autostart/firewall-applet.desktop
 chattr +i /etc/xdg/autostart/firewall-applet.desktop
 
 # Install and enable NetworkManager
-pacman -S --noconfirm --needed networkmanager
+pacman -S --noconfirm networkmanager
 systemctl enable NetworkManager.service
 
 # Install bind tools
-pacman -S --noconfirm --needed bind
+pacman -S --noconfirm bind
 
 # Install nftables
-pacman -S --noconfirm --needed iptables-nft --ask 4
+pacman -S --noconfirm iptables-nft --ask 4
 
 ################################################
 ##### Paru
@@ -601,7 +601,7 @@ rm -rf /tmp/paru-bin
 # https://apparmor.pujol.io/
 
 # Install AppArmor
-pacman -S --noconfirm --needed apparmor
+pacman -S --noconfirm apparmor
 
 # Enable AppArmor service
 systemctl enable apparmor.service
@@ -611,7 +611,7 @@ sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
 sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 
 # Install and enable Audit Framework
-pacman -S --noconfirm --needed audit
+pacman -S --noconfirm audit
 systemctl enable auditd.service
 
 # Install AppArmor.d profiles
@@ -633,7 +633,7 @@ EOF
 # https://wiki.archlinux.org/title/FFmpeg#Installation
 
 # Install ffmpeg
-pacman -S --noconfirm --needed ffmpeg
+pacman -S --noconfirm ffmpeg
 
 ################################################
 ##### GPU
@@ -646,16 +646,16 @@ pacman -S --noconfirm --needed ffmpeg
 # https://wiki.archlinux.org/title/Vulkan
 
 # Install GPU drivers related packages
-pacman -S --noconfirm --needed mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
+pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
 
 # Install 32-bit packages
 if [ ${STEAM_NATIVE} = "yes" ]; then
-    pacman -S --noconfirm --needed lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
+    pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
 
     if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-        pacman -S --noconfirm --needed lib32-vulkan-intel
+        pacman -S --noconfirm lib32-vulkan-intel
     elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-        pacman -S --noconfirm --needed lib32-vulkan-radeon lib32-libva
+        pacman -S --noconfirm lib32-vulkan-radeon lib32-libva
     fi
 fi
 
@@ -685,13 +685,13 @@ EOF
 fi
 
 # Install VA-API tools
-pacman -S --noconfirm --needed libva-utils
+pacman -S --noconfirm libva-utils
 
 # Install VDPAU tools
-pacman -S --noconfirm --needed vdpauinfo
+pacman -S --noconfirm vdpauinfo
 
 # Install Vulkan tools
-pacman -S --noconfirm --needed vulkan-tools
+pacman -S --noconfirm vulkan-tools
 
 ################################################
 ##### systemd
@@ -722,7 +722,7 @@ EOF
 # https://wiki.archlinux.org/title/GStreamer
 
 # Install GStreamer
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     gstreamer \
     gst-libav \
     gst-plugins-base \
@@ -740,7 +740,7 @@ pacman -S --noconfirm --needed \
 # https://wiki.archlinux.org/title/PipeWire
 
 # Install PipeWire and WirePlumber
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     pipewire \
     pipewire-alsa \
     pipewire-jack \
@@ -760,7 +760,7 @@ sudo -u ${NEW_USER} systemctl --user enable pipewire-pulse.service
 # https://wiki.archlinux.org/title/syncthing
 
 # Install Syncthing
-pacman -S --noconfirm --needed syncthing
+pacman -S --noconfirm syncthing
 
 # Enable Syncthing's user service
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
@@ -776,10 +776,10 @@ sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 # https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 
 # Install Podman and dependencies
-pacman -S --noconfirm --needed podman passt netavark aardvark-dns
+pacman -S --noconfirm podman passt netavark aardvark-dns
 
 # Install Buildah
-pacman -S --noconfirm --needed buildah
+pacman -S --noconfirm buildah
 
 # Enable unprivileged ping
 echo 'net.ipv4.ping_group_range=0 165535' > /etc/sysctl.d/99-unprivileged-ping.conf
@@ -812,7 +812,7 @@ systemctl --user enable podman.socket
 # https://wiki.archlinux.org/title/Virt-Manager
 
 # Install QEMU and dependencies
-pacman -S --noconfirm --needed libvirt qemu-desktop dnsmasq virt-manager
+pacman -S --noconfirm libvirt qemu-desktop dnsmasq virt-manager
 
 # Add user to libvirt group
 usermod -a -G libvirt ${NEW_USER}
@@ -836,7 +836,7 @@ systemctl enable libvirtd.service
 # https://wiki.archlinux.org/title/Minikube
 
 # Install and configure minikube
-pacman -S --noconfirm --needed minikube
+pacman -S --noconfirm minikube
 mkdir -p /home/${NEW_USER}/.minikube/config
 tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 {
@@ -846,7 +846,7 @@ tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 EOF
 
 # Install k8s applications
-pacman -S --noconfirm --needed kubectl krew helm k9s kubectx cilium-cli talosctl
+pacman -S --noconfirm kubectl krew helm k9s kubectx cilium-cli talosctl
 
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
@@ -862,7 +862,7 @@ source <(kubectl completion zsh)
 EOF
 
 # Install OpenTofu
-pacman -S --noconfirm --needed opentofu
+pacman -S --noconfirm opentofu
 
 ################################################
 ##### Development (languages, LSP, neovim)
@@ -875,7 +875,7 @@ sudo -u ${NEW_USER} git config --global init.defaultBranch main
 mkdir -p /home/${NEW_USER}/.devtools
 
 # Install NodeJS and npm
-pacman -S --noconfirm --needed nodejs npm
+pacman -S --noconfirm nodejs npm
 
 # Change npm's default directory
 # https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally
@@ -887,7 +887,7 @@ export PATH=$HOME/.devtools/npm-global/bin:$PATH
 EOF
 
 # Install Python uv
-pacman -S --noconfirm --needed uv
+pacman -S --noconfirm uv
 
 tee /home/${NEW_USER}/.zshrc.d/python << 'EOF'
 # uv shell autocompletion
@@ -896,7 +896,7 @@ eval "$(uvx --generate-shell-completion zsh)"
 EOF
 
 # Install Go
-pacman -S --noconfirm --needed go go-tools gopls
+pacman -S --noconfirm go go-tools gopls
 mkdir -p /home/${NEW_USER}/.devtools/go
 tee /home/${NEW_USER}/.zshrc.d/go << 'EOF'
 export GOPATH="$HOME/.devtools/go"
@@ -904,7 +904,7 @@ export PATH="$GOPATH/bin:$PATH"
 EOF
 
 # Install language servers
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     bash-language-server \
     eslint-language-server \
     python-lsp-server \
@@ -916,23 +916,23 @@ pacman -S --noconfirm --needed \
     yaml-language-server
 
 # Install C++ development related packages
-pacman -S --noconfirm --needed llvm clang lld mold scons
+pacman -S --noconfirm llvm clang lld mold scons
 
 # Install rust
-pacman -S --noconfirm --needed rust
+pacman -S --noconfirm rust
 
 # Install JDK
-pacman -S --noconfirm --needed jdk-openjdk
+pacman -S --noconfirm jdk-openjdk
 
 ################################################
 ##### Android
 ################################################
 
 # Install Android tools
-pacman -S --noconfirm --needed android-tools
+pacman -S --noconfirm android-tools
 
 # Install Android udev rules
-pacman -S --noconfirm --needed android-udev
+pacman -S --noconfirm android-udev
 
 # Create adbusers group
 groupadd adbusers
@@ -945,7 +945,7 @@ usermod -a -G adbusers ${NEW_USER}
 ################################################
 
 # Install Neovim and set as default editor
-pacman -S --noconfirm --needed neovim
+pacman -S --noconfirm neovim
 tee /home/${NEW_USER}/.zshrc.d/neovim << 'EOF'
 # Set neovim alias
 alias vi=nvim
@@ -1005,7 +1005,7 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 else
     if lspci | grep "VGA" | grep "AMD" > /dev/null; then
         # Install corectrl
-        pacman -S --noconfirm --needed corectrl
+        pacman -S --noconfirm corectrl
 
         # Launch CoreCtrl on session startup
         cp /usr/share/applications/org.corectrl.CoreCtrl.desktop /home/${NEW_USER}/.config/autostart/org.corectrl.CoreCtrl.desktop
@@ -1023,12 +1023,12 @@ fi
 
 # Install and enable thermald if CPU is Intel
 if [[ $(cat /proc/cpuinfo | grep vendor | uniq) =~ "GenuineIntel" ]]; then
-    pacman -S --noconfirm --needed thermald
+    pacman -S --noconfirm thermald
     systemctl enable thermald.service
 fi
 
 # Install and enable power profiles daemon
-pacman -S --noconfirm --needed power-profiles-daemon
+pacman -S --noconfirm power-profiles-daemon
 systemctl enable power-profiles-daemon.service
 
 ################################################
@@ -1039,7 +1039,7 @@ systemctl enable power-profiles-daemon.service
 sudo -u ${NEW_USER} paru -S --noconfirm visual-studio-code-bin
 
 # (Temporary - reverted at cleanup) Install Virtual framebuffer X server. Required to install VSCode extensions without a display server
-pacman -S --noconfirm --needed xorg-server-xvfb
+pacman -S --noconfirm xorg-server-xvfb
 
 # Install VSCode extensions
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
@@ -1058,7 +1058,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/sett
 ################################################
 
 # Install fonts
-pacman -S --noconfirm --needed \
+pacman -S --noconfirm \
     noto-fonts \
     noto-fonts-emoji \
     noto-fonts-cjk \
@@ -1093,7 +1093,7 @@ EOF
 ################################################
 
 # Install wireguard-tools
-pacman -S --noconfirm --needed wireguard-tools
+pacman -S --noconfirm wireguard-tools
 
 # Create WireGuard folder
 mkdir -p /etc/wireguard
