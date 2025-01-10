@@ -47,6 +47,7 @@ EOF
 
 # References:
 # https://wiki.archlinux.org/title/Pacman/Package_signing#Initializing_the_keyring
+# https://wiki.archlinux.org/title/Makepkg
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Enable multilib repository
@@ -72,6 +73,12 @@ sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 
 # Upgrade system
 pacman -Syy
+
+# Disable debug packages (makepkg)
+mkdir -p /etc/makepkg.conf.d
+tee /etc/makepkg.conf.d/debugpackages.conf << EOF
+OPTIONS=(!debug)
+EOF
 
 ################################################
 ##### initramfs configuration
