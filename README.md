@@ -51,13 +51,27 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 9. Enroll LUKS key in TPM2: `sudo systemd-cryptenroll --tpm2-pcrs=0+7 --tpm2-device=auto /dev/md/ArchArray (if RAID0) OR /dev/nvme0n1p2`
 10. Re-configure p10k: `p10k configure`
 11. Install Flatpak and applications:
-```
+```bash
 curl -LO https://raw.githubusercontent.com/gjpin/arch-linux/main/flatpak.sh
 chmod +x flatpak.sh
 ./flatpak.sh
 rm -f flatpak.sh
 ```
-12. AppArmor.d profiles are installed in complain mode, by default. See [Enforce Mode](https://apparmor.pujol.io/enforce/)
+12. Install AppArmor.d profiles
+```bash
+# AppArmor.d profiles are installed in complain mode, by default. See https://apparmor.pujol.io/enforce/
+
+# Install AppArmor.d profiles
+paru -S --noconfirm apparmor.d-git
+
+# Configure AppArmor.d
+sudo mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
+
+sudo tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
+@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
+@{XDG_GAMES_DIR}+="Games"
+EOF
+```
 
 ## Guides
 See [HERE](https://github.com/gjpin/arch-linux/blob/main/GUIDES.md)

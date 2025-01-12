@@ -621,17 +621,6 @@ sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parse
 pacman -S --noconfirm audit
 systemctl enable auditd.service
 
-# Install AppArmor.d profiles
-sudo -u ${NEW_USER} paru -S apparmor.d-git
-
-# Configure AppArmor.d
-mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
-
-tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
-@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
-@{XDG_GAMES_DIR}+="Games"
-EOF
-
 ################################################
 ##### ffmpeg
 ################################################
