@@ -111,14 +111,14 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
 # Grand Theft Focus
 # https://extensions.gnome.org/extension/5410/grand-theft-focus
-curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v6.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v7.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v8.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v9.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
@@ -172,3 +172,20 @@ fi
 
 # Update Gnome system databases
 dconf update
+
+################################################
+##### Autologin
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/GDM#Automatic_login
+
+# Enable autologin
+if [ ${AUTOLOGIN} = "yes" ]; then
+tee /etc/gdm/custom.conf << EOF
+# Enable automatic login for user
+[daemon]
+AutomaticLogin=${NEW_USER}
+AutomaticLoginEnable=True
+EOF
+fi

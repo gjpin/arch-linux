@@ -47,6 +47,7 @@ EOF
 
 # References:
 # https://wiki.archlinux.org/title/Pacman/Package_signing#Initializing_the_keyring
+# https://wiki.archlinux.org/title/Makepkg
 
 if [ ${STEAM_NATIVE} = "yes" ]; then
     # Enable multilib repository
@@ -73,6 +74,232 @@ sed -i "/ParallelDownloads = 5/a ILoveCandy" /etc/pacman.conf
 # Upgrade system
 pacman -Syy
 
+# Disable debug packages (makepkg)
+mkdir -p /etc/makepkg.conf.d
+tee /etc/makepkg.conf.d/debugpackages.conf << EOF
+OPTIONS=(!debug)
+EOF
+
+################################################
+##### initramfs configuration
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio
+# https://github.com/archlinux/mkinitcpio/blob/master/mkinitcpio.conf
+
+# Configure mkinitcpio
+tee /etc/mkinitcpio.conf << EOF
+MODULES=(ext4 vfat $(if [ ${RAID0} = "yes" ]; then echo "raid0 md_mod"; fi) dm_mod dm_crypt ${GPU_MKINITCPIO_MODULES})
+BINARIES=()
+FILES=()
+HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block $(if [ ${RAID0} = "yes" ]; then echo "mdadm_udev"; fi) sd-encrypt filesystems fsck)
+COMPRESSION="zstd"
+COMPRESSION_OPTIONS=(-2)
+EOF
+
+# Remove extra spaces from MODULES and HOOKS lines
+sed -i '/^MODULES=\|^HOOKS=/ s/  */ /g' /etc/mkinitcpio.conf
+
+################################################
+##### Kernel parameters
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Unified_kernel_image#Kernel_command_line
+# https://wiki.archlinux.org/title/Trusted_Platform_Module#systemd-cryptenroll
+# https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#8-set-kernel-command-line
+# https://wiki.archlinux.org/title/RAID#RAID0_layout
+# https://wiki.archlinux.org/title/CPU_frequency_scaling#amd_pstate
+# https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
+
+# Create cmdline.d directory for kernel parameters
+mkdir /etc/cmdline.d
+
+# LUKS options
+tee /etc/cmdline.d/luks.conf << EOF
+rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system
+EOF
+
+# root options
+tee /etc/cmdline.d/root.conf << EOF
+root=/dev/mapper/system rootfstype=ext4 rw
+EOF
+
+# RAID options
+if [ ${RAID0} = "yes" ]; then
+tee /etc/cmdline.d/raid.conf << EOF
+raid0.default_layout=2
+EOF
+fi
+
+# TPM2 LUKS unlock options
+tee /etc/cmdline.d/tpm.conf << EOF
+rd.luks.options=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=tpm2-device=auto
+EOF
+
+# AMD scaling driver options
+if [ -n "$AMD_SCALING_DRIVER" ]; then
+tee /etc/cmdline.d/amdscalingdriver.conf << EOF
+${AMD_SCALING_DRIVER}
+EOF
+fi
+
+# Disable emergency shell
+tee /etc/cmdline.d/emergencyshell.conf << EOF
+rd.shell=0 rd.emergency=reboot
+EOF
+
+# Permanently disable zswap
+tee /etc/cmdline.d/zswap.conf << EOF
+zswap.enabled=0
+EOF
+
+# Make boot quite and disable watchdog
+tee /etc/cmdline.d/quiet.conf << EOF
+nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash
+EOF
+
+# Security options
+tee /etc/cmdline.d/security.conf << EOF
+lsm=landlock,lockdown,yama,integrity,apparmor,bpf
+EOF
+
+# Full AMD GPU controls (desktop only)
+if [[ $(cat /sys/class/dmi/id/chassis_type) -ne 10 ]] && lspci | grep "VGA" | grep "AMD" > /dev/null; then
+tee /etc/cmdline.d/amdgpucontrol.conf << EOF
+amdgpu.ppfeaturemask=0xffffffff
+EOF
+fi
+
+# Intel GPU options
+if lspci | grep "VGA" | grep "Intel" > /dev/null; then
+tee /etc/cmdline.d/intelgpu.conf << EOF
+enable_guc=2 enable_fbc=1
+EOF
+fi
+
+# Enable quirks to prevent wake-up after shutdown with WoL enabled
+tee /etc/cmdline.d/wol.conf << EOF
+xhci_hcd.quirks=270336
+EOF
+
+################################################
+##### Configure systemd-ukify with measured boot support
+################################################
+
+# References:
+# /usr/lib/kernel/uki.conf
+# https://www.freedesktop.org/software/systemd/man/latest/ukify.html
+# https://man7.org/linux/man-pages/man8/kernel-install.8.html
+# https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#10-configure-systemd-ukify
+
+# Install systemd-ukify and dependencies
+pacman -S --noconfirm systemd-ukify sbsigntools efitools
+
+# Create UKI configuration
+tee /etc/kernel/uki.conf << EOF
+[UKI]
+OSRelease=@/etc/os-release
+PCRBanks=sha256
+
+[PCRSignature:initrd]
+Phases=enter-initrd
+PCRPrivateKey=/etc/kernel/pcr-initrd.key.pem
+PCRPublicKey=/etc/kernel/pcr-initrd.pub.pem
+EOF
+
+# Generate the key for the PCR policy
+ukify genkey --config=/etc/kernel/uki.conf
+
+################################################
+##### Use mkinitcpio to generate the UKI
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Unified_kernel_image#.preset_file
+# https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#11-use-mkinitcpio-to-generate-the-uki
+
+# Create preset file for standard Kernel
+tee /etc/mkinitcpio.d/linux.preset << EOF
+ALL_kver="/boot/vmlinuz-linux"
+PRESETS=('default')
+default_uki="/boot/EFI/Linux/arch-linux.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+EOF
+
+# Create preset file for LTS Kernel
+tee /etc/mkinitcpio.d/linux-lts.preset << EOF
+ALL_kver="/boot/vmlinuz-linux-lts"
+PRESETS=('default')
+default_uki="/boot/EFI/Linux/arch-linux-lts.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+EOF
+
+# Create directory for UKIs
+mkdir -p /boot/EFI/Linux
+
+# Regenerate initramfs
+mkinitcpio -P
+
+################################################
+##### systemd-boot
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/systemd-boot
+# https://wiki.archlinux.org/title/Systemd-boot#Unified_kernel_images
+
+# Install systemd-boot to the ESP
+bootctl install
+
+# systemd-boot upgrade hook
+mkdir -p /etc/pacman.d/hooks
+tee /etc/pacman.d/hooks/95-systemd-boot.hook << 'EOF'
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
+
+[Action]
+Description = Gracefully upgrading systemd-boot...
+When = PostTransaction
+Exec = /usr/bin/systemctl restart systemd-boot-update.service
+EOF
+
+# systemd-boot configuration
+tee /boot/loader/loader.conf << 'EOF'
+default  arch-linux.efi
+timeout  0
+console-mode max
+editor   no
+EOF
+
+################################################
+##### Secure boot
+################################################
+
+# References:
+# https://github.com/Foxboron/sbctl
+# https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Using_your_own_keys
+
+# Install sbctl
+pacman -S --noconfirm sbctl
+
+# Create secure boot signing keys
+sbctl create-keys
+
+# Enroll keys to EFI
+sbctl enroll-keys --tpm-eventlog
+
+# Sign files with secure boot keys
+sbctl sign --save /boot/EFI/BOOT/BOOTX64.EFI
+sbctl sign --save /boot/EFI/Linux/arch-linux.efi
+sbctl sign --save /boot/EFI/Linux/arch-linux-lts.efi
+sbctl sign --save /boot/EFI/systemd/systemd-bootx64.efi
+sbctl sign --save /boot/vmlinuz-linux
+sbctl sign --save /boot/vmlinuz-linux-lts
+
 ################################################
 ##### Common applications
 ################################################
@@ -82,7 +309,7 @@ pacman -S --noconfirm \
     coreutils \
     htop \
     git \
-    p7zip \
+    7zip \
     unzip \
     unrar \
     lm_sensors \
@@ -110,7 +337,8 @@ pacman -S --noconfirm \
     gawk \
     fzf \
     findutils \
-    net-tools
+    net-tools \
+    zenity
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
@@ -145,7 +373,7 @@ EOF
 chmod +x /usr/local/bin/update-all
 
 ################################################
-##### zram (swap)
+##### zram / swap
 ################################################
 
 # References:
@@ -304,7 +532,8 @@ mkdir -p \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/systemd/user \
   /home/${NEW_USER}/.icons \
-  /home/${NEW_USER}/Projects
+  /home/${NEW_USER}/Projects \
+  /home/${NEW_USER}/Applications
 
 # Create SSH directory and config file
 mkdir -p /home/${NEW_USER}/.ssh
@@ -356,109 +585,6 @@ pacman -S --noconfirm bind
 pacman -S --noconfirm iptables-nft --ask 4
 
 ################################################
-##### initramfs
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio
-
-# Configure mkinitcpio
-sed -i "s|MODULES=()|MODULES=(ext4${MKINITCPIO_MODULES})|" /etc/mkinitcpio.conf
-sed -i "s|^HOOKS.*|HOOKS=(systemd autodetect keyboard sd-vconsole modconf block $(if [ ${RAID0} = "yes" ]; then echo "mdadm_udev"; fi) sd-encrypt filesystems fsck)|" /etc/mkinitcpio.conf
-sed -i "s|#COMPRESSION=\"zstd\"|COMPRESSION=\"zstd\"|" /etc/mkinitcpio.conf
-sed -i "s|#COMPRESSION_OPTIONS=()|COMPRESSION_OPTIONS=(-2)|" /etc/mkinitcpio.conf
-
-# Re-create initramfs image
-mkinitcpio -P
-
-################################################
-##### systemd-boot
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/systemd-boot
-# https://wiki.archlinux.org/title/RAID#RAID0_layout
-# https://wiki.archlinux.org/title/CPU_frequency_scaling#amd_pstate
-
-# Install systemd-boot to the ESP
-bootctl install
-
-# systemd-boot upgrade hook
-mkdir -p /etc/pacman.d/hooks
-tee /etc/pacman.d/hooks/95-systemd-boot.hook << 'EOF'
-[Trigger]
-Type = Package
-Operation = Upgrade
-Target = systemd
-
-[Action]
-Description = Gracefully upgrading systemd-boot...
-When = PostTransaction
-Exec = /usr/bin/systemctl restart systemd-boot-update.service
-EOF
-
-# systemd-boot configuration
-tee /boot/loader/loader.conf << 'EOF'
-default  arch.conf
-timeout  0
-console-mode max
-editor   no
-EOF
-
-tee /boot/loader/entries/arch.conf << EOF
-title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /${CPU_MICROCODE}.img
-initrd  /initramfs-linux.img
-options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system ${AMD_SCALING_DRIVER} zswap.enabled=0 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
-EOF
-
-tee /boot/loader/entries/arch-lts.conf << EOF
-title   Arch Linux LTS
-linux   /vmlinuz-linux-lts
-initrd  /${CPU_MICROCODE}.img
-initrd  /initramfs-linux-lts.img
-options $(if [ ${RAID0} = "yes" ]; then echo "raid0.default_layout=2"; fi) rd.luks.name=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=system root=/dev/mapper/system ${AMD_SCALING_DRIVER} zswap.enabled=0 nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash rw
-EOF
-
-################################################
-##### Unlock LUKS with TPM2
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Trusted_Platform_Module#systemd-cryptenroll
-
-# Install TPM2-tools
-pacman -S --noconfirm tpm2-tools tpm2-tss
-
-# Configure initramfs to unlock the encrypted volume
-sed -i "s|=system|& rd.luks.options=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=tpm2-device=auto|" /boot/loader/entries/arch.conf
-sed -i "s|=system|& rd.luks.options=$(if [ ${RAID0} = "no" ]; then blkid -s UUID -o value /dev/nvme0n1p2; elif [ ${RAID0} = "yes" ]; then blkid -s UUID -o value /dev/md/ArchArray;fi)=tpm2-device=auto|" /boot/loader/entries/arch-lts.conf
-
-################################################
-##### Secure boot
-################################################
-
-# References:
-# https://github.com/Foxboron/sbctl
-# https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Using_your_own_keys
-
-# Install sbctl
-pacman -S --noconfirm sbctl
-
-# Create secure boot signing keys
-sbctl create-keys
-
-# Enroll keys to EFI
-sbctl enroll-keys --tpm-eventlog
-
-# Sign files with secure boot keys
-sbctl sign -s /boot/EFI/BOOT/BOOTX64.EFI
-sbctl sign -s /boot/EFI/systemd/systemd-bootx64.efi
-sbctl sign -s /boot/vmlinuz-linux
-sbctl sign -s /boot/vmlinuz-linux-lts
-
-################################################
 ##### Paru
 ################################################
 
@@ -469,12 +595,9 @@ sbctl sign -s /boot/vmlinuz-linux-lts
 echo "${NEW_USER} ALL=NOPASSWD:/usr/bin/pacman" >> /etc/sudoers
 
 # Install paru
-git clone https://aur.archlinux.org/paru-bin.git
-chown -R ${NEW_USER}:${NEW_USER} paru-bin
-cd paru-bin
-sudo -u ${NEW_USER} makepkg -si --noconfirm
-cd ..
-rm -rf paru-bin
+sudo -u ${NEW_USER} git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
+sudo -u ${NEW_USER} makepkg -si --noconfirm --dir /tmp/paru-bin
+rm -rf /tmp/paru-bin
 
 ################################################
 ##### AppArmor
@@ -492,10 +615,6 @@ pacman -S --noconfirm apparmor
 # Enable AppArmor service
 systemctl enable apparmor.service
 
-# Enable AppArmor as default security model
-sed -i "s|/system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch.conf
-sed -i "s|/system|& lsm=landlock,lockdown,yama,integrity,apparmor,bpf|" /boot/loader/entries/arch-lts.conf
-
 # Enable caching AppArmor profiles
 sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
 sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
@@ -503,17 +622,6 @@ sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parse
 # Install and enable Audit Framework
 pacman -S --noconfirm audit
 systemctl enable auditd.service
-
-# Install AppArmor.d profiles
-sudo -u ${NEW_USER} paru -S apparmor.d-git
-
-# Configure AppArmor.d
-mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
-
-tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
-@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
-@{XDG_GAMES_DIR}+="Games"
-EOF
 
 ################################################
 ##### ffmpeg
@@ -689,6 +797,9 @@ tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
 location = "docker.io"
 EOF
 
+# Enable Podman socket
+systemctl --user enable podman.socket
+
 ################################################
 ##### Virtualization
 ################################################
@@ -702,7 +813,7 @@ EOF
 pacman -S --noconfirm libvirt qemu-desktop dnsmasq virt-manager
 
 # Add user to libvirt group
-gpasswd -a ${NEW_USER} libvirt
+usermod -a -G libvirt ${NEW_USER}
 
 # Enable libvirtd service
 systemctl enable libvirtd.service
@@ -733,7 +844,7 @@ tee /home/${NEW_USER}/.minikube/config/config.json << 'EOF'
 EOF
 
 # Install k8s applications
-pacman -S --noconfirm kubectl helm k9s kubectx cilium-cli talosctl
+pacman -S --noconfirm kubectl krew helm k9s kubectx cilium-cli talosctl
 
 # Kubernetes aliases and autocompletion
 tee /home/${NEW_USER}/.zshrc.d/kubernetes << 'EOF'
@@ -787,6 +898,7 @@ pacman -S --noconfirm go go-tools gopls
 mkdir -p /home/${NEW_USER}/.devtools/go
 tee /home/${NEW_USER}/.zshrc.d/go << 'EOF'
 export GOPATH="$HOME/.devtools/go"
+export PATH="$GOPATH/bin:$PATH"
 EOF
 
 # Install language servers
@@ -806,6 +918,25 @@ pacman -S --noconfirm llvm clang lld mold scons
 
 # Install rust
 pacman -S --noconfirm rust
+
+# Install JDK
+pacman -S --noconfirm jdk-openjdk
+
+################################################
+##### Android
+################################################
+
+# Install Android tools
+pacman -S --noconfirm android-tools
+
+# Install Android udev rules
+pacman -S --noconfirm android-udev
+
+# Create adbusers group
+groupadd adbusers
+
+# Add user to the adbusers group
+usermod -a -G adbusers ${NEW_USER}
 
 ################################################
 ##### Neovim
@@ -869,9 +1000,6 @@ if [[ $(cat /sys/class/dmi/id/chassis_type) -eq 10 ]]; then
 
     # Enable wifi (iwlwifi) power saving features
     echo 'options iwlwifi power_save=1' > /etc/modprobe.d/iwlwifi.conf
-
-    # Rebuild initramfs
-    mkinitcpio -P
 else
     if lspci | grep "VGA" | grep "AMD" > /dev/null; then
         # Install corectrl
@@ -883,10 +1011,6 @@ else
         # Don't ask for user password
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/90-corectrl.rules -o /etc/polkit-1/rules.d/90-corectrl.rules
         sed -i "s/your-user-group/${NEW_USER}/" /etc/polkit-1/rules.d/90-corectrl.rules
-
-        # Full AMD GPU controls
-        sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch.conf
-        sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch-lts.conf
 
         # Import corectrl configs and profiles
         mkdir -p /home/${NEW_USER}/.config/corectrl/profiles
@@ -942,7 +1066,7 @@ pacman -S --noconfirm \
     otf-commit-mono-nerd \
     ttf-firacode-nerd \
     ttf-hack-nerd \
- 	ttf-noto-nerd \
+    ttf-noto-nerd \
     ttf-sourcecodepro-nerd \
     ttf-ubuntu-nerd \
     ttf-ubuntu-mono-nerd \
@@ -961,6 +1085,17 @@ tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
 --enable-features=WaylandWindowDecorations
 --ozone-platform-hint=auto
 EOF
+
+################################################
+##### WireGuard
+################################################
+
+# Install wireguard-tools
+pacman -S --noconfirm wireguard-tools
+
+# Create WireGuard folder
+mkdir -p /etc/wireguard
+chmod 700 /etc/wireguard
 
 ################################################
 ##### Desktop Environment

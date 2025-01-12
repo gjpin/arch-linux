@@ -1,6 +1,17 @@
 #!/usr/bin/bash
 
 ################################################
+##### Android
+################################################
+
+# Install all Android tools
+sudo -u ${NEW_USER} paru -S --noconfirm \
+    android-sdk \
+    android-sdk-platform-tools \
+    android-emulator \
+    android-sdk-cmdline-tools-latest
+
+################################################
 ##### Tailscale
 ################################################
 
@@ -18,7 +29,7 @@ systemctl enable --now tailscaled.service
 firewall-offline-cmd --zone=home --add-interface=tailscale0
 
 ################################################
-##### Sunshine (native - prebuilt)
+##### Sunshine (native - to build)
 ################################################
 
 # References:
@@ -27,11 +38,7 @@ firewall-offline-cmd --zone=home --add-interface=tailscale0
 # https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
 
 # Install sunshine
-sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
-
-# Enable sunshine service
-chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
-sudo -u ${NEW_USER} systemctl --user enable sunshine
+sudo -u ${NEW_USER} paru -S --noconfirm sunshine
 
 # Import sunshine configurations
 mkdir -p /home/${NEW_USER}/.config/sunshine
@@ -44,9 +51,6 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.config/sunshine/apps.json
 fi
 
-# Enable KMS display capture
-setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
-
 # Allow Sunshine in firewall
 firewall-offline-cmd --zone=home --add-port=47984/tcp
 firewall-offline-cmd --zone=home --add-port=47989/tcp
@@ -54,6 +58,9 @@ firewall-offline-cmd --zone=home --add-port=48010/tcp
 firewall-offline-cmd --zone=home --add-port=47998/udp
 firewall-offline-cmd --zone=home --add-port=47999/udp
 firewall-offline-cmd --zone=home --add-port=48000/udp
+
+# Launch Sunshine on session startup (systemd service is not working in Gnome Wayland)
+cp /usr/share/applications/sunshine.desktop /home/${NEW_USER}/.config/autostart/sunshine.desktop
 
 ################################################
 ##### Fonts
@@ -87,10 +94,6 @@ if lspci | grep "VGA" | grep "AMD" > /dev/null; then
     # Don't ask for user password
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/90-corectrl.rules -o /etc/polkit-1/rules.d/90-corectrl.rules
     sed -i "s/your-user-group/${NEW_USER}/" /etc/polkit-1/rules.d/90-corectrl.rules
-
-    # Full AMD GPU controls
-    sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch.conf
-    sed -i "s|/system|& amdgpu.ppfeaturemask=0xffffffff|" /boot/loader/entries/arch-lts.conf
 
     # Import corectrl configs and profiles
     mkdir -p /home/${NEW_USER}/.config/corectrl/profiles
@@ -432,7 +435,7 @@ firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source add
 # Allow user to read audit logs and get desktop notification on DENIED actions
 groupadd -r audit
 
-gpasswd -a ${NEW_USER} audit
+usermod -a -G audit ${NEW_USER}
 
 sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
 

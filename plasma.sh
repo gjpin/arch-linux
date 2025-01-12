@@ -57,7 +57,6 @@ pacman -S --noconfirm \
     powerdevil \
     print-manager \
     qqc2-breeze-style \
-    sddm-kcm \
     systemsettings \
     wacomtablet \
     xdg-desktop-portal-kde
@@ -171,6 +170,22 @@ SSH_ASKPASS_REQUIRE=prefer
 EOF
 
 ################################################
+##### Autologin
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/SDDM#Autologin
+
+# Enable autologin
+if [ ${AUTOLOGIN} = "yes" ]; then
+tee /etc/sddm.conf.d/autologin.conf << EOF
+[Autologin]
+User=${NEW_USER}
+Session=plasmawayland
+EOF
+fi
+
+################################################
 ##### Plasma shortcuts
 ################################################
 
@@ -195,7 +210,7 @@ sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell 
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 9" "none,none,Activate Task Manager Entry 9"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group plasmashell --key "activate task manager entry 10" "none,none,Activate Task Manager Entry 10"
 
-# Go to vitual desktop
+# Go to virtual desktop
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 1" "Meta+1,none,Switch to Desktop 1"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 2" "Meta+2,none,Switch to Desktop 2"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 3" "Meta+3,none,Switch to Desktop 3"
@@ -207,7 +222,7 @@ sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 9" "Meta+9,none,Switch to Desktop 9"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Switch to Desktop 10" "Meta+0,none,Switch to Desktop 10"
 
-# Move window to vitual desktop
+# Move window to virtual desktop
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 1" "Meta+\!,none,Window to Desktop 1"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 2" "Meta+@,none,Window to Desktop 2"
 sudo -u ${NEW_USER} kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window to Desktop 3" "Meta+#,none,Window to Desktop 3"

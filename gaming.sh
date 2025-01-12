@@ -35,7 +35,7 @@ fi
 mkdir -p /home/${NEW_USER}/Games/Steam
 
 ################################################
-##### Sunshine (native - to build)
+##### Sunshine (native - prebuilt)
 ################################################
 
 # References:
@@ -44,7 +44,11 @@ mkdir -p /home/${NEW_USER}/Games/Steam
 # https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
 
 # Install sunshine
-sudo -u ${NEW_USER} paru -S --noconfirm sunshine
+sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
+
+# Enable sunshine service
+chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
+sudo -u ${NEW_USER} systemctl --user enable sunshine
 
 # Import sunshine configurations
 mkdir -p /home/${NEW_USER}/.config/sunshine
@@ -57,6 +61,9 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.config/sunshine/apps.json
 fi
 
+# Enable KMS display capture
+setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
+
 # Allow Sunshine in firewall
 firewall-offline-cmd --zone=home --add-port=47984/tcp
 firewall-offline-cmd --zone=home --add-port=47989/tcp
@@ -64,9 +71,6 @@ firewall-offline-cmd --zone=home --add-port=48010/tcp
 firewall-offline-cmd --zone=home --add-port=47998/udp
 firewall-offline-cmd --zone=home --add-port=47999/udp
 firewall-offline-cmd --zone=home --add-port=48000/udp
-
-# Launch Sunshine on session startup (systemd service is not working in Gnome Wayland)
-cp /usr/share/applications/sunshine.desktop /home/${NEW_USER}/.config/autostart/sunshine.desktop
 
 ################################################
 ##### VR
@@ -79,16 +83,16 @@ cp /usr/share/applications/sunshine.desktop /home/${NEW_USER}/.config/autostart/
 # https://github.com/alvr-org/ALVR/wiki/Flatpak
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
-# Install OpenXR
-pacman -S --noconfirm openxr
+if [ ${VR} = "yes" ]; then
+    # Install OpenXR and OpenVR
+    pacman -S --noconfirm openxr openvr
 
-if [ ${STEAM_NATIVE} = "yes" ]; then
     # Install ALVR
     sudo -u ${NEW_USER} paru -S --noconfirm alvr-bin
-fi
 
-# Allow ALVR in firewall
-firewall-offline-cmd --zone=home --add-port=9943/tcp
-firewall-offline-cmd --zone=home --add-port=9943/udp
-firewall-offline-cmd --zone=home --add-port=9944/tcp
-firewall-offline-cmd --zone=home --add-port=9944/udp
+    # Allow ALVR in firewall
+    firewall-offline-cmd --zone=home --add-port=9943/tcp
+    firewall-offline-cmd --zone=home --add-port=9943/udp
+    firewall-offline-cmd --zone=home --add-port=9944/tcp
+    firewall-offline-cmd --zone=home --add-port=9944/udp
+fi

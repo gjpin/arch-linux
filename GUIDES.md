@@ -16,7 +16,6 @@
 - [System Configuration](#system-configuration)
   - [Auto-mount extra drive (drive in use)](#auto-mount-extra-drive-drive-in-use)
   - [Auto-mount extra drive (from scratch)](#auto-mount-extra-drive-from-scratch)
-  - [Wake-on-LAN quirks](#wake-on-lan-quirks)
 - [Customization](#customization)
   - [Download and apply GTK themes with Gradience](#download-and-apply-gtk-themes-with-gradience)
 
@@ -129,8 +128,8 @@ arch-chroot /mnt
 ## How to re-enroll keys in TPM2
 
 ```bash
-sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2 OR /dev/md/ArchArray
-sudo systemd-cryptenroll --tpm2-pcrs=0+1+7 --tpm2-device=auto /dev/nvme0n1p2 OR /dev/md/ArchArray
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/md/ArchArray OR /dev/nvme0n1p2
+sudo systemd-cryptenroll --tpm2-pcrs=0+7 --tpm2-device=auto /dev/md/ArchArray OR /dev/nvme0n1p2
 ```
 
 ## How to show systemd-boot menu
@@ -249,20 +248,7 @@ EOF
 sudo chown -R $USER:$USER /data
 
 # Auto unlock
-sudo systemd-cryptenroll --tpm2-device=auto /dev/nvme1n1p1
-```
-
-## Wake-on-LAN quirks
-
-```bash
-# References:
-# https://wiki.archlinux.org/title/Wake-on-LAN#Fix_by_Kernel_quirks
-
-# If WoL has been enabled and the computer does not shutdown
-
-# Add kernel boot parameters to enable quirks
-sudo sed -i "s|/system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch.conf
-sudo sed -i "s|/system|& xhci_hcd.quirks=270336|" /boot/loader/entries/arch-lts.conf
+sudo systemd-cryptenroll --tpm2-pcrs=0+7 --tpm2-device=auto /dev/nvme1n1p1
 ```
 
 ## Download and apply GTK themes with Gradience
