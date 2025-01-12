@@ -47,6 +47,9 @@ export GAMING
 read -p "Steam native (yes / no): " STEAM_NATIVE
 export STEAM_NATIVE
 
+read -p "VR (yes / no): " VR
+export VR
+
 read -p "Autologin (yes / no): " AUTOLOGIN
 export AUTOLOGIN
 
