@@ -297,6 +297,8 @@ sbctl sign --save /boot/EFI/BOOT/BOOTX64.EFI
 sbctl sign --save /boot/EFI/Linux/arch-linux.efi
 sbctl sign --save /boot/EFI/Linux/arch-linux-lts.efi
 sbctl sign --save /boot/EFI/systemd/systemd-bootx64.efi
+sbctl sign --save /boot/vmlinuz-linux
+sbctl sign --save /boot/vmlinuz-linux-lts
 
 ################################################
 ##### Common applications
