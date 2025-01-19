@@ -29,9 +29,8 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/glo
 
 # Install Flatpak runtimes
 flatpak install -y flathub org.freedesktop.Platform.ffmpeg-full//24.08
-flatpak install -y flathub org.freedesktop.Platform.GStreamer.gstreamer-vaapi//24.08
-flatpak install -y flathub org.freedesktop.Platform.GL.default//24.08-extra
-flatpak install -y flathub org.freedesktop.Platform.GL32.default//24.08-extra
+flatpak install -y flathub org.freedesktop.Platform.GL.default//24.08extra
+flatpak install -y flathub org.freedesktop.Platform.GL32.default//24.08extra
 flatpak install -y flathub org.freedesktop.Sdk//24.08
 
 if lspci | grep VGA | grep "Intel" > /dev/null; then
