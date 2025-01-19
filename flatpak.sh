@@ -11,8 +11,8 @@ export GAMING
 # https://wiki.archlinux.org/title/Flatpak
 # https://github.com/containers/bubblewrap/issues/324
 
-# Install Flatpak and applications
-sudo pacman -S --noconfirm flatpak xdg-desktop-portal-gtk
+# Install Flatpak
+sudo pacman -S --noconfirm flatpak flatpak-builder xdg-desktop-portal-gtk
 systemctl --user enable --now xdg-desktop-portal.service
 
 # Add Flathub repositories
