@@ -816,3 +816,15 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev
 # Install Obsidian
 flatpak install -y flathub md.obsidian.Obsidian
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o /home/${NEW_USER}/.local/share/flatpak/overrides/md.obsidian.Obsidian
+
+flatpak install -y flathub org.blender.Blender
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.blender.Blender -o ${HOME}/.local/share/flatpak/overrides/org.blender.Blender
+
+flatpak install -y flathub org.libreoffice.LibreOffice
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.libreoffice.LibreOffice -o ${HOME}/.local/share/flatpak/overrides/org.libreoffice.LibreOffice
+
+flatpak install -y org.sqlitebrowser.sqlitebrowser
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.sqlitebrowser.sqlitebrowser -o ${HOME}/.local/share/flatpak/overrides/org.sqlitebrowser.sqlitebrowser
+
+flatpak install -y flathub io.beekeeperstudio.Studio
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.beekeeperstudio.Studio -o ${HOME}/.local/share/flatpak/overrides/io.beekeeperstudio.Studio

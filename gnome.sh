@@ -52,7 +52,12 @@ pacman -S --noconfirm \
 pacman -S --noconfirm \
     xdg-desktop-portal-gtk \
     webp-pixbuf-loader \
-    seahorse
+    seahorse \
+    gaphor \
+    rnote \
+    gitg \
+    eyedropper \
+    authenticator
 
 # Install and enable GDM
 pacman -S --noconfirm gdm

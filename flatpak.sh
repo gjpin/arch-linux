@@ -42,33 +42,9 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Flatseal
     flatpak install -y flathub com.github.tchx84.Flatseal
 
-    # Install Gaphor
-    flatpak install -y flathub org.gaphor.Gaphor
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gaphor.Gaphor -o ${HOME}/.local/share/flatpak/overrides/org.gaphor.Gaphor
-
-    # Install Rnote
-    flatpak install -y flathub com.github.flxzt.rnote
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.flxzt.rnote -o ${HOME}/.local/share/flatpak/overrides/com.github.flxzt.rnote
-
     # Install Seabird
     flatpak install -y flathub dev.skynomads.Seabird
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.skynomads.Seabird -o ${HOME}/.local/share/flatpak/overrides/dev.skynomads.Seabird
-
-    # Install gitg
-    flatpak install -y flathub org.gnome.gitg
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gnome.gitg -o ${HOME}/.local/share/flatpak/overrides/org.gnome.gitg
-
-    # Install Eyedropper
-    flatpak install -y flathub com.github.finefindus.eyedropper
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.finefindus.eyedropper -o ${HOME}/.local/share/flatpak/overrides/com.github.finefindus.eyedropper
-
-    # Install Authenticator
-    flatpak install -y flathub com.belmoussaoui.Authenticator
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.belmoussaoui.Authenticator -o ${HOME}/.local/share/flatpak/overrides/com.belmoussaoui.Authenticator
-elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
-    # Install Keysmith
-    flatpak install -y flathub org.kde.keysmith
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.kde.keysmith -o ${HOME}/.local/share/flatpak/overrides/org.kde.keysmith
 fi
 
 # Install applications
@@ -87,17 +63,11 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 flatpak install -y flathub org.gimp.GIMP
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gimp.GIMP -o ${HOME}/.local/share/flatpak/overrides/org.gimp.GIMP
 
-flatpak install -y flathub org.blender.Blender
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.blender.Blender -o ${HOME}/.local/share/flatpak/overrides/org.blender.Blender
-
 flatpak install -y flathub com.brave.Browser
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.brave.Browser -o ${HOME}/.local/share/flatpak/overrides/com.brave.Browser
 
 flatpak install -y flathub md.obsidian.Obsidian
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o ${HOME}/.local/share/flatpak/overrides/md.obsidian.Obsidian
-
-flatpak install -y flathub org.libreoffice.LibreOffice
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.libreoffice.LibreOffice -o ${HOME}/.local/share/flatpak/overrides/org.libreoffice.LibreOffice
 
 # Install development applications
 flatpak install -y flathub io.podman_desktop.PodmanDesktop
@@ -108,12 +78,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 
 flatpak install -y flathub io.kinvolk.Headlamp
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.kinvolk.Headlamp -o ${HOME}/.local/share/flatpak/overrides/io.kinvolk.Headlamp
-
-flatpak install -y org.sqlitebrowser.sqlitebrowser
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.sqlitebrowser.sqlitebrowser -o ${HOME}/.local/share/flatpak/overrides/org.sqlitebrowser.sqlitebrowser
-
-flatpak install -y flathub io.beekeeperstudio.Studio
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.beekeeperstudio.Studio -o ${HOME}/.local/share/flatpak/overrides/io.beekeeperstudio.Studio
 
 ################################################
 ##### Firefox

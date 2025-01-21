@@ -103,7 +103,8 @@ pacman -S --noconfirm \
     okular \
     partitionmanager \
     plasma-systemmonitor \
-    spectacle
+    spectacle \
+    keysmith
 
 # Extra Plasma packages
 pacman -S --noconfirm \

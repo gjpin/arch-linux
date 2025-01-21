@@ -352,7 +352,7 @@ tee /usr/local/bin/update-all << EOF
 ################################################
 
 # Update keyring
-sudo pacman -Sy --noconfirm archlinux-keyring
+sudo pacman -Sy --noconfirm --needed archlinux-keyring
 
 # Update all packages
 paru -Syyu
