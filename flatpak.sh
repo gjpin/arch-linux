@@ -57,9 +57,6 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
 fi
 
 # Install applications
-flatpak install -y com.usebottles.bottles
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebottles.bottles -o ${HOME}/.local/share/flatpak/overrides/com.usebottles.bottles
-
 flatpak install -y flathub com.bitwarden.desktop
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.bitwarden.desktop -o ${HOME}/.local/share/flatpak/overrides/com.bitwarden.desktop
 
@@ -210,11 +207,8 @@ if [ ${GAMING} = "yes" ]; then
     # Install Heroic Games Launcher
     flatpak install -y flathub com.heroicgameslauncher.hgl
 
-    # Create directory for Heroic games
-    mkdir -p ${HOME}/Games/Heroic/{Epic,GOG}
-
-    # Create directory for Heroic Prefixes
-    mkdir -p ${HOME}/Games/Heroic/Prefixes/{Epic,GOG}
+    # Create directories for Heroic games and prefixes
+    mkdir -p ${HOME}/Games/Heroic/Prefixes
 
     # Import Flatpak overrides
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.heroicgameslauncher.hgl -o ${HOME}/.local/share/flatpak/overrides/com.heroicgameslauncher.hgl
@@ -222,4 +216,23 @@ if [ ${GAMING} = "yes" ]; then
     # Configure MangoHud for Heroic
     mkdir -p ${HOME}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/mangohud/MangoHud.conf -o ${HOME}/.var/app/com.heroicgameslauncher.hgl/config/MangoHud/MangoHud.conf
+fi
+
+################################################
+##### Bottles
+################################################
+
+if [ ${GAMING} = "yes" ]; then
+    # Install Bottles
+    flatpak install -y flathub com.usebottles.bottles
+
+    # Create directories for Bottles
+    mkdir -p ${HOME}/Games/Bottles
+
+    # Import Flatpak overrides
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebottles.bottles -o ${HOME}/.local/share/flatpak/overrides/com.usebottles.bottles
+
+    # Configure MangoHud for Bottles
+    mkdir -p ${HOME}/.var/app/com.usebottles.bottles/config/MangoHud
+    curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/mangohud/MangoHud.conf -o ${HOME}/.var/app/com.usebottles.bottles/config/MangoHud/MangoHud.conf
 fi
