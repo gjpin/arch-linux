@@ -23,6 +23,15 @@ flatpak update
 mkdir -p ${HOME}/.local/share/flatpak/overrides
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/global -o ${HOME}/.local/share/flatpak/overrides/global
 
+# Add KDE specific global configurations
+if [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
+tee -a ${HOME}/.local/share/flatpak/overrides/global << 'EOF'
+
+[Environment]
+GTK_USE_PORTAL=1
+EOF
+fi
+
 ################################################
 ##### Applications / Runtimes
 ################################################
