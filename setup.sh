@@ -340,6 +340,10 @@ pacman -S --noconfirm \
     net-tools \
     zenity
 
+# Install other applications
+pacman -S --noconfirm \
+    obsidian
+
 # Add AppImage support
 pacman -S --noconfirm fuse3
 
