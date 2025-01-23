@@ -926,6 +926,15 @@ pacman -S --noconfirm rust
 # Install JDK
 pacman -S --noconfirm jdk-openjdk
 
+# Install eBPF development related packages
+pacman -S --noconfirm \
+    linux-headers \
+    linux-lts-headers \
+    bpf \
+    bcc-tools \
+    python-bcc \
+    bpftrace
+
 ################################################
 ##### Android
 ################################################

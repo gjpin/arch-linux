@@ -192,7 +192,7 @@ EOF
 pacman -Syy
 
 # Install system
-pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers linux-firmware e2fsprogs mdadm tpm2-tools tpm2-tss ${CPU_MICROCODE}
+pacstrap /mnt base base-devel linux linux-lts linux-firmware e2fsprogs mdadm tpm2-tools tpm2-tss ${CPU_MICROCODE}
 
 # Generate filesystem tab
 genfstab -U /mnt >> /mnt/etc/fstab
