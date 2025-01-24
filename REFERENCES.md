@@ -57,3 +57,15 @@ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 # Check available scaling governors
 cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
 ```
+
+## AMD GPU Power profiles
+```bash
+# View Current Power State
+cat /sys/class/drm/card1/device/power_dpm_state
+
+# View Current Performance Level
+cat /sys/class/drm/card1/device/power_dpm_force_performance_level
+
+# Check Current Power Profile Mode
+cat /sys/class/drm/card1/device/pp_power_profile_mode
+```
