@@ -87,8 +87,15 @@ if [ ${VR} = "yes" ]; then
     # Install OpenXR and OpenVR
     pacman -S --noconfirm openxr openvr
 
-    # Install ALVR
-    sudo -u ${NEW_USER} paru -S --noconfirm alvr-bin
+    # Download ALVR Launcher
+    curl https://github.com/alvr-org/ALVR/releases/latest/download/alvr_launcher_linux.tar.gz -L -O
+
+    # Extract ALVR Launcher
+    tar -xzf alvr_launcher_linux.tar.gz
+    mv alvr_launcher_linux "/home/${NEW_USER}/Applications/ALVR Launcher"
+
+    # Cleanup ALVR
+    rm -f alvr_launcher_linux.tar.gz
 
     # Allow ALVR in firewall
     firewall-offline-cmd --zone=home --add-port=9943/tcp
