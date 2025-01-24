@@ -90,13 +90,15 @@ Video:
 - Color correction: on
    - Sharpening: 1.00
 - Maximum buffering: 1.50 frames
-- Optimize game render latench: off
+- Encoder config
+  - 10-bit encoding: on
+  - Override headset's preference for 10-bit encoding: on
 - Transcoding view resolution: absolute
-   - Width: 2064
-   - Height: 2208
+   - Width: 2496
+   - Height: 2592
 - Emulated headset view resolution: absolute
-   - Width: 2064
-   - Height: 2208
+   - Width: 2496
+   - Height: 2592
 - Preferred FPS: 90hz
 
 Headset:
@@ -104,7 +106,7 @@ Headset:
    - Emulation mode: Quest 3 Touch Plus
 
 Connection:
-- Stream protocol: TCP
+- Stream protocol: UDP
 ```
 
 6. Change SteamVR settings:
