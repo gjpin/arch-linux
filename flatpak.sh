@@ -72,6 +72,9 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org
 flatpak install -y flathub com.brave.Browser
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.brave.Browser -o ${HOME}/.local/share/flatpak/overrides/com.brave.Browser
 
+flatpak install -y flathub com.discordapp.Discord
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.discordapp.Discord -o ${HOME}/.local/share/flatpak/overrides/com.discordapp.Discord
+
 # Install development applications
 flatpak install -y flathub io.podman_desktop.PodmanDesktop
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.podman_desktop.PodmanDesktop -o ${HOME}/.local/share/flatpak/overrides/io.podman_desktop.PodmanDesktop
