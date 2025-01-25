@@ -28,6 +28,12 @@ If using Steam native, then in Sunshine's app.json use the following instead:
 steam-runtime -gamepadui
 ```
 
+## WiVRN
+1. Set game launch options to:
+```bash
+VR_OVERRIDE=/opt/opencomposite XR_RUNTIME_JSON=/run/host/usr/share/openxr/1/openxr_wivrn.json PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/wivrn/comp_ipc %command%
+```
+
 ## ALVR
 ### Flatpak
 

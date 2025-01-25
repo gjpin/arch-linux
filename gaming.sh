@@ -64,42 +64,10 @@ fi
 # Enable KMS display capture
 setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
 
-# Allow Sunshine in firewall
+# Allow Sunshine through firewall
 firewall-offline-cmd --zone=home --add-port=47984/tcp
 firewall-offline-cmd --zone=home --add-port=47989/tcp
 firewall-offline-cmd --zone=home --add-port=48010/tcp
 firewall-offline-cmd --zone=home --add-port=47998/udp
 firewall-offline-cmd --zone=home --add-port=47999/udp
 firewall-offline-cmd --zone=home --add-port=48000/udp
-
-################################################
-##### VR
-################################################
-
-# References:
-# https://github.com/alvr-org/ALVR/blob/master/alvr/xtask/flatpak/com.valvesoftware.Steam.Utility.alvr.desktop
-# https://github.com/alvr-org/ALVR/wiki/Installation-guide#portable-targz
-# https://github.com/alvr-org/ALVR/tree/master/alvr/xtask/firewall
-# https://github.com/alvr-org/ALVR/wiki/Flatpak
-# https://github.com/alvr-org/ALVR/wiki/Installation-guide
-
-if [ ${VR} = "yes" ]; then
-    # Install OpenXR and OpenVR
-    pacman -S --noconfirm openxr openvr
-
-    # Download ALVR Launcher
-    curl https://github.com/alvr-org/ALVR/releases/latest/download/alvr_launcher_linux.tar.gz -L -O
-
-    # Extract ALVR Launcher
-    tar -xzf alvr_launcher_linux.tar.gz
-    mv alvr_launcher_linux "/home/${NEW_USER}/Applications/ALVR Launcher"
-
-    # Cleanup ALVR
-    rm -f alvr_launcher_linux.tar.gz
-
-    # Allow ALVR in firewall
-    firewall-offline-cmd --zone=home --add-port=9943/tcp
-    firewall-offline-cmd --zone=home --add-port=9943/udp
-    firewall-offline-cmd --zone=home --add-port=9944/tcp
-    firewall-offline-cmd --zone=home --add-port=9944/udp
-fi

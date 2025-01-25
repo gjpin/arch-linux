@@ -51,7 +51,7 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.config/sunshine/apps.json
 fi
 
-# Allow Sunshine in firewall
+# Allow Sunshine through firewall
 firewall-offline-cmd --zone=home --add-port=47984/tcp
 firewall-offline-cmd --zone=home --add-port=47989/tcp
 firewall-offline-cmd --zone=home --add-port=48010/tcp
@@ -123,14 +123,14 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 # Install WiVRn server
 sudo -u ${NEW_USER} paru -S --noconfirm wivrn-server
 
-# Allow WiVRn in firewall
+# Allow WiVRn through firewall
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="tcp" accept log prefix="WiVRn TCP"'
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="9757" protocol="udp" accept log prefix="WiVRn UDP"'
 
 # Install Avahi
 pacman -S --noconfirm avahi nss-mdns
 
-# Allow Avahi in firewall
+# Allow Avahi through firewall
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="5353" protocol="udp" accept log prefix="Avahi"'
 
 ################################################
@@ -417,7 +417,7 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/sunshine/apps-plasma.json -o /home/${NEW_USER}/.var/app/dev.lizardbyte.sunshine/config/sunshine/apps.json
 fi
 
-# Allow Sunshine in firewall
+# Allow Sunshine through firewall
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="tcp" accept log prefix="Sunshine - RTSP TCP"'
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48010" protocol="udp" accept log prefix="Sunshine - RTSP UDP"'
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="47998" protocol="udp" accept log prefix="Sunshine - Video"'
@@ -544,7 +544,7 @@ X-KDE-RunOnDiscreteGpu=true
 StartupWMClass=ALVR
 EOF
 
-# Allow ALVR in firewall
+# Allow ALVR through firewall
 firewall-offline-cmd --zone=block --add-service=alvr
 firewall-offline-cmd --zone=home --add-service=alvr
 

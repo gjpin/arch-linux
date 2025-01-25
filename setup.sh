@@ -1030,6 +1030,7 @@ else
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/corectrl.ini -o /home/${NEW_USER}/.config/corectrl/corectrl.ini
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/_global_.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/_global_.ccpro
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/alvr_dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/alvr_dashboard.ccpro
+        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/wivrn-dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/wivrn-dashboard.ccpro
     fi
 fi
 
@@ -1146,6 +1147,15 @@ done
 # Install and configure gaming with Flatpak
 if [ ${GAMING} = "yes" ]; then
     /install-arch/gaming.sh
+fi
+
+################################################
+##### VR
+################################################
+
+# Install and configure VR with Flatpak
+if [ ${VR} = "yes" ]; then
+    /install-arch/vr.sh
 fi
 
 ################################################

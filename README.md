@@ -57,7 +57,21 @@ chmod +x flatpak.sh
 ./flatpak.sh
 rm -f flatpak.sh
 ```
-12. Install AppArmor.d profiles
+12. Ensure user services are running
+```bash
+systemctl --user enable pipewire-pulse.service
+systemctl --user enable syncthing.service
+systemctl --user enable podman.socket
+
+if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
+    systemctl --user enable sunshine
+fi
+
+if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+    systemctl --user enable gcr-ssh-agent.socket
+fi
+```
+13. Install AppArmor.d profiles
 ```bash
 # AppArmor.d profiles are installed in complain mode, by default. See https://apparmor.pujol.io/enforce/
 

@@ -1,8 +1,5 @@
 #!/usr/bin/bash
 
-read -p "Gaming (yes / no): " GAMING
-export GAMING
-
 ################################################
 ##### Installation
 ################################################
@@ -162,7 +159,7 @@ fi
 # References:
 # https://wiki.archlinux.org/title/MangoHud
 
-if [ ${GAMING} = "yes" ]; then
+if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
     # Install MangoHud
     flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
 
@@ -182,7 +179,7 @@ fi
 ##### Steam
 ################################################
 
-if [ ${GAMING} = "yes" ]; then
+if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
     if [ ! -e "/usr/bin/steam" ]; then
         # Install Steam
         flatpak install -y flathub com.valvesoftware.Steam
@@ -207,7 +204,7 @@ fi
 ##### Heroic Games Launcher
 ################################################
 
-if [ ${GAMING} = "yes" ]; then
+if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
     # Install Heroic Games Launcher
     flatpak install -y flathub com.heroicgameslauncher.hgl
 
@@ -226,7 +223,7 @@ fi
 ##### Bottles
 ################################################
 
-if [ ${GAMING} = "yes" ]; then
+if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
     # Install Bottles
     flatpak install -y flathub com.usebottles.bottles
 
