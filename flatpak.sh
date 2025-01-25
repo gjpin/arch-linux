@@ -25,10 +25,11 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/glo
 
 # Add KDE specific global configurations
 if [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
-tee -a ${HOME}/.local/share/flatpak/overrides/global << 'EOF'
-
-[Environment]
-GTK_USE_PORTAL=1
+mkdir -p ${HOME}/.config/xdg-desktop-portal
+tee -a ${HOME}/.config/xdg-desktop-portal/portals.conf << 'EOF'
+[preferred]
+default=kde
+org.freedesktop.impl.portal.FileChooser=kde
 EOF
 fi
 
