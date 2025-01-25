@@ -1,17 +1,19 @@
 {
-    "application": [
-      "/usr/bin/wlx-overlay-s"
-    ],
-    "bitrate": 150000000,
-    "encoders": [
-      {
-        "codec": "av1",
-        "encoder": "vaapi",
-        "height": 1.0,
-        "offset_x": 0.0,
-        "offset_y": 0.0,
-        "width": 1.0
-      }
-    ],
-    "scale": 0.5
-  }
+  "application": [
+    "/usr/bin/wlx-overlay-s",
+    "--openxr",
+    "--show"
+  ],
+  "bitrate": 150000000,
+  "encoders": [
+    {
+      "codec": "av1",
+      "encoder": "vaapi",
+      "height": 1.0,
+      "offset_x": 0.0,
+      "offset_y": 0.0,
+      "width": 1.0
+    }
+  ],
+  "scale": 0.5
+}
