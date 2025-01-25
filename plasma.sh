@@ -128,6 +128,9 @@ sudo -u ${NEW_USER} balooctl6 suspend
 sudo -u ${NEW_USER} balooctl6 disable
 sudo -u ${NEW_USER} balooctl6 purge
 
+# Allow KDE Connect in firewall
+firewall-offline-cmd --zone=home --add-service=kdeconnect
+
 ################################################
 ##### SDDM
 ################################################
