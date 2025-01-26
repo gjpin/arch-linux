@@ -31,9 +31,6 @@ if [ ${STEAM_NATIVE} = "yes" ]; then
     fi
 fi
 
-# Create directory for Steam games
-mkdir -p /home/${NEW_USER}/Games/Steam
-
 ################################################
 ##### Sunshine (native - prebuilt)
 ################################################
