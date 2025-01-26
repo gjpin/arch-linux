@@ -14,6 +14,7 @@ systemctl --user enable --now xdg-desktop-portal.service
 
 # Add Flathub repositories
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak update
 
 # Import global Flatpak overrides
