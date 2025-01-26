@@ -120,7 +120,6 @@ tee -a /etc/environment << EOF
 
 # KDE file picker
 GDK_DEBUG=portals
-GTK_USE_PORTAL=1
 EOF
 
 # Disable baloo (file indexer)
