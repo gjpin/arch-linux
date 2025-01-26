@@ -1,6 +1,64 @@
 #!/usr/bin/bash
 
 ################################################
+##### Firefox (Flatpak)
+################################################
+
+# References:
+# https://github.com/rafaelmardojai/firefox-gnome-theme
+# Theme is manually installed and not from AUR, since Firefox flatpak cannot access it
+
+# Install Firefox
+flatpak install -y flathub org.mozilla.firefox
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.mozilla.firefox -o ${HOME}/.local/share/flatpak/overrides/org.mozilla.firefox
+
+# Set Firefox as default browser and handler for http/s
+xdg-settings set default-web-browser org.mozilla.firefox.desktop
+xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
+xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
+
+# Temporarily open firefox to create profile
+timeout 5 flatpak run org.mozilla.firefox --headless
+
+# Set Firefox profile path
+export FIREFOX_PROFILE_PATH=$(find ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox -type d -name "*.default-release")
+
+# Import extensions
+mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
+curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
+curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
+
+# Import Firefox configs
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
+
+# Desktop environment specific configurations
+if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
+    # Firefox Gnome theme integration
+    mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
+    git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
+    echo '@import "firefox-gnome-theme/userChrome.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userChrome.css
+    echo '@import "firefox-gnome-theme/userContent.css"' > ${FIREFOX_PROFILE_PATH}/chrome/userContent.css
+    curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/gnome.js >> ${FIREFOX_PROFILE_PATH}/user.js
+
+    # Firefox theme updater
+    sudo tee -a /usr/local/bin/update-all << 'EOF'
+
+################################################
+##### Firefox
+################################################
+
+# Update Firefox theme
+FIREFOX_PROFILE_PATH=$(realpath ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
+git -C ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme pull
+EOF
+elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
+    # Better KDE Plasma integration
+    curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/plasma.js >> ${FIREFOX_PROFILE_PATH}/user.js
+fi
+
+################################################
 ##### Android
 ################################################
 
@@ -652,45 +710,6 @@ curl -sSL https://raw.githubusercontent.com/ValveSoftware/steam-devices/master/6
 
 # Install Heroic Games Launcher
 sudo -u ${NEW_USER} paru -S --noconfirm heroic-games-launcher-bin
-
-################################################
-##### Firefox (native)
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/Firefox
-# https://github.com/pyllyukko/user.js/blob/master/user.js
-
-# Install Firefox
-pacman -S --noconfirm firefox
-
-# Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
-
-# Run Firefox natively under Wayland
-tee -a /home/${NEW_USER}/.zshenv << EOF
-
-# Firefox
-export MOZ_ENABLE_WAYLAND=1
-EOF
-
-# Temporarily open firefox to create profile folder
-sudo -u ${NEW_USER} timeout 5 firefox --headless
-
-# Set Firefox profile path
-export FIREFOX_PROFILE_PATH=$(find /home/${NEW_USER}/.mozilla/firefox -type d -name "*.default-release")
-
-# Import extensions
-mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
-curl https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/uBlock0@raymondhill.net.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/4018008/bitwarden_password_manager-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/{446900e4-71c2-419f-a6a7-df9c091e268b}.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3998783/floccus-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/floccus@handmadeideas.org.xpi
-curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_containers-latest.xpi -o ${FIREFOX_PROFILE_PATH}/extensions/@testpilot-containers.xpi
-
-# Import Firefox configs
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
 
 ################################################
 ##### OpenSnitch
