@@ -17,6 +17,14 @@ jobs:
 
     - name: Update Pacman and install base packages
       run: |
+        # Add custom repo
+        tee -a /etc/pacman.conf << EOF
+
+        [gjpin]
+        SigLevel = Optional TrustAll
+        Server = https://gjpin.github.io/arch-linux-repo/repo/
+        EOF
+        
         # Update pacman database and install essential tools
         pacman -Syyu --noconfirm
         pacman -S --noconfirm grep sed coreutils git
