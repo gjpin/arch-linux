@@ -1072,6 +1072,7 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/vscode/sett
 
 # Install fonts
 pacman -S --noconfirm \
+    adwaita-fonts \
     noto-fonts \
     noto-fonts-emoji \
     noto-fonts-cjk \
