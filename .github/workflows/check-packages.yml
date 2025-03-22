@@ -46,16 +46,31 @@ jobs:
         # Function to validate a single package
         validate_package() {
           local package="$1"
+
           # Skip empty, comments, argument flags, or variables like $GPU_PACKAGES
           if [[ -z "$package" ]] || [[ "$package" == "#"* ]] || [[ "$package" == "-"* ]] || [[ "$package" =~ ^-- ]] || [[ "$package" == *"$"* ]]; then
             return 0
           fi
-          
-          # Check package in pacman
-          if pacman -Ss "^${package}$" > /dev/null 2>&1; then
+
+          # Extract repository if present (format: repo/package)
+          if [[ "$package" == */* ]]; then
+            repo_name="${package%%/*}"
+            package_name="${package##*/}"
+            
+            # Search for package in the specified repository
+            if pacman -Sl "$repo_name" | grep -q "^$repo_name $package_name "; then
+              echo "✅ Package exists in pacman: $package"
+              return 0
+            fi
+          else
+            package_name="$package"
+          fi
+
+          # Check package in pacman (if not in a custom repo)
+          if pacman -Ss "^${package_name}$" > /dev/null 2>&1; then
             echo "✅ Package exists in pacman: $package"
-          # Check package in AUR using curl (direct AUR API query)
-          elif curl -s "https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=${package}" | grep -q '"resultcount":1'; then
+          # Check package in AUR
+          elif curl -s "https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=${package_name}" | grep -q '"resultcount":1'; then
             echo "✅ Package exists in AUR: $package"
           else
             failed_packages+=("$package")
