@@ -1,5 +1,11 @@
 #!/usr/bin/bash
 
+read -p "Gaming (yes / no): " GAMING
+export GAMING
+
+read -p "VR (yes / no): " VR
+export VR
+
 ################################################
 ##### Installation
 ################################################
@@ -52,6 +58,10 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Seabird
     flatpak install -y flathub dev.skynomads.Seabird
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/dev.skynomads.Seabird -o ${HOME}/.local/share/flatpak/overrides/dev.skynomads.Seabird
+
+    # Install Pods
+    flatpak install -y flathub com.github.marhkb.Pods
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.marhkb.Pods -o ${HOME}/.local/share/flatpak/overrides/com.github.marhkb.Pods
 fi
 
 # Install applications
@@ -73,10 +83,10 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com
 flatpak install -y flathub com.discordapp.Discord
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.discordapp.Discord -o ${HOME}/.local/share/flatpak/overrides/com.discordapp.Discord
 
-# Install development applications
-flatpak install -y flathub io.podman_desktop.PodmanDesktop
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.podman_desktop.PodmanDesktop -o ${HOME}/.local/share/flatpak/overrides/io.podman_desktop.PodmanDesktop
+flatpak install -y flathub md.obsidian.Obsidian
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/md.obsidian.Obsidian -o ${HOME}/.local/share/flatpak/overrides/md.obsidian.Obsidian
 
+# Install development applications
 flatpak install -y flathub com.usebruno.Bruno
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.usebruno.Bruno -o ${HOME}/.local/share/flatpak/overrides/com.usebruno.Bruno
 
@@ -95,33 +105,10 @@ elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
 fi
 
 ################################################
-##### Gaming utilities
-################################################
-
-# References:
-# https://wiki.archlinux.org/title/MangoHud
-
-if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
-    # Install MangoHud
-    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
-
-    # Install Gamescope
-    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//24.08
-
-    # Install ProtonUp-Qt
-    flatpak install -y flathub net.davidotek.pupgui2
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/net.davidotek.pupgui2 -o ${HOME}/.local/share/flatpak/overrides/net.davidotek.pupgui2
-
-    # Install Protontricks
-    flatpak install -y flathub com.github.Matoking.protontricks
-    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.Matoking.protontricks -o ${HOME}/.local/share/flatpak/overrides/com.github.Matoking.protontricks
-fi
-
-################################################
 ##### Steam
 ################################################
 
-if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
+if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/steam" ]; then
         # Install Steam
         flatpak install -y flathub com.valvesoftware.Steam
@@ -146,7 +133,7 @@ fi
 ##### Heroic Games Launcher
 ################################################
 
-if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
+if [ ${GAMING} = "yes" ]; then
     # Install Heroic Games Launcher
     flatpak install -y flathub com.heroicgameslauncher.hgl
 
@@ -165,7 +152,7 @@ fi
 ##### Bottles
 ################################################
 
-if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
+if [ ${GAMING} = "yes" ]; then
     # Install Bottles
     flatpak install -y flathub com.usebottles.bottles
 
@@ -178,4 +165,27 @@ if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; t
     # Configure MangoHud for Bottles
     mkdir -p ${HOME}/.var/app/com.usebottles.bottles/config/MangoHud
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/mangohud/MangoHud.conf -o ${HOME}/.var/app/com.usebottles.bottles/config/MangoHud/MangoHud.conf
+fi
+
+################################################
+##### Gaming utilities
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/MangoHud
+
+if [ ${GAMING} = "yes" ]; then
+    # Install MangoHud
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.MangoHud//24.08
+
+    # Install Gamescope
+    flatpak install -y flathub org.freedesktop.Platform.VulkanLayer.gamescope//24.08
+
+    # Install ProtonUp-Qt
+    flatpak install -y flathub net.davidotek.pupgui2
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/net.davidotek.pupgui2 -o ${HOME}/.local/share/flatpak/overrides/net.davidotek.pupgui2
+
+    # Install Protontricks
+    flatpak install -y flathub com.github.Matoking.protontricks
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.Matoking.protontricks -o ${HOME}/.local/share/flatpak/overrides/com.github.Matoking.protontricks
 fi

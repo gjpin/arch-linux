@@ -1,6 +1,11 @@
 [org/gnome/desktop/interface]
 gtk-theme='adw-gtk3-dark'
 color-scheme='prefer-dark'
+font-name='Noto Sans 10'
+document-font-name='Noto Sans 10'
+monospace-font-name='NotoSansM Nerd Font Mono Medium 10'
+font-antialiasing='rgba'
+icon-theme='MoreWaita'
 
 [org/gnome/desktop/wm/keybindings]
 close=['<Shift><Super>q']
@@ -39,13 +44,8 @@ sort-directories-first=true
 [org/gnome/nautilus/icon-view]
 default-zoom-level='small-plus'
 
-[org/gnome/desktop/interface]
-font-name='Adwaita Sans 10'
-document-font-name='Adwaita Sans 10'
-monospace-font-name='Adwaita Mono 10'
-
 [org/gnome/desktop/wm/preferences]
-titlebar-font='Adwaita Sans Bold 10'
+titlebar-font='Noto Sans Bold 10'
 
 [org/gnome/shell]
 disable-user-extensions=false
@@ -85,7 +85,7 @@ folder-children=['Office', 'Dev', 'Media', 'System', 'Gaming', 'Emulators', 'Sec
 
 [org/gnome/desktop/app-folders/folders/Office]
 name='Office'
-apps=['org.gaphor.Gaphor.desktop', 'com.github.flxzt.rnote.desktop', 'org.gnome.Evince.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.clocks.desktop', 'md.obsidian.Obsidian.desktop', 'simple-scan.desktop', 'org.gnome.Contacts.desktop', 'org.libreoffice.LibreOffice.desktop', 'org.libreoffice.LibreOffice.base.desktop', 'org.libreoffice.LibreOffice.calc.desktop', 'org.libreoffice.LibreOffice.draw.desktop', 'org.libreoffice.LibreOffice.impress.desktop', 'org.libreoffice.LibreOffice.math.desktop', 'org.libreoffice.LibreOffice.writer.desktop', 'libreoffice-calc.desktop', 'libreoffice-impress.desktop', 'libreoffice-writer.desktop']
+apps=['org.gaphor.Gaphor.desktop', 'com.github.flxzt.rnote.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.TextEditor.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.clocks.desktop', 'md.obsidian.Obsidian.desktop', 'simple-scan.desktop', 'org.gnome.Contacts.desktop', 'org.libreoffice.LibreOffice.desktop', 'org.libreoffice.LibreOffice.base.desktop', 'org.libreoffice.LibreOffice.calc.desktop', 'org.libreoffice.LibreOffice.draw.desktop', 'org.libreoffice.LibreOffice.impress.desktop', 'org.libreoffice.LibreOffice.math.desktop', 'org.libreoffice.LibreOffice.writer.desktop', 'libreoffice-calc.desktop', 'libreoffice-impress.desktop', 'libreoffice-writer.desktop']
 
 [org/gnome/desktop/app-folders/folders/Dev]
 name='Dev'
@@ -125,9 +125,6 @@ primary-color='#241f31'
 
 [org/gnome/shell]
 disable-extension-version-validation=true
-
-[org/gnome/desktop/interface]
-font-antialiasing='rgba'
 
 [org/gnome/desktop/search-provers]
 disable-external=true

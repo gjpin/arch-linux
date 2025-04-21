@@ -18,7 +18,7 @@
 
 pacman -S --noconfirm \
     baobab \
-    evince \
+    papers \
     file-roller \
     gnome-backgrounds \
     gnome-calculator \
@@ -30,7 +30,7 @@ pacman -S --noconfirm \
     gnome-font-viewer \
     gnome-keyring \
     gnome-logs \
-    gnome-music \
+    decibels \
     gnome-session \
     gnome-settings-daemon \
     gnome-shell \
@@ -85,7 +85,7 @@ tscale=oversample
 hwdec=auto
 EOF
 
-# Configure  Gnome's default file associations (based on shared-mime-info-gnome)
+# Configure Gnome's default file associations (based on shared-mime-info-gnome)
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/gnome-mimeapps.list -o /usr/share/applications/gnome-mimeapps.list
 
 ################################################
@@ -116,14 +116,14 @@ mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions
 
 # Grand Theft Focus
 # https://extensions.gnome.org/extension/5410/grand-theft-focus
-curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v7.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/grand-theft-focuszalckos.github.com.v8.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/grand-theft-focus@zalckos.github.com
 rm -f shell-extension.zip
 
 # Legacy (GTK3) Theme Scheme Auto Switcher
 # https://extensions.gnome.org/extension/4998/legacy-gtk3-theme-scheme-auto-switcher/
-curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v9.shell-extension.zip -o shell-extension.zip
+curl -sSL https://extensions.gnome.org/extension-data/legacyschemeautoswitcherjoshimukul29.gmail.com.v10.shell-extension.zip -o shell-extension.zip
 mkdir -p /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 unzip shell-extension.zip -d /home/${NEW_USER}/.local/share/gnome-shell/extensions/legacyschemeautoswitcher@joshimukul29.gmail.com
 rm -f shell-extension.zip
@@ -131,21 +131,23 @@ rm -f shell-extension.zip
 # AppIndicator and KStatusNotifierItem Support
 # https://extensions.gnome.org/extension/615/appindicator-support/
 # https://src.fedoraproject.org/rpms/gnome-shell-extension-appindicator/blob/rawhide/f/gnome-shell-extension-appindicator.spec
-pacman -S --noconfirm libappindicator-gtk3
-
-curl -sSL https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v59.shell-extension.zip -O
-gnome-extensions install *.shell-extension.zip
-rm -f *.shell-extension.zip
+pacman -S --noconfirm \
+    libappindicator-gtk3 \
+    gnome-shell-extension-appindicator
 
 ################################################
-##### GTK theme
+##### Themes and icons
 ################################################
 
 # References:
 # https://github.com/lassekongo83/adw-gtk3
+# https://github.com/somepaulo/MoreWaita
 
 # Install adw-gtk3
 pacman -S --noconfirm adw-gtk-theme
+
+# Install MoreWaita icon theme
+sudo -u ${NEW_USER} paru -S --noconfirm morewaita-icon-theme
 
 ################################################
 ##### Utilities

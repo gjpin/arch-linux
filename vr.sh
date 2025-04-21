@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+if [ ${VR_NATIVE} = "yes" ]; then
+
 ################################################
 ##### Custom repo
 ################################################
@@ -95,3 +97,5 @@ firewall-offline-cmd --zone=home --add-port=9943/tcp
 firewall-offline-cmd --zone=home --add-port=9943/udp
 firewall-offline-cmd --zone=home --add-port=9944/tcp
 firewall-offline-cmd --zone=home --add-port=9944/udp
+
+fi

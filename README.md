@@ -71,21 +71,7 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     systemctl --user enable gcr-ssh-agent.socket
 fi
 ```
-13. Install AppArmor.d profiles
-```bash
-# AppArmor.d profiles are installed in complain mode, by default. See https://apparmor.pujol.io/enforce/
-
-# Install AppArmor.d profiles
-paru -S --noconfirm apparmor.d-git
-
-# Configure AppArmor.d
-sudo mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
-
-sudo tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
-@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
-@{XDG_GAMES_DIR}+="Games"
-EOF
-```
+13. Consider [enforcing AppArmor.d profiles](https://apparmor.pujol.io/enforce/)
 
 ## Guides
 See [HERE](https://github.com/gjpin/arch-linux/blob/main/GUIDES.md)

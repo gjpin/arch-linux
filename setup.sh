@@ -220,6 +220,9 @@ ukify genkey --config=/etc/kernel/uki.conf
 # https://wiki.archlinux.org/title/Unified_kernel_image#.preset_file
 # https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2?tab=readme-ov-file#11-use-mkinitcpio-to-generate-the-uki
 
+# Create directory for UKIs
+mkdir -p /boot/EFI/Linux
+
 # Create preset file for standard Kernel
 tee /etc/mkinitcpio.d/linux.preset << EOF
 ALL_kver="/boot/vmlinuz-linux"
@@ -235,9 +238,6 @@ PRESETS=('default')
 default_uki="/boot/EFI/Linux/arch-linux-lts.efi"
 default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
 EOF
-
-# Create directory for UKIs
-mkdir -p /boot/EFI/Linux
 
 # Regenerate initramfs
 mkinitcpio -P
@@ -339,10 +339,6 @@ pacman -S --noconfirm \
     findutils \
     net-tools \
     zenity
-
-# Install other applications
-pacman -S --noconfirm \
-    obsidian
 
 # Add AppImage support
 pacman -S --noconfirm fuse3
@@ -627,6 +623,17 @@ sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parse
 pacman -S --noconfirm audit
 systemctl enable auditd.service
 
+# Install AppArmor.d profiles
+sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
+
+# Configure AppArmor.d
+mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
+
+tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
+@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
+@{XDG_GAMES_DIR}+="Games"
+EOF
+
 ################################################
 ##### ffmpeg
 ################################################
@@ -793,12 +800,15 @@ EOF
 
 # Re-enable unqualified search registries
 tee -a /etc/containers/registries.conf.d/10-unqualified-search-registries.conf << EOF
-unqualified-search-registries = ['docker.io']
+unqualified-search-registries = ['docker.io', 'quay.io']
 EOF
 
 tee -a /etc/containers/registries.conf.d/01-registries.conf << EOF
 [[registry]]
 location = "docker.io"
+
+[[registry]]
+location = "quay.io"
 EOF
 
 # Enable Podman socket
@@ -955,8 +965,10 @@ usermod -a -G adbusers ${NEW_USER}
 ##### Neovim
 ################################################
 
-# Install Neovim and set as default editor
+# Install Neovim 
 pacman -S --noconfirm neovim
+
+# Set as default editor
 tee /home/${NEW_USER}/.zshrc.d/neovim << 'EOF'
 # Set neovim alias
 alias vi=nvim
@@ -970,30 +982,6 @@ else
   export EDITOR='nvim'
   export VISUAL='nvim'
 fi
-EOF
-
-# Install LazyVim
-# https://www.lazyvim.org/installation
-git clone https://github.com/LazyVim/starter /home/${NEW_USER}/.config/nvim
-rm -rf /home/${NEW_USER}/.config/nvim/.git
-
-# Install arctic.nvim (Dark Modern) color scheme in neovim
-# https://github.com/rockyzhang24/arctic.nvim/tree/v2
-# https://www.lazyvim.org/plugins/colorscheme
-tee /home/${NEW_USER}/.config/nvim/lua/plugins/colorscheme.lua << 'EOF'
-return {
-    {
-        "gjpin/arctic.nvim",
-        branch = "v2",
-        dependencies = { "rktjmp/lush.nvim" }
-    },
-    {
-        "LazyVim/LazyVim",
-        opts = {
-            colorscheme = "arctic",
-        }
-    }
-}
 EOF
 
 ################################################
@@ -1030,7 +1018,7 @@ else
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/corectrl.ini -o /home/${NEW_USER}/.config/corectrl/corectrl.ini
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/_global_.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/_global_.ccpro
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/alvr_dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/alvr_dashboard.ccpro
-        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/wivrn-dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/wivrn-dashboard.ccpro
+        curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/corectrl/profiles/wivrn_dashboard.ccpro -o /home/${NEW_USER}/.config/corectrl/profiles/wivrn_dashboard.ccpro
     fi
 fi
 
@@ -1058,8 +1046,6 @@ pacman -S --noconfirm xorg-server-xvfb
 sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
 sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
-sudo -u ${NEW_USER} xvfb-run code --install-extension esbenp.prettier-vscode
-sudo -u ${NEW_USER} xvfb-run code --install-extension dbaeumer.vscode-eslint
 sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
 
 # Import VSCode settings
@@ -1094,6 +1080,9 @@ pacman -S --noconfirm \
 ################################################
 ##### Electron
 ################################################
+
+# References:
+# https://wiki.archlinux.org/title/Wayland#Electron
 
 # Enable Wayland for electron apps and improve font rendering
 tee /home/${NEW_USER}/.config/electron-flags.conf << EOF
@@ -1211,7 +1200,7 @@ fi
 ##### VR
 ################################################
 
-# Install and configure VR with Flatpak
+# Install and configure VR
 if [ ${VR} = "yes" ]; then
     /install-arch/vr.sh
 fi

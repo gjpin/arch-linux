@@ -1,6 +1,34 @@
 #!/usr/bin/bash
 
 ################################################
+##### LazyVim
+################################################
+
+# Install LazyVim
+# https://www.lazyvim.org/installation
+git clone https://github.com/LazyVim/starter /home/${NEW_USER}/.config/nvim
+rm -rf /home/${NEW_USER}/.config/nvim/.git
+
+# Install arctic.nvim (Dark Modern) color scheme in neovim
+# https://github.com/rockyzhang24/arctic.nvim/tree/v2
+# https://www.lazyvim.org/plugins/colorscheme
+tee /home/${NEW_USER}/.config/nvim/lua/plugins/colorscheme.lua << 'EOF'
+return {
+    {
+        "gjpin/arctic.nvim",
+        branch = "v2",
+        dependencies = { "rktjmp/lush.nvim" }
+    },
+    {
+        "LazyVim/LazyVim",
+        opts = {
+            colorscheme = "arctic",
+        }
+    }
+}
+EOF
+
+################################################
 ##### Firefox (Flatpak)
 ################################################
 
