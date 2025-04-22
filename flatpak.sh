@@ -62,6 +62,10 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Pods
     flatpak install -y flathub com.github.marhkb.Pods
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.marhkb.Pods -o ${HOME}/.local/share/flatpak/overrides/com.github.marhkb.Pods
+
+    # Install Ptyxis
+    flatpak install -y flathub app.devsuite.Ptyxis
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/app.devsuite.Ptyxis -o ${HOME}/.local/share/flatpak/overrides/app.devsuite.Ptyxis
 fi
 
 # Install applications
