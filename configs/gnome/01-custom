@@ -51,7 +51,7 @@ titlebar-font='Noto Sans Bold 10'
 disable-user-extensions=false
 
 [org/gnome/shell]
-favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.gnome.Console.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'org.mozilla.firefox.desktop', 'org.gnome.Ptyxis.desktop', 'org.gnome.TextEditor.desktop', 'code.desktop']
 
 [org/gnome/shell]
 enabled-extensions=['grand-theft-focus@zalckos.github.com', 'legacyschemeautoswitcher@joshimukul29.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com']
@@ -67,8 +67,8 @@ custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybin
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
-command='kgx'
-name='Gnome Console'
+command='ptyxis'
+name='Ptyxis'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>E'

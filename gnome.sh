@@ -24,7 +24,6 @@ pacman -S --noconfirm \
     gnome-calculator \
     gnome-calendar \
     gnome-color-manager \
-    gnome-console \
     gnome-control-center \
     gnome-disk-utility \
     gnome-font-viewer \
@@ -42,6 +41,7 @@ pacman -S --noconfirm \
     gvfs-mtp \
     gvfs-nfs \
     loupe \
+    ptyxis \
     nautilus \
     snapshot \
     sushi \
