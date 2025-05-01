@@ -1047,6 +1047,7 @@ sudo -u ${NEW_USER} xvfb-run code --install-extension golang.Go
 sudo -u ${NEW_USER} xvfb-run code --install-extension ms-python.python
 sudo -u ${NEW_USER} xvfb-run code --install-extension redhat.vscode-yaml
 sudo -u ${NEW_USER} xvfb-run code --install-extension hashicorp.terraform
+sudo -u ${NEW_USER} xvfb-run code --install-extension rooveterinaryinc.roo-cline
 
 # Import VSCode settings
 mkdir -p /home/${NEW_USER}/.config/Code/User
@@ -1065,13 +1066,7 @@ pacman -S --noconfirm \
     noto-fonts-extra \
     ttf-liberation \
     otf-cascadia-code \
-    otf-commit-mono-nerd \
-    ttf-firacode-nerd \
-    ttf-hack-nerd \
     ttf-noto-nerd \
-    ttf-sourcecodepro-nerd \
-    ttf-ubuntu-nerd \
-    ttf-ubuntu-mono-nerd \
     ttf-hack \
     inter-font \
     cantarell-fonts \

@@ -207,10 +207,11 @@ fi
 
 # Configure system
 mkdir -p /mnt/install-arch
-cp ./plasma.sh /mnt/install-arch/plasma.sh
-cp ./gnome.sh /mnt/install-arch/gnome.sh
 cp ./gaming.sh /mnt/install-arch/gaming.sh
+cp ./gnome.sh /mnt/install-arch/gnome.sh
+cp ./plasma.sh /mnt/install-arch/plasma.sh
 cp ./setup.sh /mnt/install-arch/setup.sh
+cp ./vr.sh /mnt/install-arch/vr.sh
 arch-chroot /mnt /bin/bash /install-arch/setup.sh
 rm -rf /mnt/install-arch
 umount -R /mnt

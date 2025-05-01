@@ -54,6 +54,7 @@ fi
 if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Flatseal
     flatpak install -y flathub com.github.tchx84.Flatseal
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.tchx84.Flatseal -o ${HOME}/.local/share/flatpak/overrides/com.github.tchx84.Flatseal
 
     # Install Seabird
     flatpak install -y flathub dev.skynomads.Seabird
@@ -62,6 +63,26 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Pods
     flatpak install -y flathub com.github.marhkb.Pods
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.marhkb.Pods -o ${HOME}/.local/share/flatpak/overrides/com.github.marhkb.Pods
+
+    # Install Rnote
+    flatpak install -y flathub com.github.flxzt.rnote
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.flxzt.rnote -o ${HOME}/.local/share/flatpak/overrides/com.github.flxzt.rnote
+
+    # Install Gaphor
+    flatpak install -y flathub org.gaphor.Gaphor
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.gaphor.Gaphor -o ${HOME}/.local/share/flatpak/overrides/org.gaphor.Gaphor
+
+    # Install Eyedropper
+    flatpak install -y flathub com.github.finefindus.eyedropper
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.finefindus.eyedropper -o ${HOME}/.local/share/flatpak/overrides/com.github.finefindus.eyedropper
+    
+    # Install Authenticator
+    flatpak install -y flathub com.belmoussaoui.Authenticator
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.belmoussaoui.Authenticator -o ${HOME}/.local/share/flatpak/overrides/com.belmoussaoui.Authenticator
+
+    # Install Celluloid
+    flatpak install -y flathub io.github.celluloid_player.Celluloid
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.github.celluloid_player.Celluloid -o ${HOME}/.local/share/flatpak/overrides/io.github.celluloid_player.Celluloid
 fi
 
 # Install applications
@@ -246,4 +267,62 @@ if [ ${GAMING} = "yes" ]; then
     # Install Protontricks
     flatpak install -y flathub com.github.Matoking.protontricks
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.github.Matoking.protontricks -o ${HOME}/.local/share/flatpak/overrides/com.github.Matoking.protontricks
+fi
+
+################################################
+##### WiVRn
+################################################
+
+# References:
+# https://github.com/WiVRn/WiVRn
+
+if [ "$VR" = "yes" ]; then
+    # Install WiVRn
+    flatpak install -y flathub io.github.wivrn.wivrn
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.github.wivrn.wivrn -o ${HOME}/.local/share/flatpak/overrides/io.github.wivrn.wivrn
+
+    # Steam Flatpak integration
+    mkdir -p ${HOME}/.var/app/com.valvesoftware.Steam/.config/openxr
+    mkdir -p ${HOME}/.config/openxr/1
+    ln -s ${HOME}/.config/openxr/1 ${HOME}/.var/app/com.valvesoftware.Steam/.config/openxr/1
+
+    # Allow mDNS through firewall (required by WiVRn)
+    sudo firewall-cmd --zone=home --add-port=5353/udp --permanent
+
+    # Allow Avahi through firewall (required by WiVRn)
+    sudo firewall-cmd --zone=home --add-port=9757/tcp --permanent
+    sudo firewall-cmd --zone=home --add-port=9757/udp --permanent
+fi
+
+################################################
+##### ALVR
+################################################
+
+# References:
+# https://github.com/alvr-org/ALVR/wiki/Installing-ALVR-and-using-SteamVR-on-Linux-through-Flatpak
+
+if [ "$VR" = "yes" ]; then
+    # Download ALVR
+    curl https://github.com/alvr-org/ALVR/releases/latest/download/com.valvesoftware.Steam.Utility.alvr.flatpak -L -O
+
+    # Install ALVR
+    flatpak install -y --bundle com.valvesoftware.Steam.Utility.alvr.flatpak
+
+    # Remove ALVR flatpak file
+    rm -f com.valvesoftware.Steam.Utility.alvr.flatpak
+
+    # Create ALVR dashboard alias
+    echo 'alias alvr="flatpak run --command=alvr_launcher com.valvesoftware.Steam"' > ${HOME}/.zshrc.d/alvr
+
+    # Create ALVR dashboard desktop entry
+    mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps
+    curl -sSL https://raw.githubusercontent.com/alvr-org/ALVR/refs/heads/master/alvr/xtask/flatpak/alvr_icon.png \
+        -o ${HOME}/.local/share/icons/hicolor/256x256/apps/application-alvr-launcher.png
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/alvr/alvr-flatpak.desktop -o ${HOME}/.local/share/applications/com.valvesoftware.Steam.Utility.alvr.desktop
+
+    # Allow ALVR through firewall
+    sudo firewall-cmd --zone=home --add-port=9943/tcp --permanent
+    sudo firewall-cmd --zone=home --add-port=9943/udp --permanent
+    sudo firewall-cmd --zone=home --add-port=9944/tcp --permanent
+    sudo firewall-cmd --zone=home --add-port=9944/udp --permanent
 fi

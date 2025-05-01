@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;!host;xdg-documents;
+filesystems=!home;!host;xdg-documents;home/Projects;

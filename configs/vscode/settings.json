@@ -34,5 +34,43 @@
         }
     },
     "git.useIntegratedAskPass": false,
-    "chat.commandCenter.enabled": false
+    "chat.commandCenter.enabled": false,
+    "telemetry.feedback.enabled": false,
+    "dotnetAcquisitionExtension.enableTelemetry": false,
+    "mcp": {
+        "servers": {
+            "Context7": {
+                "command": "podman",
+                "args": [
+                    "run",
+                    "-i",
+                    "--rm",
+                    "mcp/context7"
+                ]
+            },
+            "brave-search": {
+                "command": "podman",
+                "args": [
+                    "run",
+                    "-i",
+                    "--rm",
+                    "-e",
+                    "BRAVE_API_KEY",
+                    "mcp/brave-search"
+                ],
+                "env": {
+                    "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
+                }
+            },
+            "fetch": {
+                "command": "podman",
+                "args": [
+                    "run",
+                    "-i",
+                    "--rm",
+                    "mcp/fetch"
+                ]
+            }
+        }
+    },
 }

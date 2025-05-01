@@ -53,11 +53,7 @@ pacman -S --noconfirm \
     xdg-desktop-portal-gtk \
     webp-pixbuf-loader \
     seahorse \
-    gaphor \
-    rnote \
-    gitg \
-    eyedropper \
-    authenticator
+    gitg
 
 # Install and enable GDM
 pacman -S --noconfirm gdm
@@ -65,25 +61,6 @@ systemctl enable gdm.service
 
 # Enable SSH wrapper
 sudo -u ${NEW_USER} systemctl --user enable gcr-ssh-agent.socket
-
-# Install and configure MPV / Celluloid
-pacman -S --noconfirm \
-    mpv \
-    celluloid
-
-mkdir -p /home/${NEW_USER}/.config/mpv
-
-cp /usr/share/doc/mpv/mplayer-input.conf /home/${NEW_USER}/.config/mpv/input.conf
-
-tee /home/${NEW_USER}/.config/mpv/mpv.conf << EOF
-profile=gpu-hq
-scale=ewa_lanczossharp
-cscale=ewa_lanczossharp
-video-sync=display-resample
-interpolation
-tscale=oversample
-hwdec=auto
-EOF
 
 # Configure Gnome's default file associations (based on shared-mime-info-gnome)
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/gnome-mimeapps.list -o /usr/share/applications/gnome-mimeapps.list
