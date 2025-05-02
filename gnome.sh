@@ -65,6 +65,9 @@ sudo -u ${NEW_USER} systemctl --user enable gcr-ssh-agent.socket
 # Configure Gnome's default file associations (based on shared-mime-info-gnome)
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gnome/gnome-mimeapps.list -o /usr/share/applications/gnome-mimeapps.list
 
+# Enable VRR
+sudo -u ${NEW_USER} gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
+
 ################################################
 ##### Disable unneeded packages and services
 ################################################

@@ -1,3 +1,5 @@
+@import 'colors.css';
+@import 'window_decorations.css';
 @define-color accent_color #3daee9;
 @define-color accent_bg_color #3daee9;
 @define-color accent_fg_color #ffffff;

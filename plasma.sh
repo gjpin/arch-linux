@@ -146,8 +146,8 @@ systemctl enable sddm.service
 
 # Apply Breeze Dark theme to GTK applications
 mkdir -p /home/${NEW_USER}/.config/{gtk-3.0,gtk-4.0}
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/gtk.css -o /home/${NEW_USER}/.config/gtk-3.0/gtk.css
-curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/gtk.css -o /home/${NEW_USER}/.config/gtk-4.0/gtk.css
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/kde-gtk.css -o /home/${NEW_USER}/.config/gtk-3.0/gtk.css
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/gtk/kde-gtk.css -o /home/${NEW_USER}/.config/gtk-4.0/gtk.css
 
 # Select GTK theme
 mkdir -p /home/${NEW_USER}/.config/xsettingsd

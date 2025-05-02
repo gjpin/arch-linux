@@ -170,6 +170,11 @@ EOF
 elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
     # Better KDE Plasma integration
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/plasma.js >> ${FIREFOX_PROFILE_PATH}/user.js
+
+tee -a ${HOME}/.local/share/flatpak/overrides/org.mozilla.firefox << EOF
+[Environment]
+GTK_THEME=Breeze
+EOF
 fi
 
 ################################################
