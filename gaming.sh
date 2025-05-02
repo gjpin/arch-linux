@@ -41,7 +41,7 @@ fi
 # https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/advanced_usage.html#port
 
 # Install sunshine
-sudo -u ${NEW_USER} paru -S --noconfirm sunshine-bin
+sudo -u ${NEW_USER} paru -S --noconfirm sunshine-beta-bin
 
 # Enable sunshine service
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
