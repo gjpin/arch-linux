@@ -1,2 +1,5 @@
 [Context]
-filesystems=!home;!host;
+filesystems=!home;!host;xdg-config/sunshine;
+
+[Session Bus Policy]
+org.freedesktop.Flatpak=talk

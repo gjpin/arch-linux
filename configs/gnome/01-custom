@@ -80,6 +80,12 @@ binding='<Shift><Control>Escape'
 command='gnome-system-monitor'
 name='Gnome System Monitor'
 
+[org/gnome/Ptyxis/Shortcuts]
+close-tab='<Control>w'
+
+[org/gnome/Ptyxis/Shortcuts]
+move-next-tab='<Control>Tab'
+
 [org/gnome/desktop/app-folders]
 folder-children=['Office', 'Dev', 'Media', 'System', 'Gaming', 'Emulators', 'Security']
 
