@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-if [ ${VR_NATIVE} = "yes" ]; then
-
 ################################################
 ##### Custom repo
 ################################################
@@ -31,22 +29,28 @@ pacman -Sy
 # Install OpenXR and OpenVR
 pacman -S --noconfirm openxr openvr
 
-# Install Monado and OpenComposite 
+# Install Monado, OpenComposite and xrizer
 sudo -u ${NEW_USER} paru -S --noconfirm \
     gjpin/xr-hardware-git \
     gjpin/monado-git \
-    gjpin/opencomposite-git
+    gjpin/opencomposite-git \
+    gjpin/xrizer-git
 
 # Install WlxOverlay-S
 sudo -u ${NEW_USER} paru -S --noconfirm gjpin/wlx-overlay-s-git
 
-# Setup OpenVR to use OpenComposite (but leave Steam as default)
+# Setup OpenVR to use OpenComposite
 mkdir -p /home/${NEW_USER}/.config/openvr
-curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/openvr/openvrpaths.vrpath.opencomp | envsubst > /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.opencomp
+
+curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/openvr/openvrpaths.vrpath.opencomposite | envsubst > /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.opencomposite
 curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/openvr/openvrpaths.vrpath.steam | envsubst > /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.steam
-chmod 444 /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.opencomp
+curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/openvr/openvrpaths.vrpath.xrizer | envsubst > /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.xrizer
+
+chmod 444 /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.opencomposite
 chmod 444 /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.steam
-ln -sf /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.steam /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath
+chmod 444 /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.xrizer
+
+ln -sf /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath.opencomposite /home/${NEW_USER}/.config/openvr/openvrpaths.vrpath
 
 ################################################
 ##### WiVRn
@@ -97,5 +101,3 @@ firewall-offline-cmd --zone=home --add-port=9943/tcp
 firewall-offline-cmd --zone=home --add-port=9943/udp
 firewall-offline-cmd --zone=home --add-port=9944/tcp
 firewall-offline-cmd --zone=home --add-port=9944/udp
-
-fi

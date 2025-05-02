@@ -49,15 +49,6 @@ EOF
 # https://wiki.archlinux.org/title/Pacman/Package_signing#Initializing_the_keyring
 # https://wiki.archlinux.org/title/Makepkg
 
-if [ ${STEAM_NATIVE} = "yes" ]; then
-    # Enable multilib repository
-    sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
-fi
-
-# Always ignore amdvlk packages
-# sed -i '/^#IgnorePkg/s/^#//' /etc/pacman.conf
-# sed -i '/^IgnorePkg/s/$/ amdvlk lib32-amdvlk/' /etc/pacman.conf
-
 # Force pacman to refresh the package lists
 pacman -Syyu --noconfirm
 
@@ -527,6 +518,7 @@ mkdir -p \
   /home/${NEW_USER}/.local/share/applications \
   /home/${NEW_USER}/.local/share/themes \
   /home/${NEW_USER}/.local/share/fonts \
+  /home/${NEW_USER}/.local/bin \
   /home/${NEW_USER}/.config/autostart \
   /home/${NEW_USER}/.config/environment.d \
   /home/${NEW_USER}/.config/autostart \
@@ -656,17 +648,6 @@ pacman -S --noconfirm ffmpeg
 
 # Install GPU drivers related packages
 pacman -S --noconfirm mesa vulkan-icd-loader vulkan-mesa-layers ${GPU_PACKAGES}
-
-# Install 32-bit packages
-if [ ${STEAM_NATIVE} = "yes" ]; then
-    pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
-
-    if lspci | grep "VGA" | grep "Intel" > /dev/null; then
-        pacman -S --noconfirm lib32-vulkan-intel
-    elif lspci | grep "VGA" | grep "AMD" > /dev/null; then
-        pacman -S --noconfirm lib32-vulkan-radeon lib32-libva
-    fi
-fi
 
 # Override VA-API driver via environment variable
 tee -a /etc/environment << EOF
@@ -1126,20 +1107,21 @@ do
 done
 
 ################################################
-##### Gaming
+##### Gaming / XR related applications
 ################################################
 
-# Install and configure gaming with Flatpak
-if [ ${GAMING} = "yes" ]; then
-    /install-arch/gaming.sh
+# Install Steam
+if [ ${STEAM_NATIVE} = "yes" ]; then
+    /install-arch/steam.sh
 fi
 
-################################################
-##### VR
-################################################
+# Install Sunshine
+if [ ${SUNSHINE_NATIVE} = "yes" ]; then
+    /install-arch/sunshine.sh
+fi
 
-# Install and configure VR
-if [ ${VR} = "yes" ]; then
+# Install VR related apps
+if [ ${VR_NATIVE} = "yes" ]; then
     /install-arch/vr.sh
 fi
 

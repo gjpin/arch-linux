@@ -2,13 +2,13 @@
   "config": [
     "/home/${NEW_USER}/.local/share/Steam/config"
   ],
-  "external_drivers": [],
+  "external_drivers": null,
   "jsonid": "vrpathreg",
   "log": [
     "/home/${NEW_USER}/.local/share/Steam/logs"
   ],
   "runtime": [
-    "/opt/opencomposite"
+    "/opt/xrizer"
   ],
   "version": 1
 }

@@ -41,16 +41,13 @@ export TIMEZONE
 read -p "Desktop environment (plasma / gnome): " DESKTOP_ENVIRONMENT
 export DESKTOP_ENVIRONMENT
 
-read -p "Gaming (yes / no): " GAMING
-export GAMING
-
 read -p "Steam native (yes / no): " STEAM_NATIVE
 export STEAM_NATIVE
 
-read -p "VR (yes / no): " VR
-export VR
+read -p "Sunshine native (yes / no): " SUNSHINE_NATIVE
+export SUNSHINE_NATIVE
 
-read -p "VR_NATIVE (yes / no): " VR_NATIVE
+read -p "VR native - ALVR/Envision (yes / no): " VR_NATIVE
 export VR_NATIVE
 
 read -p "Autologin (yes / no): " AUTOLOGIN
@@ -207,11 +204,7 @@ fi
 
 # Configure system
 mkdir -p /mnt/install-arch
-cp ./gaming.sh /mnt/install-arch/gaming.sh
-cp ./gnome.sh /mnt/install-arch/gnome.sh
-cp ./plasma.sh /mnt/install-arch/plasma.sh
-cp ./setup.sh /mnt/install-arch/setup.sh
-cp ./vr.sh /mnt/install-arch/vr.sh
+cp ./*.sh /mnt/install-arch
 arch-chroot /mnt /bin/bash /install-arch/setup.sh
 rm -rf /mnt/install-arch
 umount -R /mnt

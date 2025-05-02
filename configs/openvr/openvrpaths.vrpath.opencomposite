@@ -8,7 +8,7 @@
     "/home/${NEW_USER}/.local/share/Steam/logs"
   ],
   "runtime": [
-    "/home/${NEW_USER}/.local/share/Steam/steamapps/common/SteamVR"
+    "/opt/opencomposite"
   ],
   "version": 1
 }
