@@ -189,6 +189,9 @@ fi
 
 if [ ${GAMING} = "yes" ]; then
     if [ ! -e "/usr/bin/steam" ]; then
+        # Create directory for Steam games
+        mkdir -p $HOME/Games/Steam
+
         # Install Steam
         flatpak install -y flathub com.valvesoftware.Steam
         curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/com.valvesoftware.Steam -o ${HOME}/.local/share/flatpak/overrides/com.valvesoftware.Steam
@@ -285,6 +288,9 @@ if [ "$VR" = "yes" ]; then
     mkdir -p ${HOME}/.var/app/com.valvesoftware.Steam/.config/openxr
     mkdir -p ${HOME}/.config/openxr/1
     ln -s ${HOME}/.config/openxr/1 ${HOME}/.var/app/com.valvesoftware.Steam/.config/openxr/1
+
+    # Enable Avahi service
+    sudo systemctl enable avahi-daemon.service
 
     # Allow mDNS through firewall (required by WiVRn)
     sudo firewall-cmd --zone=home --add-port=5353/udp --permanent
