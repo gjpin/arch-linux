@@ -1,2 +1,2 @@
 [Context]
-filesystems=!home;!host;home/Games/Steam;xdg-run/pipewire-0;xdg-run/wivrn:ro;xdg-data/flatpak/app/io.github.wivrn.wivrn:ro;xdg-config/openxr:ro;xdg-config/openvr:ro;
+filesystems=!home;!host;home/Games/Steam;xdg-run/pipewire-0;xdg-run/wivrn:ro;xdg-data/flatpak/app/io.github.wivrn.wivrn:ro;xdg-config/openxr:ro;xdg-config/openvr:ro;home/steamvr;
