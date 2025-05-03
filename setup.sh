@@ -756,6 +756,9 @@ pacman -S --noconfirm syncthing
 chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}
 sudo -u ${NEW_USER} systemctl --user enable syncthing.service
 
+# Allow Syncthing through firewall
+firewall-offline-cmd --zone=home --add-port=22000/tcp
+
 ################################################
 ##### Podman
 ################################################
