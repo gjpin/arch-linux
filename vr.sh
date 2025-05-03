@@ -71,6 +71,9 @@ sudo -u ${NEW_USER} paru -S --noconfirm \
 mkdir -p /home/${NEW_USER}/.config/wivrn
 curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/wivrn/config.json -o /home/${NEW_USER}/.config/wivrn/config.json
 
+# Enable Avahi service
+systemctl enable avahi-daemon.service
+
 # Allow mDNS through firewall
 firewall-offline-cmd --zone=home --add-port=5353/udp
 
