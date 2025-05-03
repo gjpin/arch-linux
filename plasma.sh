@@ -268,3 +268,72 @@ sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group FeedbackStyle --key "
 
 # Disable cursor shake
 sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Plugins --key "shakecursorEnabled" --type bool false
+
+# Disable windows outline
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "Common" --key OutlineIntensity "OutlineOff"
+
+################################################
+##### Titlebar color schemes
+################################################
+
+# References:
+# https://github.com/eritbh/kde-application-titlebar-themes
+
+# Create directory for custom color schemes
+mkdir -p /home/${NEW_USER}/.local/share/color-schemes
+
+# VSCode
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/VSCodeModernDark.colors
+
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key decocolor "VSCodeModernDark"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key Description "Application settings for Code"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key wmclass "code Code"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key wmclasscomplete "true"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6" --key wmclassmatch "1"
+
+# Discord
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/DiscordOnyx.colors
+
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key Description "Application settings for discord"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key decocolor "DiscordOnyx"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key wmclass "discord"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "2100c0f9-f5ae-410a-ab1c-892232f95c06" --key wmclassmatch "1"
+
+# Heroic
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/HeroicGamesLauncher.colors
+
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key Description "Application settings for heroic"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key decocolor "HeroicGamesLauncher"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key wmclass "heroic"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "474e9587-e3c9-4d3b-adb8-81126272ced3" --key wmclassmatch "1"
+
+# Obsidian
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/ObsidianDark.colors
+
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key Description "Application settings for obsidian"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key decocolor "ObsidianDark"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key wmclass "obsidian"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "eaf84238-f041-4f87-b04b-0ba58bcddff3" --key wmclassmatch "1"
+
+# Spotify
+curl -O --output-dir /home/${NEW_USER}/.local/share/color-schemes https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/colors/Spotify.colors
+
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key Description "Application settings for Spotify"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key clientmachine "localhost"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key decocolor "Spotify"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key decocolorrule "2"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key wmclass "spotify Spotify"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key wmclasscomplete "true"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "f251c05a-63f7-4d9c-a7c8-9bfb6728acb4" --key wmclassmatch "1"
+
+# General
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "General" --key count "5"
+sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "General" --key rules "474e9587-e3c9-4d3b-adb8-81126272ced3,eaf84238-f041-4f87-b04b-0ba58bcddff3,2100c0f9-f5ae-410a-ab1c-892232f95c06,0fcd2e39-42a2-4e82-a8b0-ee01dbe06bd6,f251c05a-63f7-4d9c-a7c8-9bfb6728acb4"
