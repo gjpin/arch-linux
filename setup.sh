@@ -148,7 +148,7 @@ EOF
 
 # Make boot quite and disable watchdog
 tee /etc/cmdline.d/quiet.conf << EOF
-nowatchdog quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0 splash
+nowatchdog quiet loglevel=2 systemd.show_status=auto rd.udev.log_level=2 vt.global_cursor_default=0 splash
 EOF
 
 # Security options
