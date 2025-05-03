@@ -45,3 +45,6 @@ if pacman -Qs lib32-amdvlk > /dev/null; then
     pacman -S --noconfirm lib32-vulkan-radeon
     pacman -Rs --noconfirm lib32-amdvlk
 fi
+
+# Create directory for Steam games
+mkdir -p /home/${NEW_USER}/Games/Steam
