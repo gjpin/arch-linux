@@ -29,7 +29,7 @@ return {
 EOF
 
 ################################################
-##### Firefox (native)
+##### Firefox (Flatpak)
 ################################################
 
 # References:
@@ -37,18 +37,19 @@ EOF
 # Theme is manually installed and not from AUR, since Firefox flatpak cannot access it
 
 # Install Firefox
-pacman -S --noconfirm firefox
+flatpak install -y flathub org.mozilla.firefox
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.mozilla.firefox -o ${HOME}/.local/share/flatpak/overrides/org.mozilla.firefox
 
 # Set Firefox as default browser and handler for http/s
-sudo -u ${NEW_USER} xdg-settings set default-web-browser firefox.desktop
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/http
-sudo -u ${NEW_USER} xdg-mime default firefox.desktop x-scheme-handler/https
+xdg-settings set default-web-browser org.mozilla.firefox.desktop
+xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/http
+xdg-mime default org.mozilla.firefox.desktop x-scheme-handler/https
 
 # Temporarily open firefox to create profile
-sudo -u ${NEW_USER} timeout 5 firefox --headless
+timeout 5 flatpak run org.mozilla.firefox --headless
 
 # Set Firefox profile path
-export FIREFOX_PROFILE_PATH=$(find /home/${NEW_USER}/.mozilla/firefox -type d -name "*.default-release")
+export FIREFOX_PROFILE_PATH=$(find ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox -type d -name "*.default-release")
 
 # Import extensions
 mkdir -p ${FIREFOX_PROFILE_PATH}/extensions
@@ -61,7 +62,7 @@ curl https://addons.mozilla.org/firefox/downloads/file/3932862/multi_account_con
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/user.js -o ${FIREFOX_PROFILE_PATH}/user.js
 
 # Desktop environment specific configurations
-if [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
+if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Firefox Gnome theme integration
     mkdir -p ${FIREFOX_PROFILE_PATH}/chrome
     git clone https://github.com/rafaelmardojai/firefox-gnome-theme.git ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme
@@ -70,19 +71,25 @@ if [ ${DESKTOP_ENVIRONMENT} = "gnome" ]; then
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/gnome.js >> ${FIREFOX_PROFILE_PATH}/user.js
 
     # Firefox theme updater
-    tee -a /usr/local/bin/update-all << 'EOF'
+    sudo tee -a /usr/local/bin/update-all << 'EOF'
 
 ################################################
 ##### Firefox
 ################################################
 
 # Update Firefox theme
-FIREFOX_PROFILE_PATH=$(realpath ${HOME}/.mozilla/firefox -type d -name "*.default-release")
+FIREFOX_PROFILE_PATH=$(realpath ${HOME}/.var/app/org.mozilla.firefox/.mozilla/firefox/*.default-release)
 git -C ${FIREFOX_PROFILE_PATH}/chrome/firefox-gnome-theme pull
 EOF
-elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
+elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
     # Better KDE Plasma integration
     curl -sSL https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/firefox/plasma.js >> ${FIREFOX_PROFILE_PATH}/user.js
+
+tee -a ${HOME}/.local/share/flatpak/overrides/org.mozilla.firefox << EOF
+
+[Environment]
+GTK_THEME=Breeze
+EOF
 fi
 
 ################################################
