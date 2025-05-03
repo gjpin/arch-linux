@@ -89,6 +89,9 @@ firewall-offline-cmd --zone=home --add-port=9757/udp
 # https://github.com/alvr-org/ALVR/wiki/Flatpak
 # https://github.com/alvr-org/ALVR/wiki/Installation-guide
 
+# Ensure alvr firewalld service does not exist due to conflict
+rm -f /usr/lib/firewalld/services/alvr.xml
+
 # Install ALVR
 sudo -u ${NEW_USER} paru -S --noconfirm gjpin/alvr-git
 

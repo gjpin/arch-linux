@@ -7,6 +7,9 @@
 # Enable multilib repository
 sed -i '/#\[multilib\]/{N;s/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/\[multilib\]\nInclude = \/etc\/pacman.d\/mirrorlist/}' /etc/pacman.conf
 
+# Refresh package databases
+pacman -Sy
+
 # Install 32-bit packages
 pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-mesa-layers
 
