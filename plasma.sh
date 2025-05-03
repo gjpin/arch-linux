@@ -62,6 +62,7 @@ pacman -S --noconfirm \
     xdg-desktop-portal-kde
 
 # Non-Plasma packages (add-ons, extensions, ...)
+# https://community.kde.org/Distributions/Packaging_Recommendations#Non-Plasma_packages
 pacman -S --noconfirm \
     baloo-widgets \
     dolphin-plugins \
@@ -74,15 +75,18 @@ pacman -S --noconfirm \
     kio-admin \
     kio-extras \
     kio-fuse \
-    libappindicator-gtk3 \
     phonon-qt6-vlc \
     qt6-imageformats \
     xwaylandvideobridge
 
 # 3rd-party packages
+# https://community.kde.org/Distributions/Packaging_Recommendations#3rd-party_packages
 pacman -S --noconfirm \
+    fprintd \
     icoutils \
     iio-sensor-proxy \
+    libappindicator-gtk3 \
+    qt-imageformats \
     switcheroo-control \
     xdg-desktop-portal-gtk \
     xsettingsd

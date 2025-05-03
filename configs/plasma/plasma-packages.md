@@ -3,7 +3,7 @@
 # https://download.kde.org/stable/plasma/
 
 ```
-packages=$(curl -s https://download.kde.org/stable/plasma/6.1.0/ | grep -o -P '(?<=<a href=")(.*)(?=-6.1.0.tar.xz.sig"><img)')
+packages=$(curl -s https://download.kde.org/stable/plasma/6.3.4/ | grep -o -P '(?<=<a href=")(.*)(?=-6.3.4.tar.xz.sig"><img)')
 ```
 
 # packages to remove from Plasma Desktop:
@@ -11,7 +11,7 @@ packages=$(curl -s https://download.kde.org/stable/plasma/6.1.0/ | grep -o -P '(
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
 
 ```
-echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|plasma-tests/d'
+echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|breeze-grub\|breeze-plymouth\|discover\|krdp\|plasma-dialer\|plasma-welcome\|plymouth-kcm\|spacebar\|plasma-tests/d'
 ```
 
 # Plasma packages
@@ -20,10 +20,7 @@ echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plas
 
 bluedevil
 breeze
-breeze-grub # skip
 breeze-gtk
-breeze-plymouth # skip
-discover # skip
 drkonqi
 flatpak-kcm
 kactivitymanagerd
@@ -36,7 +33,6 @@ kglobalacceld
 kinfocenter
 kmenuedit
 kpipewire
-krdp # skip
 kscreen
 kscreenlocker
 ksshaskpass
@@ -66,16 +62,15 @@ plasma-pa
 plasma-systemmonitor
 plasma-thunderbolt
 plasma-vault
-plasma-welcome # skip
 plasma-workspace
 plasma-workspace-wallpapers
 plasma5support
-plymouth-kcm # skip
 polkit-kde-agent-1
 powerdevil
 print-manager
 qqc2-breeze-style
 sddm-kcm
+spectacle
 systemsettings
 wacomtablet
 xdg-desktop-portal-kde
@@ -97,8 +92,9 @@ kio-admin
 kio-extras
 kio-fuse
 kio-gdrive # skip
+kwalletmanager
 libappindicator-gtk3
-phonon-vlc # phonon-qt5-vlc
+phonon-vlc # phonon-qt6-vlc
 qt-imageformats
 xwaylandvideobridge
 
