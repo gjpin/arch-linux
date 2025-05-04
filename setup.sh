@@ -546,6 +546,12 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.zshrc 
 # Configure powerlevel10k zsh theme
 curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/zsh/.p10k.zsh -o /home/${NEW_USER}/.p10k.zsh
 
+# Configure pacman (makepkg)
+mkdir -p /home/${NEW_USER}/.config/pacman
+tee /home/${NEW_USER}/.config/pacman/makepkg.conf << 'EOF'
+BUILDDIR=/tmp/build
+EOF
+
 ################################################
 ##### Networking
 ################################################
@@ -651,17 +657,17 @@ sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
 pacman -S --noconfirm tk python-notify2 python-psutil
 
 # Receive notifications of AppArmor denials
-mkdir -p /home/${NEW_USER}/.config/autostart
-tee /home/${NEW_USER}/.config/autostart/apparmor-notify.desktop << 'EOF'
-[Desktop Entry]
-Type=Application
-Name=AppArmor Notify
-Comment=Receive on screen notifications of AppArmor denials
-TryExec=aa-notify
-Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
-StartupNotify=false
-NoDisplay=true
-EOF
+# mkdir -p /home/${NEW_USER}/.config/autostart
+# tee /home/${NEW_USER}/.config/autostart/apparmor-notify.desktop << 'EOF'
+# [Desktop Entry]
+# Type=Application
+# Name=AppArmor Notify
+# Comment=Receive on screen notifications of AppArmor denials
+# TryExec=/usr/bin/aa-notify
+# Exec=/usr/bin/aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
+# StartupNotify=false
+# NoDisplay=true
+# EOF
 
 ################################################
 ##### ffmpeg

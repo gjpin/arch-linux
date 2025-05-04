@@ -163,13 +163,6 @@ curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/plasma/xset
 
 # Use the KDE Wallet to store ssh key passphrases
 # https://wiki.archlinux.org/title/KDE_Wallet#Using_the_KDE_Wallet_to_store_ssh_key_passphrases
-tee /home/${NEW_USER}/.config/autostart/ssh-add.desktop << EOF
-[Desktop Entry]
-Exec=ssh-add -q
-Name=ssh-add
-Type=Application
-EOF
-
 tee /home/${NEW_USER}/.config/environment.d/ssh_askpass.conf << EOF
 SSH_ASKPASS='/usr/bin/ksshaskpass'
 GIT_ASKPASS=ksshaskpass
