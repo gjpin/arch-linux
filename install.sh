@@ -184,8 +184,8 @@ fi
 
 # Import mirrorlist
 tee /etc/pacman.d/mirrorlist << 'EOF'
-Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
 Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
 EOF
 
 # Synchronize package databases
