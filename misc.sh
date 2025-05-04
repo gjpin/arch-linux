@@ -516,15 +516,66 @@ firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source add
 firewall-offline-cmd --zone=block --add-rich-rule='rule family="ipv4" source address="10.100.100.0/24" port port="48000" protocol="udp" accept log prefix="Sunshine - Audio"'
 
 ################################################
-##### AppArmor profiles
+##### AppArmor
 ################################################
 
 # References:
 # https://wiki.archlinux.org/title/AppArmor
 # https://wiki.archlinux.org/title/Audit_framework
 # https://github.com/roddhjav/apparmor.d
+# https://apparmor.pujol.io/
 
-# Allow user to read audit logs and get desktop notification on DENIED actions
+# Install AppArmor
+pacman -S --noconfirm apparmor
+
+# Enable AppArmor service
+systemctl enable apparmor.service
+
+# Enable caching AppArmor profiles
+sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
+sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
+
+# Install and enable Audit Framework
+pacman -S --noconfirm audit
+systemctl enable auditd.service
+
+# Install AppArmor.d profiles
+# Needed till packages are split: https://github.com/roddhjav/apparmor.d/issues/464
+sudo -u ${NEW_USER} git clone https://aur.archlinux.org/apparmor.d-git.git /tmp/apparmor.d-git
+sudo -u ${NEW_USER} sed -i 's/^\(\s*\)make DISTRIBUTION=arch/\1make enforce DISTRIBUTION=arch/' /tmp/apparmor.d-git/PKGBUILD
+sudo -u ${NEW_USER} makepkg -si --noconfirm --dir /tmp/apparmor.d-git
+rm -rf /tmp/apparmor.d-git
+
+# AppArmor.d profiles updater
+# Needed till packages are split: https://github.com/roddhjav/apparmor.d/issues/464
+tee -a /usr/local/bin/update-all << 'EOF'
+
+################################################
+##### AppArmor.d
+################################################
+
+# Update AppArmor.d profiles
+git clone https://aur.archlinux.org/apparmor.d-git.git /tmp/apparmor.d-git
+sed -i 's/^\(\s*\)make DISTRIBUTION=arch/\1make enforce DISTRIBUTION=arch/' /tmp/apparmor.d-git/PKGBUILD
+makepkg -si --noconfirm --dir /tmp/apparmor.d-git
+rm -rf /tmp/apparmor.d-git
+EOF
+
+# Configure AppArmor.d
+mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
+
+tee /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d/local << 'EOF'
+@{XDG_PROJECTS_DIR}+="Projects" ".devtools"
+@{XDG_GAMES_DIR}+="Games"
+@{XDG_PASSWORD_STORE_DIR}=".password-store" "@{HOME}/Sync/credentials/"
+EOF
+
+# Allow Dolphin / Nautilus to access system files
+tee /etc/apparmor.d/local/{nautilus,dolphin} << 'EOF'
+/** r,
+EOF
+
+# Get desktop notification on DENIED actions
 groupadd -r audit
 
 usermod -a -G audit ${NEW_USER}
@@ -545,9 +596,6 @@ Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
 StartupNotify=false
 NoDisplay=true
 EOF
-
-# Install additional AppArmor profiles
-sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
 
 ################################################
 ##### Node.js

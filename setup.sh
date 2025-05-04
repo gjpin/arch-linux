@@ -611,10 +611,6 @@ systemctl enable apparmor.service
 sed -i "s|^#write-cache|write-cache|g" /etc/apparmor/parser.conf
 sed -i "s|^#Optimize=compress-fast|Optimize=compress-fast|g" /etc/apparmor/parser.conf
 
-# Install and enable Audit Framework
-pacman -S --noconfirm audit
-systemctl enable auditd.service
-
 # Install AppArmor.d profiles
 sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
 
@@ -630,6 +626,32 @@ EOF
 # Allow Dolphin / Nautilus to access system files
 tee /etc/apparmor.d/local/{nautilus,dolphin} << 'EOF'
 /** r,
+EOF
+
+# Install and enable Audit Framework
+pacman -S --noconfirm audit
+systemctl enable auditd.service
+
+# Get desktop notification on DENIED actions
+groupadd -r audit
+
+usermod -a -G audit ${NEW_USER}
+
+sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
+
+pacman -S --noconfirm python-notify2 python-psutil
+
+mkdir -p /home/${NEW_USER}/.config/autostart
+
+tee /home/${NEW_USER}/.config/autostart/apparmor-notify.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=AppArmor Notify
+Comment=Receive on screen notifications of AppArmor denials
+TryExec=aa-notify
+Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
+StartupNotify=false
+NoDisplay=true
 EOF
 
 ################################################

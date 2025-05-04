@@ -86,7 +86,7 @@ pacman -S --noconfirm \
     icoutils \
     iio-sensor-proxy \
     libappindicator-gtk3 \
-    qt-imageformats \
+    qt6-imageformats \
     switcheroo-control \
     xdg-desktop-portal-gtk \
     xsettingsd
