@@ -270,7 +270,7 @@ sudo -u ${NEW_USER} kwriteconfig6 --file klaunchrc --group FeedbackStyle --key "
 sudo -u ${NEW_USER} kwriteconfig6 --file kwinrc --group Plugins --key "shakecursorEnabled" --type bool false
 
 # Disable windows outline
-sudo -u ${NEW_USER} kwriteconfig6 --file kwinrulesrc --group "Common" --key OutlineIntensity "OutlineOff"
+sudo -u ${NEW_USER} kwriteconfig6 --file breezerc --group "Common" --key OutlineIntensity "OutlineOff"
 
 ################################################
 ##### Titlebar color schemes
