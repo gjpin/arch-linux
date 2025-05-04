@@ -966,6 +966,10 @@ pacman -S --noconfirm \
     python-bcc \
     bpftrace
 
+# Install misc development packages
+pacman -S --noconfirm \
+    just
+
 ################################################
 ##### Android
 ################################################
