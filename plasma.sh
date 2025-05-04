@@ -76,8 +76,7 @@ pacman -S --noconfirm \
     kio-extras \
     kio-fuse \
     phonon-qt6-vlc \
-    qt6-imageformats \
-    xwaylandvideobridge
+    qt6-imageformats
 
 # 3rd-party packages
 # https://community.kde.org/Distributions/Packaging_Recommendations#3rd-party_packages
