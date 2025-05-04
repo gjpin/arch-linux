@@ -597,7 +597,6 @@ rm -rf /tmp/paru-bin
 
 # References:
 # https://wiki.archlinux.org/title/AppArmor
-# https://wiki.archlinux.org/title/Audit_framework
 # https://github.com/roddhjav/apparmor.d
 # https://apparmor.pujol.io/
 
@@ -628,21 +627,31 @@ tee /etc/apparmor.d/local/{nautilus,dolphin} << 'EOF'
 /** r,
 EOF
 
+################################################
+##### Audit Framework
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Audit_framework
+
 # Install and enable Audit Framework
 pacman -S --noconfirm audit
 systemctl enable auditd.service
 
-# Get desktop notification on DENIED actions
+# Create 'audit' group
 groupadd -r audit
 
+# Add user to 'audit' group
 usermod -a -G audit ${NEW_USER}
 
+# Change log group to 'audit'
 sed -i "s|^log_group.*|log_group = audit|g" /etc/audit/auditd.conf
 
-pacman -S --noconfirm python-notify2 python-psutil
+# Install dependencies
+pacman -S --noconfirm tk python-notify2 python-psutil
 
+# Receive notifications of AppArmor denials
 mkdir -p /home/${NEW_USER}/.config/autostart
-
 tee /home/${NEW_USER}/.config/autostart/apparmor-notify.desktop << 'EOF'
 [Desktop Entry]
 Type=Application
