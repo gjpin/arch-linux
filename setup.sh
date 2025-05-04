@@ -616,26 +616,7 @@ pacman -S --noconfirm audit
 systemctl enable auditd.service
 
 # Install AppArmor.d profiles
-# Needed till packages are split: https://github.com/roddhjav/apparmor.d/issues/464
-sudo -u ${NEW_USER} git clone https://aur.archlinux.org/apparmor.d-git.git /tmp/apparmor.d-git
-sudo -u ${NEW_USER} sed -i 's/^\(\s*\)make DISTRIBUTION=arch/\1make enforce DISTRIBUTION=arch/' /tmp/apparmor.d-git/PKGBUILD
-sudo -u ${NEW_USER} makepkg -si --noconfirm --dir /tmp/apparmor.d-git
-rm -rf /tmp/apparmor.d-git
-
-# AppArmor.d profiles updater
-# Needed till packages are split: https://github.com/roddhjav/apparmor.d/issues/464
-tee -a /usr/local/bin/update-all << 'EOF'
-
-################################################
-##### AppArmor.d
-################################################
-
-# Update AppArmor.d profiles
-git clone https://aur.archlinux.org/apparmor.d-git.git /tmp/apparmor.d-git
-sed -i 's/^\(\s*\)make DISTRIBUTION=arch/\1make enforce DISTRIBUTION=arch/' /tmp/apparmor.d-git/PKGBUILD
-makepkg -si --noconfirm --dir /tmp/apparmor.d-git
-rm -rf /tmp/apparmor.d-git
-EOF
+sudo -u ${NEW_USER} paru -S --noconfirm apparmor.d-git
 
 # Configure AppArmor.d
 mkdir -p /etc/apparmor.d/tunables/xdg-user-dirs.d/apparmor.d.d
