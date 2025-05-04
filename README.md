@@ -13,7 +13,7 @@ WARNING: Running install.sh with delete all data in nvme0n1 and nvme1n1 (if usin
 - Single disk or RAID0 support
 - nftables
 - Paru (AUR helper)
-- AppArmor + AppArmor.d profiles (complain mode by default)
+- AppArmor + AppArmor.d profiles (enforce mode by default)
 - ZSH
 - Plasma / Gnome / Sway
 - Steam / Heroic / Bottles
@@ -71,7 +71,6 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     systemctl --user enable gcr-ssh-agent.socket
 fi
 ```
-13. Consider [enforcing AppArmor.d profiles](https://apparmor.pujol.io/enforce/)
 
 ## Guides
 See [HERE](https://github.com/gjpin/arch-linux/blob/main/GUIDES.md)
