@@ -83,6 +83,10 @@ if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
     # Install Celluloid
     flatpak install -y flathub io.github.celluloid_player.Celluloid
     curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/io.github.celluloid_player.Celluloid -o ${HOME}/.local/share/flatpak/overrides/io.github.celluloid_player.Celluloid
+elif [[ "$XDG_CURRENT_DESKTOP" == *"KDE"* ]]; then
+    # Install NeoChat
+    flatpak install -y flathub com.github.tchx84.Flatseal
+    curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/flatpak/org.kde.neochat -o ${HOME}/.local/share/flatpak/overrides/org.kde.neochat
 fi
 
 # Install applications
