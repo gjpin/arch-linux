@@ -34,7 +34,6 @@
         }
     },
     "git.useIntegratedAskPass": false,
-    "chat.commandCenter.enabled": false,
     "telemetry.feedback.enabled": false,
     "dotnetAcquisitionExtension.enableTelemetry": false,
     "mcp": {
