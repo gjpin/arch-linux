@@ -28,7 +28,7 @@ elif [ ${DESKTOP_ENVIRONMENT} = "plasma" ]; then
 fi
 
 # Enable KMS display capture
-setcap cap_sys_admin+p $(readlink -f /usr/bin/sunshine)
+setcap cap_sys_admin+p /usr/bin/sunshine
 
 # Allow Sunshine through firewall
 firewall-offline-cmd --zone=home --add-port=47984/tcp
@@ -37,3 +37,16 @@ firewall-offline-cmd --zone=home --add-port=48010/tcp
 firewall-offline-cmd --zone=home --add-port=47998/udp
 firewall-offline-cmd --zone=home --add-port=47999/udp
 firewall-offline-cmd --zone=home --add-port=48000/udp
+
+# Sunshine pacman hook
+tee /etc/pacman.d/hooks/95-sunshine.hook << 'EOF'
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = sunshine-beta-bin
+
+[Action]
+Description = Re-enabling Sunshine's KMS display capture
+When = PostTransaction
+Exec = /usr/bin/setcap cap_sys_admin+p /usr/bin/sunshine
+EOF
