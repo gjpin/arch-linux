@@ -59,16 +59,16 @@ rm -f flatpak.sh
 ```
 12. Ensure user services are running
 ```bash
-systemctl --user enable pipewire-pulse.service
-systemctl --user enable syncthing.service
-systemctl --user enable podman.socket
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user enable --now syncthing.service
+systemctl --user enable --now podman.socket
 
-if [[ -d "${HOME}/.var/app/com.valvesoftware.Steam" || -f "/usr/bin/steam" ]]; then
-    systemctl --user enable sunshine
+if [[ -f "/usr/bin/sunshine" ]]; then
+    systemctl --user enable --now sunshine
 fi
 
 if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-    systemctl --user enable gcr-ssh-agent.socket
+    systemctl --user enable --now gcr-ssh-agent.socket
 fi
 ```
 13. Consider [enforcing AppArmor.d profiles](https://apparmor.pujol.io/enforce/)
