@@ -6,10 +6,6 @@
 
 # References:
 # https://wiki.archlinux.org/title/System_time#Time_zone
-# https://wiki.archlinux.org/title/Systemd-timesyncd
-
-# Enable systemd-timesyncd
-systemctl enable systemd-timesyncd.service
 
 # Set timezone
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
@@ -290,6 +286,26 @@ sbctl sign --save /boot/EFI/Linux/arch-linux-lts.efi
 sbctl sign --save /boot/EFI/systemd/systemd-bootx64.efi
 sbctl sign --save /boot/vmlinuz-linux
 sbctl sign --save /boot/vmlinuz-linux-lts
+
+################################################
+##### Chrony
+################################################
+
+# References:
+# https://wiki.archlinux.org/title/Chrony
+# https://github.com/secureblue/secureblue/blob/live/files/system/etc/chrony.conf
+
+# Install chrony
+pacman -S --noconfirm chrony
+
+# Import chrony config
+curl https://raw.githubusercontent.com/gjpin/arch-linux/main/configs/chrony/chrony.conf -o /etc/chrony.conf
+
+# Enable chrony
+systemctl enable chronyd.service
+
+# Ensure systemd-timesyncd is disabled
+systemctl disable systemd-timesyncd.service
 
 ################################################
 ##### Common applications
