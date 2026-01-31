@@ -3,7 +3,7 @@
 # https://download.kde.org/stable/plasma/
 
 ```
-packages=$(curl -s https://download.kde.org/stable/plasma/6.3.4/ | grep -o -P '(?<=<a href=")(.*)(?=-6.3.4.tar.xz.sig"><img)')
+packages=$(curl -s https://download.kde.org/stable/plasma/6.5.4/ | grep -o -P '(?<=<a href=")(.*)(?=-6.5.4.tar.xz.sig"><img)')
 ```
 
 # packages to remove from Plasma Desktop:
@@ -11,7 +11,7 @@ packages=$(curl -s https://download.kde.org/stable/plasma/6.3.4/ | grep -o -P '(
 # https://community.kde.org/Distributions/Packaging_Recommendations#Plasma_packages
 
 ```
-echo "${packages}" | sed -e '/aura-browser\|plank-player\|plasma-bigscreen\|plasma-mobile\|plasma-nano\|plasma-remotecontrollers\|plasma-sdk\|breeze-grub\|breeze-plymouth\|discover\|krdp\|plasma-dialer\|plasma-welcome\|plymouth-kcm\|spacebar\|plasma-tests/d'
+echo "${packages}" | sed -e '/oxygen\|oxygen-sounds\|plasma-dialer\|plasma-mobile\|plasma-nano\|plasma-sdk\|spacebar/d'
 ```
 
 # Plasma packages
